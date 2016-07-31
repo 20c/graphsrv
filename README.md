@@ -1,4 +1,3 @@
-
 # graphsrv
 
 [![PyPI](https://img.shields.io/pypi/v/graphsrv.svg?maxAge=3600)](https://pypi.python.org/pypi/graphsrv)
