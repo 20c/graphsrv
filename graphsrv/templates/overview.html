@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>graphsrv overview</title>
+  <script src="{{ static_url }}js/jquery.js" type="text/javascript"></script>
+  <script src="{{ static_url }}js/graphsrv.oview.js" type="text/javascript"></script>
+  <link rel="stylesheet" href="{{ static_url }}media/bootstrap.css" type="text/css" />
+  <link rel="stylesheet" href="{{ static_url }}media/graphsrv.css" type="text/css" />
+</head>
+<body>
+
+<div class="graphsrv overview">
+  <div class="container-fluid">
+    
+    {% for row in layout %}
+      {% include "overview.row.html" %}
+    {% endfor %}
+    
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,187 @@
+div.twentychart {
+  font: 11px Verdana, Arial, Helvetica;
+  color: #999;
+  overflow: hidden;
+}
+
+img.twentychart-menu-icon {
+  width :15px;
+  height: 15px;
+  vertical-align: middle;
+}
+
+div.twentychart div.toolbar {
+  -background-color: #000;
+  -border-bottom: 1px #444 solid;
+  color: #ccc;
+  position: absolute;
+  top: 3px;
+  right: 0px;
+  left: 0px;
+  height: 25px;
+  font-weight: bold;
+  font-size: 11px;
+  padding-left: 5px;
+  z-index: 1000;
+}
+
+div.twentychart div.toolbar img,
+div.twentychart div.toolbar-hotkeys img {
+  vertical-align: middle;
+  cursor: pointer;
+}
+
+
+div.twentychart div.toolbar-hotkey {
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+  cursor: pointer;
+  margin-right: 1px;
+  width: 25px;
+  height: 25px;
+}
+
+
+div.twentychart img.toolbar-hotkey-hover {
+  position: absolute;
+  left: 0px;
+  right: 0px;
+}
+
+div.twentychart img.toolbar-hotkey-selected {
+  position: absolute;
+  left: 0px;
+  right: 0px;
+}
+
+div.twentychart-menu {
+  cursor: pointer;
+  position : absolute;
+  overflow: auto;
+  width : auto;
+  height : auto;
+  min-width: 125px;
+  max-width: 200px;
+  max-height: 200px;
+  background-color: #444;
+  border: 1px #000 solid;
+  box-shadow: 0px 2px 5px rgba(0,0,0,0.5);
+  -webkit-transition: opacity 0.3s linear;
+}
+
+div.twentychart-menu-item {
+  font-weight: bold;
+  font-size: 10px;
+  padding: 2px;
+  border-bottom: 1px #000 solid;
+}
+
+div.twentychart-menu-item:hover {
+  color: #fff;
+  background-color: #666;
+}
+
+div.twentychart-prefs {
+  position: absolute;
+  z-index: 500;
+  top: 34px;
+  left: -180px;
+  width: 160px;
+  bottom: 0px;
+  cursor : default;
+  overflow: hidden;
+  overflow-x: hidden;
+  max-width: 160px;
+  border-right: 1px #333 solid;
+  background-color: #222;
+  padding: 5px;
+  box-shadow: 2px 0px 5px rgba(0,0,0,0.5);
+  -webkit-transition: left 0.5s linear;
+}
+
+input.twentychart-fld {
+  width: 135px;
+  background-color: #444;
+  border: 1px #666 solid;
+  color: #999;
+}
+
+div.twentychart-prefs-row {
+}
+
+input.twentychart-prefs-btn {
+  width: 139px;
+  background-color: #666;
+  border: 1px #999 solid;
+  color: #999;
+  box-shadow: 2px 2px 5px rgba(0,0,0,0.25);
+}
+
+div.twentychart-prefs h1 {
+  font-size: 12px;
+  font-weight: bold;
+  color: #555;
+  border-bottom: 1px #333 solid;
+}
+div.twentychart-prefs h2 {
+  font-size: 12px;
+  font-weight: bold;
+  color: #999;
+  cursor: pointer;
+  text-transform: uppercase;
+}
+
+div.twentychart-prefs h2:hover {
+  background-color: #333;
+}
+div.twentychart-prefs h2 span {
+  display: block;
+  font-size: 9px;
+  color: #bbb;
+}
+
+div.twentychart-prefs-section {
+  overflow: hidden;
+  border-bottom: 1px #333 solid;
+  margin-bottom: 5px;
+  padding-bottom: 5px;
+
+}
+
+div.twentychart-prefs span {
+  font-weight: bold;
+}
+
+div.twentychart-prefs-row span {
+  vertical-align: middle;
+}
+
+div.twentychart-prefs-row input[type=checkbox] {
+  vertical-align: middle;
+  margin-left: 0px;
+}
+
+div.twentychart-dnd-icon {
+  position: absolute;
+  z-index: 9;
+  width: auto;
+  height: auto;
+  padding: 5px;
+  border: 1px #999 solid;
+  box-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+  background-color: rgba(0,0,0,0.5);
+  text-align: center;
+  font-weight: bold;
+}
+
+div.twentychart-shim {
+  position: absolute;
+  left: 0px;
+  right: 0px;
+  top: 0px;
+  bottom: 0px;
+  z-index: 10;
+}
+
+

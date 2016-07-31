@@ -1,0 +1,13 @@
+<div class="row" style="height: {{ row.height }}%">
+{% for col in row.cols %}
+  <div class="col-xs-12 col-md-{{ col.width }}">
+  {% if col.graph %}
+    <script src="/graph?targets={{ col.graph.targets }}&id={{ col.graph.id }}&fit={{ col.graph.fit }}&type={{ col.graph.config_dict.type }}{% if col.graph.config %}&config={{ col.graph.config }}{% endif %}&source={{ col.graph.config_dict.source }}"></script>
+  {% elif col.text %}
+    <script type="text/javascript">
+    vapingOverview.initTextMonitor('{{ col.text.name }}')
+    </script>
+  {% endif %}
+  </div>
+{% endfor %}
+</div>
