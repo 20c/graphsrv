@@ -68,7 +68,7 @@ class TestConfig(unittest.TestCase):
         expected = ["a","b"]
         r = []
         self.app.collect_targets(r, "test")
-        self.assertEqual(r, expected)
+        self.assertEqual(sorted(r), sorted(expected))
 
     def test_sync_layout_config(self):
         """
