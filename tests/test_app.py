@@ -83,6 +83,7 @@ class TestConfig(unittest.TestCase):
         self.assertEqual(self.app.layouts, self.layout_config);
 
         layout_config = {"layouts":{"test":[]}}
+        time.sleep(0.5)
         self.layout_config_file.write(json.dumps(layout_config));
         self.app.sync_layout_config();
         self.assertEqual(layout_config, self.app.layouts.data);
