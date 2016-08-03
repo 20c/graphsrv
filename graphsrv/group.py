@@ -11,7 +11,7 @@ def add(data_id, group_name, targets):
 def get_paths():
     r = []
     for data_id, s in groups.items():
-        for group, cfg in s.items():
+        for group in s.keys():
             r.append("%s.%s" % (data_id, group))
     return r
 

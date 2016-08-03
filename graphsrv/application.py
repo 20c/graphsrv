@@ -1,7 +1,6 @@
 import uuid
 import copy
 import os
-import traceback
 
 import vodka.app
 import vodka.data
@@ -72,7 +71,7 @@ class GraphServ(vodka.app.WebApplication):
         self.layout_last_sync = 0
 
     def data(self, source):
-        data, targets = graphsrv.group.get_from_path(source)
+        data, _ = graphsrv.group.get_from_path(source)
         return data
 
     def data_type(self, source):
@@ -130,10 +129,10 @@ class GraphServ(vodka.app.WebApplication):
                         {
                             "graph" : copy.deepcopy(layout.get("graph")),
                             "width" : int(12/grid[0])
-                        } for n in range(0, grid[0])
+                        } for _ in range(0, grid[0])
                     ],
                     "height" : float(100.00/float(grid[1]))
-                } for i in range(0, grid[1])
+                } for _ in range(0, grid[1])
             ]
 
         for row in layout.get("layout"):
