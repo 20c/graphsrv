@@ -1,6 +1,7 @@
 import uuid
 import copy
 import os
+import traceback
 
 import vodka.app
 import vodka.data
@@ -9,17 +10,14 @@ import vodka.plugins
 import vodka.plugins.flaskwsgi
 import vodka.plugins.zeromq
 
+import graphsrv.group
+
 #FIXME: these need to be abstracted in wsgi plugin
 from flask import request, abort
-
 
 class Graph(object):
    
     class Configuration(vodka.config.Handler):
-        source = vodka.config.Attribute(
-            str,
-            help_text="data source for this graph (as specified in sources)"
-        )
 
         format_y = vodka.config.Attribute(
             str,
@@ -46,25 +44,6 @@ class Graph(object):
             help_text="the field by which a record in the data set is uniquely identified"
         )
 
-        targets = vodka.config.Attribute(
-            dict,
-            default={},
-            help_text="list or dict of target config objects"
-        )
-
-        @classmethod
-        def prepare_targets(cls, value, config={}):
-            id_field = config.get("id_field")
-            if type(value) == list and id_field:
-                r = {}
-                for target in value:
-                    if type(target) == dict:
-                        r[target[id_field]] = target
-                    else:
-                        r[target] = {id_field : target}
-                return r
-            return value
-                
 
 class GraphServ(vodka.app.WebApplication):
     handle = "graphsrv"
@@ -93,7 +72,8 @@ class GraphServ(vodka.app.WebApplication):
         self.layout_last_sync = 0
 
     def data(self, source):
-        return vodka.storage.get(source)
+        data, targets = graphsrv.group.get_from_path(source)
+        return data
 
     def data_type(self, source):
         return source
@@ -125,15 +105,38 @@ class GraphServ(vodka.app.WebApplication):
         layouts = self.layouts.get("layouts")
         graphs = self.config.get("graphs")
 
-
         if "layout" in request.args:
             _layout = layouts.get(request.args["layout"])
         else:
             _layout = layouts.values()[0]
 
         layout = copy.deepcopy(_layout)
+        
+        source = layout.get("source", request.args.get("source"))
+        sources = [source]
 
-        for row in layout:
+        ids = 1
+
+        if layout.get("type") == "index":
+            # index layout, auto generate grid
+
+            grid = [int(x) for x in layout.get("grid", "3x3").split("x")]
+
+            sources = layout.get("sources", graphsrv.group.get_paths())
+           
+            layout["layout"] = [
+                {
+                    "cols" : [
+                        {
+                            "graph" : copy.deepcopy(layout.get("graph")),
+                            "width" : int(12/grid[0])
+                        } for n in range(0, grid[0])
+                    ],
+                    "height" : float(100.00/float(grid[1]))
+                } for i in range(0, grid[1])
+            ]
+
+        for row in layout.get("layout"):
             for col in row.get("cols",[]):
                 if "graph" in col:
                     cfg = graphs.get(col["graph"].get("config"))
@@ -141,11 +144,18 @@ class GraphServ(vodka.app.WebApplication):
                         cfg["targets"] = [{"target":"all"}]
 
                     col["graph"]["config_dict"] =cfg
-
+                    if layout.get("type") == "index":
+                        if sources:
+                            col["graph"]["source"] = sources.pop(0)
+                        if not col["graph"].get("id"):
+                            col["graph"]["id"] = ids
+                            ids +=1 
+                    else:
+                        col["graph"]["source"] = sources[0]
 
         return self.render(
             "overview.html", 
-            self.wsgi_plugin.request_env(layout=layout)
+            self.wsgi_plugin.request_env(layout=layout, source=source)
         )
   
     def graph_view(self):

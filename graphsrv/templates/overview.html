@@ -9,10 +9,10 @@
 </head>
 <body>
 
-<div class="graphsrv overview">
+<div id="graphsrv-overview" class="graphsrv overview {{ layout.type }}">
   <div class="container-fluid">
     
-    {% for row in layout %}
+    {% for row in layout.layout %}
       {% include "overview.row.html" %}
     {% endfor %}
     

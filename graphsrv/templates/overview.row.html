@@ -1,12 +1,19 @@
 <div class="row" style="height: {{ row.height }}%">
 {% for col in row.cols %}
   <div class="col-xs-12 col-md-{{ col.width }}">
-  {% if col.graph %}
-    <script src="/graph?targets={{ col.graph.targets }}&id={{ col.graph.id }}&fit={{ col.graph.fit }}&type={{ col.graph.config_dict.type }}{% if col.graph.config %}&config={{ col.graph.config }}{% endif %}&source={{ col.graph.config_dict.source }}"></script>
+  {% if col.graph and col.graph.source %}
+    {% if layout.type == "index" %}
+    <div class="graph-label">
+      <a href="/?layout=detail&source={{ col.graph.source }}">{{ col.graph.source }}</a>
+    </div>
+    {% endif %}
+    <script src="/graph?targets={{ col.graph.targets }}&id={{ col.graph.id }}&fit={{ col.graph.fit }}&type={{ col.graph.config_dict.type }}{% if col.graph.config %}&config={{ col.graph.config }}{% endif %}&source={{ col.graph.source }}"></script>
   {% elif col.text %}
     <script type="text/javascript">
     vapingOverview.initTextMonitor('{{ col.text.name }}')
     </script>
+  {% else %}
+    <div class="empty">Empty</div>
   {% endif %}
   </div>
 {% endfor %}

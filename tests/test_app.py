@@ -5,10 +5,13 @@ import graphsrv.application
 import time
 import os.path
 import vodka.storage
+import graphsrv.group
 
 APP_CONFIG = {
     "tmpl_engine" : "jinja2"
 }
+
+graphsrv.group.add("test", "a", {"x":{},"y":{}})
 
 class TestConfig(unittest.TestCase):
 
@@ -28,12 +31,12 @@ class TestConfig(unittest.TestCase):
         self.assertEqual("test", self.app.data_type("test"))
 
     def test_data(self):
-        expected = vodka.storage.storage["test"] = [{"x":0,"y":1}]
-        self.assertEqual(self.app.data("test"), expected)
+        expected = vodka.storage.storage["test"] = [{"data":{"x":0,"y":1}}]
+        self.assertEqual(self.app.data("test.a"), expected)
 
     def test_collect_graph_data(self):
 
-        points = {"a":{}, "b":{}}
+        points = {"x":{}, "y":{}}
         
         vodka.storage.storage["test"] = [
             {"data":points, "ts": 0},
@@ -41,33 +44,33 @@ class TestConfig(unittest.TestCase):
         ]
 
         r = []
-        self.app.collect_graph_data(r, ["a"], "test")
+        self.app.collect_graph_data(r, ["x"], "test.a")
         self.assertEqual(
             r,
-            [{"data":{"a":{}},"ts":0},{"data":{"a":{}},"ts":2}]
+            [{"data":{"x":{}},"ts":0},{"data":{"x":{}},"ts":2}]
         )
                 
         r = []
-        self.app.collect_graph_data(r, ["all"], "test")
+        self.app.collect_graph_data(r, ["all"], "test.a")
         self.assertEqual(
             r,
             [{"data":points,"ts":0},{"data":points,"ts":2}]
         )
  
         r = []
-        self.app.collect_graph_data(r, ["a"], "test", ts=1)
+        self.app.collect_graph_data(r, ["x"], "test.a", ts=1)
         self.assertEqual(
             r,
-            [{"data":{"a":{}},"ts":2}]
+            [{"data":{"x":{}},"ts":2}]
         )
  
 
     def test_collect_targets(self):
         
-        vodka.storage.storage["test"] = [{"data":{"a":{}, "b":{}}}]
-        expected = ["a","b"]
+        vodka.storage.storage["test"] = [{"data":{"x":{}, "y":{}}}]
+        expected = ["x","y"]
         r = []
-        self.app.collect_targets(r, "test")
+        self.app.collect_targets(r, "test.a")
         self.assertEqual(sorted(r), sorted(expected))
 
     def test_sync_layout_config(self):
@@ -87,34 +90,5 @@ class TestConfig(unittest.TestCase):
         self.layout_config_file.write(json.dumps(layout_config));
         self.app.sync_layout_config();
         self.assertEqual(layout_config, self.app.layouts.data);
-
-
-    def test_prepare_targets(self):
-        """
-        test preparation of target config
-        """
-
-        config = {
-            "id_field" : "host"
-        }
-
-        data = [
-            # target config can be a dict
-            {
-                "host" : "20c.com",
-                "color" : "red"
-            },
-            # or a simple string
-            "127.0.0.1"
-        ]
-
-        expected = {
-            "127.0.0.1" : { "host" : "127.0.0.1" },
-            "20c.com" : {"host" : "20c.com", "color" : "red" }
-        }
-
-        result = graphsrv.application.Graph.Configuration.prepare_targets(data, config); 
-
-        self.assertEqual(result, expected)
 
 

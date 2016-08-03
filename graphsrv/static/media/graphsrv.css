@@ -42,3 +42,21 @@ div.graphsrv.overview div.overview-file {
   font-size: 12px;
   padding-top: 10px;
 }
+
+div.graphsrv.overview div.graph-label {
+  text-align: center;
+}
+
+div.graphsrv.overview div.graph-label a {
+  text-decoration: underline;
+}
+
+div.graphsrv.overview div.empty {
+  padding-top: 10%;
+  color: #666;
+  font-size: 150%;
+  text-align: center;
+  height: 100%;
+  width: 100%;
+  border: 1px #333 dashed;
+}

@@ -6,13 +6,17 @@ if(typeof window.graphsrv == "undefined") {
     },
     syncSize : function(a) {
       var i, g, region;
+      var overview = YAHOO.util.Dom.get("graphsrv-overview")
+      var isIndex = YAHOO.util.Dom.hasClass(overview, "index")
+      var hOffset = (isIndex?-20:0);
       for(i in this.graphs) {
         if(a && a != i)
           continue;
         g = this.graphs[i]
         if(g.fit) {
           region = YAHOO.util.Dom.getRegion(g.container.parentNode);
-          g.chart.SetConfig({width:region.width-15, height:region.height});
+          console.log(isIndex, hOffset, region);
+          g.chart.SetConfig({width:region.width-15, height:region.height+hOffset});
         }
       }
     },
