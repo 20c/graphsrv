@@ -21,6 +21,16 @@ def get_from_path(path):
         raise ValueError("Path needs to be data_id.group_name")
     return get(t[0], t[1])
 
+def get_config_from_path(path):
+    t = path.split(".")
+    if len(t) != 2:
+        raise ValueError("Path needs to be data_id.group_name")
+    return get_config(t[0], t[1])
+
+def get_config(data_id, group_name):
+    config = groups.get(data_id).get(group_name).get("targets")
+    return config
+
 def get(data_id, group_name):
     config = groups.get(data_id).get(group_name)
     data = vodka.storage.get(data_id)

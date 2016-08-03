@@ -201,6 +201,10 @@ class GraphServ(vodka.app.WebApplication):
             variables["graphConfig"] = self.config.get("graphs",{}).get(
                 request.args["config"]
             )
+        else:
+            variables["graphConfig"] = {}
+
+        variables["graphConfig"]["targets"] = graphsrv.group.get_config_from_path(source)
 
         return self.render("graph.js", self.wsgi_plugin.request_env(**variables))
 

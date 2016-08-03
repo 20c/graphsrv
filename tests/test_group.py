@@ -37,6 +37,16 @@ class TestGroup(unittest.TestCase):
         self.assertEqual(data, TEST_DATA["plot"])
         self.assertEqual(config, {"1":{}, "2":{}})
 
+    def test_get_config_from_path(self):
+        
+        data_id = str(uuid.uuid4())
+        
+        vodka.storage.storage[data_id] = TEST_DATA["plot"]
+        graphsrv.group.add(data_id, "first", {"1":{}, "2":{}})
+        config = graphsrv.group.get_config_from_path("%s.%s" % (data_id, "first"))
+        self.assertEqual(config, {"1":{}, "2":{}})
+
+
     def test_get_paths(self):
         graphsrv.group.groups = {}
 
