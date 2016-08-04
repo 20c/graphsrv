@@ -40,9 +40,9 @@ def get(data_id, group_name):
         for row in data:
             _row = dict([(k,v) for k,v in row.items() if k != "data"])
             _row["data"] = {}
-            for id,sub in row["data"].items():
-                if id in targets:
-                    _row["data"][id] = sub
+            for _id,sub in row["data"].items():
+                if _id in targets:
+                    _row["data"][_id] = sub
             if _row["data"]:
                 rv.append(_row)
 

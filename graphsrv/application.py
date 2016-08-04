@@ -12,7 +12,7 @@ import vodka.plugins.zeromq
 import graphsrv.group
 
 #FIXME: these need to be abstracted in wsgi plugin
-from flask import request, abort
+from flask import request
 
 class Graph(object):
    
@@ -174,7 +174,7 @@ class GraphServ(vodka.app.WebApplication):
         graphs = self.config.get("graphs")
         
         graph_types = []
-        for n, g in graphs.items():
+        for _, g in graphs.items():
             if g.get("type") not in graph_types:
                 graph_types.append(g.get("type"))
 
