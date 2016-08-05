@@ -112,6 +112,12 @@ class GraphServ(vodka.app.WebApplication):
         layout = copy.deepcopy(_layout)
         
         source = layout.get("source", request.args.get("source"))
+
+        if source:
+            title = layout.get("title", source)
+        else:
+            title = layout.get("title", "overview")
+
         sources = [source]
 
         ids = 1
@@ -122,7 +128,7 @@ class GraphServ(vodka.app.WebApplication):
             grid = [int(x) for x in layout.get("grid", "3x3").split("x")]
 
             sources = layout.get("sources", graphsrv.group.get_paths())
-           
+
             layout["layout"] = [
                 {
                     "cols" : [
@@ -134,6 +140,7 @@ class GraphServ(vodka.app.WebApplication):
                     "height" : float(100.00/float(grid[1]))
                 } for _ in range(0, grid[1])
             ]
+        
 
         for row in layout.get("layout"):
             for col in row.get("cols",[]):
@@ -154,7 +161,7 @@ class GraphServ(vodka.app.WebApplication):
 
         return self.render(
             "overview.html", 
-            self.wsgi_plugin.request_env(layout=layout, source=source)
+            self.wsgi_plugin.request_env(layout=layout, source=source, title=title)
         )
   
     def graph_view(self):
