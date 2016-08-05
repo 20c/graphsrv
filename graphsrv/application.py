@@ -154,7 +154,7 @@ class GraphServ(vodka.app.WebApplication):
                         if sources:
                             col["graph"]["source"] = sources.pop(0)
                         if not col["graph"].get("id"):
-                            col["graph"]["id"] = ids
+                            col["graph"]["id"] = "auto-%s" % ids
                             ids +=1 
                     else:
                         col["graph"]["source"] = sources[0]
