@@ -1,5 +1,5 @@
 
-# Change Log
+#graphsrv Change Log
 
 ## [Unreleased]
 ### Added
@@ -9,3 +9,6 @@
 ### Removed
 ### Security
 
+##1.0.2
+### Fixed
+- fixed issue where graphs would not render on safari
