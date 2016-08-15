@@ -6,7 +6,6 @@ import vodka.app
 import vodka.data
 import vodka.config
 import vodka.plugins
-import vodka.plugins.flaskwsgi
 import vodka.plugins.zeromq
 
 import graphsrv.group
