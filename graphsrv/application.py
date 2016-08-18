@@ -43,9 +43,8 @@ class Graph(object):
         )
 
 
+@vodka.app.register('graphsrv')
 class GraphServ(vodka.app.WebApplication):
-    handle = "graphsrv"
-
     # configuration
 
     class Configuration(vodka.app.WebApplication.Configuration):
@@ -289,4 +288,3 @@ class GraphServ(vodka.app.WebApplication):
         
                     
         
-vodka.app.register(GraphServ)
