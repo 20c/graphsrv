@@ -5,6 +5,7 @@ import graphsrv.application
 import time
 import os.path
 import vodka.storage
+import vodka
 import graphsrv.group
 
 APP_CONFIG = {
@@ -12,6 +13,7 @@ APP_CONFIG = {
 }
 
 graphsrv.group.add("test", "a", {"x":{},"y":{}})
+vodka.config.instance["home"] = "."
 
 class TestConfig(unittest.TestCase):
 
