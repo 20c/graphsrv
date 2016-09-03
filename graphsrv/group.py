@@ -13,7 +13,11 @@ def add(data_id, group_name, targets=None, **kwargs):
 def add_all(cfg):
     for data_id, grp in cfg.items():
         for name, targets in grp.items():
-            add(data_id, name, **targets)
+            # config is used for commong config and cant be used as 
+            # a group name
+            if name in ["config"]:
+                continue
+            add(data_id, name, targets=targets, **cfg.get("config",{}))
 
 def get_paths():
     r = []

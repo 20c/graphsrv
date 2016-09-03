@@ -214,7 +214,7 @@ class GraphServ(vodka.app.WebApplication):
 
         source_config = graphsrv.group.get_config_from_path(source)
 
-        valid_tick_sizes = source_config.get("tick_sizes", [3000])
+        valid_tick_sizes = source_config.get("ticks_x", [3000])
         tick_size = int(request.args.get("size", valid_tick_sizes[0]))
 
         if tick_size not in valid_tick_sizes:
