@@ -46,10 +46,10 @@ OG.prototype.calc = function(chart, i, prev, data) {
     plots : {
       main : {
         time : data.time,
-        avg : parseInt(data.data[this.target][this.plotField]*Math.pow(10,this.precision))
       }
     }
   }
+  rv.plots.main[this.plotField] = parseInt(data.data[this.target][this.plotField]*Math.pow(10,this.precision))
   return rv;
 }
 OG.prototype.FormatTickValue = function(val) {
