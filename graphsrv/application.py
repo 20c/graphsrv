@@ -1,6 +1,7 @@
 import uuid
 import copy
 import os
+import time
 
 import vodka.app
 import vodka.data
@@ -12,6 +13,33 @@ import graphsrv.group
 
 #FIXME: these need to be abstracted in wsgi plugin
 from flask import request
+
+class GraphSourcePlugin(vodka.plugins.TimedPlugin):
+    """
+    Graph data source plugin
+    """
+
+    @property
+    def type_name(self):
+        return self.get_config("type")
+
+    def push(self, plots, ts=None):
+        
+        if not ts:
+            ts = time.time()
+
+        vodka.data.handle(
+            self.type_name,
+            {
+                "data": plots,
+                "ts" : ts
+            },
+            data_id=self.name,
+            caller=self
+        )
+
+
+
 
 class Graph(object):
    
@@ -43,6 +71,7 @@ class Graph(object):
         )
 
 
+
 @vodka.app.register('graphsrv')
 class GraphServ(vodka.app.WebApplication):
     # configuration
@@ -62,11 +91,18 @@ class GraphServ(vodka.app.WebApplication):
             handler=lambda k,v: Graph
         )
 
+        groups = vodka.config.Attribute(
+            dict,
+            default={},
+            help_text="data groups"
+        )
+
     # application methods
 
     def setup(self):
         super(GraphServ, self).setup()
         self.layout_last_sync = 0
+        graphsrv.group.add_all(self.get_config("groups"))
 
     def data(self, source):
         data, _ = graphsrv.group.get_from_path(source)
@@ -174,9 +210,15 @@ class GraphServ(vodka.app.WebApplication):
 
         data_type = self.data_type(source)
 
-        valid_tick_sizes = [int(s) for s in self.config.get("%s_periods", "3000").split(",")]
-        tick_size = int(request.args.get("size", valid_tick_sizes[0]))
         graphs = self.config.get("graphs")
+
+        source_config = graphsrv.group.get_config_from_path(source)
+
+        valid_tick_sizes = source_config.get("tick_sizes", [3000])
+        tick_size = int(request.args.get("size", valid_tick_sizes[0]))
+
+        if tick_size not in valid_tick_sizes:
+            tick_size = valid_tick_sizes[0]
         
         graph_types = []
         for _, g in graphs.items():
@@ -208,7 +250,7 @@ class GraphServ(vodka.app.WebApplication):
         else:
             variables["graphConfig"] = {}
 
-        variables["graphConfig"]["targets"] = graphsrv.group.get_config_from_path(source)
+        variables["graphConfig"]["targets"] = graphsrv.group.get_config_from_path(source).get("targets")
 
         return self.render("graph.js", self.wsgi_plugin.request_env(**variables))
 

@@ -1,12 +1,19 @@
 import vodka.storage
+import vodka.config
 
 groups = {}
-def add(data_id, group_name, targets):
+def add(data_id, group_name, targets=None, **kwargs):
     if data_id not in groups:
         groups[data_id] = {}
     groups[data_id][group_name] = { 
         "targets" : targets
     }
+    groups[data_id][group_name].update(**kwargs)
+
+def add_all(cfg):
+    for data_id, grp in cfg.items():
+        for name, targets in grp.items():
+            add(data_id, name, **targets)
 
 def get_paths():
     r = []
@@ -28,7 +35,7 @@ def get_config_from_path(path):
     return get_config(t[0], t[1])
 
 def get_config(data_id, group_name):
-    config = groups.get(data_id).get(group_name).get("targets")
+    config = groups.get(data_id).get(group_name)
     return config
 
 def get(data_id, group_name):
