@@ -20,8 +20,8 @@ OG.prototype.InitOGPlot = function(target, isOverlay, config) {
   else
     this.config.plots.main.colors.neutral = graph_colors[isOverlay] || "#fff";
 
-  this.tick_size = 25;
-  this.precision = 2;
+  this.precision = typeof config.precision_y == "undefined"?2 : config.precision_y;
+  this.tick_size = typeof config.size_y == "undefined"?25 : config.size_y * Math.pow(10, this.precision);
   this.sync_scale = true;
   this.data_type = 1;
   this.y_zoom = 85;
@@ -53,7 +53,7 @@ OG.prototype.calc = function(chart, i, prev, data) {
   return rv;
 }
 OG.prototype.FormatTickValue = function(val) {
-  return parseFloat(val/Math.pow(10,this.precision)).toFixed(2)+"ms";
+  return this.labels[this.plotField].fnFormat((val/Math.pow(10,this.precision)));
 }
 OG.prototype.Id = function() {
   return this.target;

@@ -53,6 +53,24 @@ class Graph(object):
             help_text="formatter for y axis labels"
         )
 
+        precision_y = vodka.config.Attribute(
+            int,
+            default=2,
+            help_text="float precision"
+        )
+
+        size_y = vodka.config.Attribute(
+            float,
+            default=0.25,
+            help_text="tick size on the y axis"
+        )
+
+        sizes_x = vodka.config.Attribute(
+            list,
+            default=[3000],
+            help_text="valid sizes for the x axis - this should be a list of intervals you want to support for viewing. (ms)"
+        )
+
         type = vodka.config.Attribute(
             str,
             #FIXME: should be dynamic
@@ -214,7 +232,12 @@ class GraphServ(vodka.app.WebApplication):
 
         source_config = graphsrv.group.get_config_from_path(source)
 
-        valid_tick_sizes = source_config.get("ticks_x", [3000])
+        if "config" in request.args:
+            graph_config = graphs.get(request.args.get("config"))
+        else:
+            graph_config = {}
+
+        valid_tick_sizes = graph_config.get("sizes_x", [3000])
         tick_size = int(request.args.get("size", valid_tick_sizes[0]))
 
         if tick_size not in valid_tick_sizes:
@@ -230,8 +253,9 @@ class GraphServ(vodka.app.WebApplication):
             "type" : request.args.get("type", "multitarget"),
             "source" : source,
             "graph_types" : graph_types,
-            "dataType" : data_type,
+            "graphConfig" : graph_config,
             "maxTicks" : int(self.config.get("max_ticks", 500)),
+            "dataType" : data_type,
             "tickSize" : tick_size,
             "targets" : request.args.get("targets", ""),
             "fit" : request.args.get("fit", "no"),
@@ -243,12 +267,6 @@ class GraphServ(vodka.app.WebApplication):
             variables["targets"] = variables["targets"].split(",")[0]
 
         self.sync_layout_config()
-        if "config" in request.args: 
-            variables["graphConfig"] = self.config.get("graphs",{}).get(
-                request.args["config"]
-            )
-        else:
-            variables["graphConfig"] = {}
 
         variables["graphConfig"]["targets"] = graphsrv.group.get_config_from_path(source).get("targets")
 
