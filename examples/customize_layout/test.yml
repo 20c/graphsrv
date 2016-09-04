@@ -1,0 +1,24 @@
+layouts:
+  test:
+    type: custom
+    layout:
+    # row 1
+    - cols:
+      # col 1, render a graph
+      - graph:
+          config: multitarget
+          fit: 'yes'
+          targets: all
+          id: multitarget-1
+        width: 12
+      height: 50
+    # row 2 
+    - cols:
+      # col 1, render a graph
+      - graph:
+          config: multitarget
+          fit: 'yes'
+          targets: all
+          id: multitarget-2
+        width: 12
+      height: 50

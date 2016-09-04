@@ -1,0 +1,34 @@
+layouts:
+  
+  # the detail layout is used to render graph group details after
+  # clicking through from the index page
+
+  detail:
+    
+    # layout type: 'custom'
+    type: custom
+
+    # grid
+    layout:
+    # row 1
+    - cols:
+      # col 1, render a graph
+      - graph:
+        
+          # we use the 'multitarget' graph we configured in config.yml (see Getting Started)
+          config: multitarget
+
+          # fit to column
+          fit: 'yes'
+
+          # render all targets of the graph group to this graph
+          targets: all
+
+          # custom graph id - needs to be unique to this layout
+          id: multitarget-1
+
+        # use maximum width
+        width: 12
+      
+      # use maximum height
+      height: 100

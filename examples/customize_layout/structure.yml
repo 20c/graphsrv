@@ -1,0 +1,18 @@
+layouts:
+  
+  # all layouts go here, indexed by their name
+
+  index:
+    # the name 'index' is reserved and will be the layout 
+    # rendered at /
+    # 
+    # it is required to be an 'index' type layout 
+    #
+    # ... layout config ...
+
+  layout_one:
+    # other layouts can by of type 'index' or 'custom' 
+    # ... layout config ...
+   
+  layout_two:
+    # ... layout config ..

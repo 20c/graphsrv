@@ -1,0 +1,125 @@
+apps:
+  # graphsrv app config
+  graphsrv:
+    enabled: true
+    tmpl_engine: jinja2
+
+    # we specify where to load our layout config from
+    # graphsrv will automatically reload this when it is changed
+    # during runtime
+    layout_config_file: /path/to/graphsrv_example/layout.yml
+    
+    # graph groups
+    groups:
+      # data 'source_a'
+      source_a:
+        # group 'first'
+        first:
+          # plot a
+          a:
+            name: Plot A
+            color: red
+          # plot b
+          b:
+            name: Plot B
+            color: cyan
+    
+    # graph config
+    graphs:
+      
+      # graph name
+      multitarget:
+        
+        # graph type, multitarget graphs allow plotting of multiple plots
+        type: multitarget
+
+        # the field we use to identify a plot in the graph data
+        id_field: id 
+
+        # the field we want to plot on the y axis 
+        plot_y: value 
+
+        # precision for y axis values
+        precision_y: 0
+
+        # tick size for y axis values
+        size_y: 1.0
+
+        # the gap between our ticks on the x axis 
+        sizes_x:
+          - 1000 # 1000 ms (1.0 s)
+
+
+  
+  # our example app config
+  graphsrv_example:
+    requires:
+      - graphsrv
+    enabled: true
+    home: /path/to/graphsrv_example
+
+
+data:
+
+  # vodka can manage our data for us, we define a data type
+  # for our test plot data
+  - type: test_plot
+    handlers:
+      # re-index data by the id field
+      - type: index
+        index: id 
+      # store data in a list with a maximum limit of 500 data points
+      - type: store
+        container: list
+        limit: 500
+
+plugins:
+
+  # configure our test plot plugin
+  
+  - type: test_plot
+    name: source_a
+    async: thread 
+    interval: 1.0
+
+  # graphsrv uses flask to serve to the web
+  
+  - name: http
+    type: flask
+
+    # server website to host and port
+    host: 0.0.0.0
+    port: 7041
+
+    debug: true
+    server: gevent
+    async: gevent 
+    routes:
+      /targets : graphsrv->targets
+      /graph_data :
+        methods:
+          - POST
+          - GET
+        target: graphsrv->graph_data
+      /graph : graphsrv->graph_view
+      /overview_read_file : graphsrv->overview_read_file
+      /: graphsrv->overview_view
+
+# logging config
+
+logging:
+  version: 1
+  formatters:
+    simple:
+      format: '%(asctime)s - %(name)s - %(levelname)s: %(message)s'
+  handlers:
+    console:
+      class: logging.StreamHandler
+      level: DEBUG
+      formatter: simple
+      stream: ext://sys.stdout
+  loggers:
+    vodka:
+      level: DEBUG
+      handlers:
+        - console

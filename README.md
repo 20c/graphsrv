@@ -8,6 +8,12 @@
 
 serve embeddable graphs
 
+## Install
+
+```sh
+pip install graphsrv
+```
+
 ### License
 
 Copyright 2016 20C, LLC

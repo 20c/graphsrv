@@ -1,0 +1,20 @@
+layouts:
+
+  # this is the layout that will be rendered to /, it is required to be of type 'index'
+
+  index:
+    
+    # layout type: 'index'
+    type: index
+
+    # allows place for 9 graphs
+    grid: 3x3
+
+    # graph configuration
+    graph:
+      
+      # we use the 'multitarget' graph we configured in config.yml (see Getting Started)
+      config: multitarget
+      fit: 'yes'
+      targets: all
+

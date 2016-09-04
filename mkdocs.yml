@@ -1,0 +1,13 @@
+site_name: graphsrv
+site_url: https://github.com/20c/graphsrv
+
+theme: readthedocs
+
+pages:
+  - Home: index.md
+  - Getting started: start.md
+  - Customization: custom.md
+  - Graphs: graphs.md
+
+markdown_extensions:
+  - markdown_include.include
