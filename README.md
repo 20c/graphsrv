@@ -8,11 +8,15 @@
 
 serve embeddable graphs
 
-## Install
+### Install
 
 ```sh
 pip install graphsrv
 ```
+
+### Documentation (work in progress)
+
+http://graphsrv.readthedocs.io/
 
 ### License
 
