@@ -3,6 +3,15 @@
 
 ## [Unreleased]
 ### Added
+### Fixed
+### Changed
+### Deprecated
+### Removed
+### Security
+
+##1.0.5
+
+### Added
 
 - documentation
 - graph config attribute size_y: specifies y tick size
@@ -14,11 +23,6 @@
 ### Fixed
 
 - fixed an issue where using an id field other than "avg" would cause the graph not to render
-
-### Changed
-### Deprecated
-### Removed
-### Security
 
 ##1.0.4
 ### Changed
