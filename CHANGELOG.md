@@ -9,6 +9,12 @@
 ### Removed
 ### Security
 
+##1.0.6
+
+### Fixed
+
+- fix remote graph embedding
+
 ##1.0.5
 
 ### Added
