@@ -82,19 +82,24 @@ if(!graphsrv.loadingLibs) {
 
   graphsrv.loadingLibs = true;
   graphsrv.loadedLibs = false;
-  
+
   var loaders = [
-    "{{ host }}{{ graphsrv.static_url }}js/yui.js",
-    "{{ host }}{{ graphsrv.static_url }}js/jquery.js",
     "{{ host }}{{ graphsrv.static_url }}js/twentyc.core.ext.js",
     "{{ host }}{{ graphsrv.static_url }}js/twentyc.cla.yui2.js",
     "{{ host }}{{ graphsrv.static_url }}js/twentyc.chart.js",
     "{{ host }}{{ graphsrv.static_url }}js/graphsrv.js"
   ]
+
+  if(typeof window.jQuery == "undefined")
+    loaders.unshift("{{ host }}{{ graphsrv.static_url }}js/jquery.js")
+  
+  if(typeof window.YAHOO == "undefined")
+    loaders.unshift("{{ host }}{{ graphsrv.static_url }}js/yui.js")
+
   {% for graph_type in graph_types %}
   loaders.push("{{ host }}{{ graphsrv.static_url }}js/graphsrv.{{ graph_type }}.js")
   {% endfor %}
-    
+
 
   var onload = function() {
     loaders.shift();
