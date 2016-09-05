@@ -23,12 +23,13 @@ if(typeof window.graphsrv == "undefined") {
     ready : function() {
       var i, fit=false;
       this.isReady = true;
-      TwentyC.widget.Chart.pathImg = "{{ graphsrv.static_url }}media/";
+      TwentyC.widget.Chart.pathImg = "{{ host }}{{ graphsrv.static_url }}media/";
       for(i in this.graphs) {
         this.loadGraph(i);
         if(this.graphs[i].fit == "yes")
           fit = true;
       }
+      graphsrv.globalUpdate.host = "{{ host }}";
       graphsrv.globalUpdate.requestAll();
       setInterval(function() {
         graphsrv.globalUpdate.requestAll();
@@ -83,14 +84,15 @@ if(!graphsrv.loadingLibs) {
   graphsrv.loadedLibs = false;
   
   var loaders = [
-    "{{ graphsrv.static_url }}js/yui.js",
-    "{{ graphsrv.static_url }}js/twentyc.core.ext.js",
-    "{{ graphsrv.static_url }}js/twentyc.cla.yui2.js",
-    "{{ graphsrv.static_url }}js/twentyc.chart.js",
-    "{{ graphsrv.static_url }}js/graphsrv.js"
+    "{{ host }}{{ graphsrv.static_url }}js/yui.js",
+    "{{ host }}{{ graphsrv.static_url }}js/jquery.js",
+    "{{ host }}{{ graphsrv.static_url }}js/twentyc.core.ext.js",
+    "{{ host }}{{ graphsrv.static_url }}js/twentyc.cla.yui2.js",
+    "{{ host }}{{ graphsrv.static_url }}js/twentyc.chart.js",
+    "{{ host }}{{ graphsrv.static_url }}js/graphsrv.js"
   ]
   {% for graph_type in graph_types %}
-  loaders.push("{{ graphsrv.static_url }}js/graphsrv.{{ graph_type }}.js")
+  loaders.push("{{ host }}{{ graphsrv.static_url }}js/graphsrv.{{ graph_type }}.js")
   {% endfor %}
     
 
@@ -118,7 +120,7 @@ if(!graphsrv.loadingLibs) {
   load(loaders[0]);
 
   var style = document.createElement("link")
-  style.href = "{{ graphsrv.static_url }}media/style.css"
+  style.href = "{{ host }}{{ graphsrv.static_url }}media/style.css"
   style.type = "text/css"
   style.rel = "stylesheet"
   document.head.appendChild(style);

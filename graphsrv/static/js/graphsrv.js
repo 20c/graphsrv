@@ -29,6 +29,7 @@ graphsrv.sizes = {
  */
 
 graphsrv.globalUpdate = {
+  host : '',
   afterUpdate : new TwentyC.cla.EventHandler("afterUpdate"),
   data : {
   },
@@ -81,7 +82,7 @@ graphsrv.globalUpdate = {
     var data_e = this.data[type];
     var ts = (data_e.length ? data_e[data_e.length-1].ts : 0);
 
-    TwentyC.cla.XHR.send("POST", "/graph_data/", {
+    TwentyC.cla.XHR.send("POST", this.host+"/graph_data/", {
       success : function(o) {
         var data_n = JSON.parse(o.responseText).data;
         var t, k, rm=0, add=0, b=false, j=0, target, target_sane, maintarget;
