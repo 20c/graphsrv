@@ -5,7 +5,6 @@ OG.prototype = new TwentyC.widget.Chart.widget.Graph();
 OG.prototype.title = "Multiple Targets"
 OG.prototype.Init = 
 OG.prototype.InitOGPlot = function(target, isOverlay, config) {
-  console.log(config);
   this.InitGraph();
   this.serverConfig = config || {};
   this.targetConfig = config && config.targets ? config.targets[target] || {} : {};
