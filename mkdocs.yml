@@ -8,6 +8,7 @@ pages:
   - Getting started: start.md
   - Customization: custom.md
   - Graphs: graphs.md
+  - Embed: embed.md
 
 markdown_extensions:
   - markdown_include.include
