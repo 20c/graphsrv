@@ -81,8 +81,6 @@ class TestConfig(unittest.TestCase):
         when changed
         """
 
-        print APP_CONFIG
-
         self.app.sync_layout_config();
 
         self.assertEqual(self.app.layouts, self.layout_config);

@@ -11,8 +11,8 @@ def add(data_id, group_name, targets=None, **kwargs):
     groups[data_id][group_name].update(**kwargs)
 
 def add_all(cfg):
-    for data_id, grp in cfg.items():
-        for name, targets in grp.items():
+    for data_id, grp in list(cfg.items()):
+        for name, targets in list(grp.items()):
             # config is used for commong config and cant be used as 
             # a group name
             if name in ["config"]:
@@ -21,8 +21,8 @@ def add_all(cfg):
 
 def get_paths():
     r = []
-    for data_id, s in groups.items():
-        for group in s.keys():
+    for data_id, s in list(groups.items()):
+        for group in list(s.keys()):
             r.append("%s.%s" % (data_id, group))
     return r
 
@@ -49,9 +49,9 @@ def get(data_id, group_name):
     rv = []
     if data:
         for row in data:
-            _row = dict([(k,v) for k,v in row.items() if k != "data"])
+            _row = dict([(k,v) for k,v in list(row.items()) if k != "data"])
             _row["data"] = {}
-            for _id,sub in row["data"].items():
+            for _id,sub in list(row["data"].items()):
                 if _id in targets:
                     _row["data"][_id] = sub
             if _row["data"]:

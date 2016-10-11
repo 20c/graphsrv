@@ -1,3 +1,8 @@
+from __future__ import division
+from builtins import str
+from builtins import range
+from past.utils import old_div
+from builtins import object
 import uuid
 import copy
 import os
@@ -5,6 +10,7 @@ import time
 
 import vodka.app
 import vodka.data
+import vodka.data.renderers
 import vodka.config
 import vodka.plugins
 import vodka.plugins.zeromq
@@ -159,7 +165,7 @@ class GraphServ(vodka.app.WebApplication):
         if "layout" in request.args:
             _layout = layouts.get(request.args["layout"])
         else:
-            _layout = layouts.values()[0]
+            _layout = list(layouts.values())[0]
 
         layout = copy.deepcopy(_layout)
         
@@ -186,10 +192,10 @@ class GraphServ(vodka.app.WebApplication):
                     "cols" : [
                         {
                             "graph" : copy.deepcopy(layout.get("graph")),
-                            "width" : int(12/grid[0])
+                            "width" : int(old_div(12,grid[0]))
                         } for _ in range(0, grid[0])
                     ],
-                    "height" : float(100.00/float(grid[1]))
+                    "height" : float(old_div(100.00,float(grid[1])))
                 } for _ in range(0, grid[1])
             ]
         
@@ -244,7 +250,7 @@ class GraphServ(vodka.app.WebApplication):
             tick_size = valid_tick_sizes[0]
         
         graph_types = []
-        for _, g in graphs.items():
+        for _, g in list(graphs.items()):
             if g.get("type") not in graph_types:
                 graph_types.append(g.get("type"))
 
@@ -274,7 +280,7 @@ class GraphServ(vodka.app.WebApplication):
 
     def collect_targets(self, data, source):
         for row in self.data(source):
-            for target in row["data"].keys():
+            for target in list(row["data"].keys()):
                 if target not in data and target[0] != "_":
                     data.append(target)
 
@@ -317,7 +323,7 @@ class GraphServ(vodka.app.WebApplication):
             rv_row = {"ts" : row["ts"], "data":{}}
 
             if "all" in targets:
-                for target,bars in rdata.items():
+                for target,bars in list(rdata.items()):
                     rv_row["data"][target] = bars
             else:
                 for target in targets:
