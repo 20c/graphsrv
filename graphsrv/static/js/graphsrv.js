@@ -72,10 +72,8 @@ graphsrv.globalUpdate = {
     if(!this.times[type])
       return
     if(t - (this.times[type] || 0) > 10000) {
-        console.log("SHOWING INDICATOR", type)
         indicator.addClass("visible").show();
     } else {
-        console.log("HIDING INDICATOR", type)
         indicator.removeClass("visible").hide();
     }
   },
