@@ -60,3 +60,32 @@ div.graphsrv.overview div.empty {
   width: 100%;
   border: 1px #333 dashed;
 }
+
+@keyframes status_indicator_anim {
+  0% {opacity:1.0;}
+  50% {opacity:0.5;}
+  100% {opacity:1.0;}
+}
+
+div.graphsrv.overview div.status-indicator {
+  position: absolute;
+  left: 0px;
+  right: 65px;
+  top: 5px;
+  bottom: 40px;
+  font-size: 12px;
+  color: red;
+  font-weight: bold;
+  text-align: right;
+  padding-top: 10px;
+  padding-right: 10px;
+  text-shadow: 0px 0px 5px #000;
+  z-index: 1000;
+  border-right: 3px red solid
+}
+
+div.graphsrv.overview div.status-indicator.visible {
+  animation-name: status_indicator_anim;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+}

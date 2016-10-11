@@ -41,6 +41,9 @@ graphsrv.globalUpdate = {
   },
   queue : [
   ],
+  times : {
+
+  },
   get_data : function(type) {
     if(!this.data[type]) {
       this.data[type] = [] 
@@ -58,6 +61,25 @@ graphsrv.globalUpdate = {
       this.targets[type][targets[i]] = true;
     }
   },
+  
+  markTime : function(type) {
+    this.times[type] = new Date().getTime();
+  },
+
+  renderStatus : function(type) {
+    var t = new Date().getTime();
+    var indicator = $('.status-indicator.'+type.replace(".","-"))
+    if(!this.times[type])
+      return
+    if(t - (this.times[type] || 0) > 10000) {
+        console.log("SHOWING INDICATOR", type)
+        indicator.addClass("visible").show();
+    } else {
+        console.log("HIDING INDICATOR", type)
+        indicator.removeClass("visible").hide();
+    }
+  },
+
   requestAll : function(type) {
     var type;
     if(this.queue.length)
@@ -81,6 +103,8 @@ graphsrv.globalUpdate = {
     var targets = targets_a.join(",");
     var data_e = this.data[type];
     var ts = (data_e.length ? data_e[data_e.length-1].ts : 0);
+    
+    this.renderStatus(type);
 
     TwentyC.cla.XHR.send("POST", this.host+"/graph_data/", {
       success : function(o) {
@@ -101,9 +125,15 @@ graphsrv.globalUpdate = {
           data_e.shift();
           rm++;
         }
+
         this.afterUpdate.fire({"type" : type, "ts" : ts, "data_e" : data_e, "data_n" : data_n, "added" : add, "removed" : rm});
         this.busy[type] = false;
         this.queue.shift();
+
+        if(add > 0 || rm > 0) {
+          this.markTime(type)
+        }
+
         if(this.queue.length) 
           this.request();
       }.bind(this),
@@ -260,11 +290,22 @@ graphsrv.loadGraph = function(id) {
     },
     title : "Overview"
   })
+  
   chart.contextMenu.menu.destroy();
   chart.Dock(this.graphs[id].container);
   chart.RemoveGraph(chart.graphs.main)
   chart.RemoveGraph(chart.graphs.volume)
   this.globalUpdate.require(this.graphs[id].source,this.graphs[id].targetsSource)
+
+  // status indicator
+  $(chart.element).append(
+    $('<div>')
+      .addClass("status-indicator")
+      .addClass(this.graphs[id].dataType.replace(".","-"))
+      .html("Data Feed Stopped")
+      .hide()
+  )
+
 
   this.graphs[id].initialUpdate = function() {
     if(this.initialUpdateDone)
@@ -435,6 +476,9 @@ graphsrv.formatters = {
     return function(v) { return v }
   },
   ms : function(value) {
+    if(isNaN(parseFloat(value)))
+      return "-- ms";
+
     return parseFloat(value).toFixed(2)+"ms";
   }
 }
