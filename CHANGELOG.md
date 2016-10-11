@@ -3,15 +3,6 @@
 
 ## [Unreleased]
 ### Added
-### Fixed
-### Changed
-### Deprecated
-### Removed
-### Security
-
-##1.0.7
-
-### Added
 
 - py3 support
 - visiual indicator when data feed has stopped
@@ -20,8 +11,12 @@
 
 - NaN format issues on ms formatted labels
 
-##1.0.6
+### Changed
+### Deprecated
+### Removed
+### Security
 
+##1.0.6
 ### Fixed
 
 - fix remote graph embedding
