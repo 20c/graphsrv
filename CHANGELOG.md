@@ -9,6 +9,17 @@
 ### Removed
 ### Security
 
+##1.0.7
+
+### Added
+
+- py3 support
+- visiual indicator when data feed has stopped
+
+### Fixed
+
+- NaN format issues on ms formatted labels
+
 ##1.0.6
 
 ### Fixed
