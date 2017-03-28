@@ -288,7 +288,16 @@ graphsrv.loadGraph = function(id) {
     },
     title : "Overview"
   })
-  
+
+  chart.onAddGraph.subscribe(function(a,payload) {
+    var chart = payload[0].chart, graph;
+    chart.graphsOrder.sort(function(a,b) {
+      if(a.title < b.title) return -1;
+      if(a.title > b.title) return 1;
+      return 0;
+    });
+  });
+
   chart.contextMenu.menu.destroy();
   chart.Dock(this.graphs[id].container);
   chart.RemoveGraph(chart.graphs.main)
