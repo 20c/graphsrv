@@ -1424,9 +1424,12 @@ Graph.prototype.RenderStyles = function(plot) {
 
 Graph.prototype.ParentIndex = function() {
   if(this.par) {
-    for(i  = 0; i < this.par.overlayed.length; i++) {
-      if(this.par.overlayed[i][1] == this)
-        return i;
+    var i, k;
+    for(k = 0; k < this.chart.graphsOrder.length; k++) {
+      for(i  = 0; i < this.par.overlayed.length; i++) {
+        if(this.par.overlayed[i][1] == this && this.chart.graphsOrder[k] == this)
+          return k-1;
+      }
     }
     return -1;
   };
@@ -4790,6 +4793,7 @@ Chart.prototype.AddGraph = function(name, graph, position) {
     else
       this.graphsOrder.unshift(graph);
   }
+ 
   graph.name = name;
 
   if(graph.overlay && typeof position != "number") {
