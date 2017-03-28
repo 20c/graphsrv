@@ -30,7 +30,6 @@ class GraphSourcePlugin(vodka.plugins.TimedPlugin):
         return self.get_config("type")
 
     def push(self, plots, ts=None):
-        
         if not ts:
             ts = time.time()
 
@@ -48,7 +47,7 @@ class GraphSourcePlugin(vodka.plugins.TimedPlugin):
 
 
 class Graph(object):
-   
+
     class Configuration(vodka.config.Handler):
 
         format_y = vodka.config.Attribute(
@@ -101,7 +100,7 @@ class GraphServ(vodka.app.WebApplication):
     # configuration
 
     class Configuration(vodka.app.WebApplication.Configuration):
-        
+
         layout_config_file = vodka.config.Attribute(
             vodka.config.validators.path,
             default=lambda x,i: i.resource("etc/layouts.yaml"),
@@ -150,7 +149,7 @@ class GraphServ(vodka.app.WebApplication):
             self.layout_last_sync = mtime
 
         return self.layouts
-        
+
 
     def overview_view(self):
         """
@@ -158,7 +157,7 @@ class GraphServ(vodka.app.WebApplication):
         and is built via config
         """
         self.sync_layout_config()
-        
+
         layouts = self.layouts.get("layouts")
         graphs = self.config.get("graphs")
 
@@ -168,7 +167,7 @@ class GraphServ(vodka.app.WebApplication):
             _layout = list(layouts.values())[0]
 
         layout = copy.deepcopy(_layout)
-        
+
         source = layout.get("source", request.args.get("source"))
 
         if source:
@@ -198,7 +197,7 @@ class GraphServ(vodka.app.WebApplication):
                     "height" : float(old_div(100.00,float(grid[1])))
                 } for _ in range(0, grid[1])
             ]
-        
+
 
         for row in layout.get("layout"):
             for col in row.get("cols",[]):
@@ -213,22 +212,22 @@ class GraphServ(vodka.app.WebApplication):
                             col["graph"]["source"] = sources.pop(0)
                         if not col["graph"].get("id"):
                             col["graph"]["id"] = "auto-%s" % ids
-                            ids +=1 
+                            ids +=1
                     else:
                         col["graph"]["source"] = sources[0]
 
         return self.render(
-            "overview.html", 
+            "overview.html",
             self.wsgi_plugin.request_env(layout=layout, source=source, title=title)
         )
-  
+
     def graph_view(self):
         """
         Renders graph.js
         """
 
         source = request.args.get("source")
-        
+
         if not source:
             raise ValueError("No source specified")
 
@@ -248,7 +247,7 @@ class GraphServ(vodka.app.WebApplication):
 
         if tick_size not in valid_tick_sizes:
             tick_size = valid_tick_sizes[0]
-        
+
         graph_types = []
         for _, g in list(graphs.items()):
             if g.get("type") not in graph_types:
@@ -266,7 +265,7 @@ class GraphServ(vodka.app.WebApplication):
             "targets" : request.args.get("targets", ""),
             "fit" : request.args.get("fit", "no"),
             "id" : request.args.get("id", str(uuid.uuid4()))
-        } 
+        }
 
         # for detail charts we only allow one target
         if variables["type"] in ["detail"]:
@@ -293,7 +292,7 @@ class GraphServ(vodka.app.WebApplication):
         data)
         """
         source = request.values.get("source")
-        
+
         if not source:
             raise ValueError("No source specified")
 
@@ -311,7 +310,7 @@ class GraphServ(vodka.app.WebApplication):
         ts <float> - if specified only collect targets that were updated past this timestamp (seconds)
         """
 
-        
+
         cdata = self.data(source)
 
         for row in cdata:
@@ -319,7 +318,7 @@ class GraphServ(vodka.app.WebApplication):
                 continue
 
             rdata = row["data"]
-            
+
             rv_row = {"ts" : row["ts"], "data":{}}
 
             if "all" in targets:
@@ -329,9 +328,9 @@ class GraphServ(vodka.app.WebApplication):
                 for target in targets:
                     if target in rdata:
                         rv_row["data"][target] = rdata.get(target)
-            
+
             data.append(rv_row)
- 
+
 
 
     @vodka.data.renderers.RPC(errors=True)
@@ -351,6 +350,6 @@ class GraphServ(vodka.app.WebApplication):
             raise ValueError("Target targets missing")
 
         self.collect_graph_data(data, targets, source, ts=ts)
-        
-                    
-        
+
+
+
