@@ -120,6 +120,22 @@ class GraphServ(vodka.app.WebApplication):
             help_text="data groups"
         )
 
+        includes = vodka.config.Attribute(
+            dict,
+            default={
+                "js" : {
+                    "jquery" : {"path":"graphsrv/js/jquery.js"},
+                    "graphsrv.oview": {"path":"graphsrv/js/graphsrv.oview.js"}
+                },
+                "css": {
+                    "bootstrap" : {"path":"graphsrv/media/bootstrap.css"},
+                    "graphsrv" : {"path":"graphsrv/media/graphsrv.css"}
+                }
+            },
+            handler=lambda x,y: vodka.config.shared.Routers(dict, "includes:merge", handler=SharedIncludesConfigHandler),
+            help_text="allows you to specify extra media includes for js,css etc."
+        )
+
     # application methods
 
     def setup(self):
