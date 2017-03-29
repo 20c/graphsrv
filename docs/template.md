@@ -9,11 +9,11 @@ mkdir /path/to/my/templates
 create a file called overview.html inside this directory
 
 ```html
-{!examples/override_template/overview.html}
+{!examples/override_template/overview.html!}
 ```
 
 update the config to let graphsrv know about the directory
 
 ```yml
-{!examples/override_template/config.yml}
+{!examples/override_template/config.yml!}
 ```
