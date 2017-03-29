@@ -125,11 +125,11 @@ class GraphServ(vodka.app.WebApplication):
             default={
                 "js" : {
                     "jquery" : {"path":"graphsrv/js/jquery.js"},
-                    "graphsrv.oview": {"path":"graphsrv/js/graphsrv.oview.js"}
+                    "graphsrv.oview": {"path":"graphsrv/js/graphsrv.oview.js", "order":1}
                 },
                 "css": {
                     "bootstrap" : {"path":"graphsrv/media/bootstrap.css"},
-                    "graphsrv" : {"path":"graphsrv/media/graphsrv.css"}
+                    "graphsrv" : {"path":"graphsrv/media/graphsrv.css", "order":1}
                 }
             },
             handler=lambda x,y: vodka.config.shared.Routers(dict, "includes:merge", handler=SharedIncludesConfigHandler),
