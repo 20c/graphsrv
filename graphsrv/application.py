@@ -142,7 +142,8 @@ class GraphServ(vodka.app.WebApplication):
         super(GraphServ, self).setup()
         self.layout_last_sync = 0
         graphsrv.group.add_all(self.get_config("groups"))
-        self.wsgi_plugin.set_route("/view/<layout>/<source>", self.view, methods=["GET","POST"])
+        if hasattr(self, "wsgi_plugin"):
+            self.wsgi_plugin.set_route("/view/<layout>/<source>", self.view, methods=["GET","POST"])
 
 
     def data(self, source):
