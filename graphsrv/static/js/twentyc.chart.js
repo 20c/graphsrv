@@ -1416,6 +1416,41 @@ Graph.prototype.RenderStyles = function(plot) {
 };
 
 /******************************************************************************
+ * Returns the label positional order for the graph relative to it's overlay
+ * siblings and it's parent according to their position in graphsOrder
+ * @method LabelPosition
+ * @returns Number
+ */
+
+Graph.prototype.LabelPosition = function() {
+  var k, i, j, o = this.chart.graphsOrder;
+  for(k = 0, i = 0; k < o.length; k++) {
+    if(o[k] == this)
+      return i;
+    if(this.par) {
+      if(this.par == o[k]) {
+        i++;
+        continue;
+      }
+      for(j = 0; j < this.par.overlayed.length; j++) {
+        if(this.par.overlayed[j][1] == o[k]) {
+          i++;
+          break;
+        }
+      }
+    } else if(this.overlayed) {
+      for(j = 0; j < this.overlayed.length; j++) {
+        if(this.overlayed[j][1] == o[k]) {
+          i++;
+          break;
+        }
+      }
+    }
+  }
+  return -1;
+};
+
+/******************************************************************************
  * If graph is overlayed onto another graph return the graph's overlay index.
  * Return -1 if not overlayed.
  * @method ParentIndex
@@ -5213,11 +5248,11 @@ Chart.prototype.RenderMarkers = function() {
         continue;
       var label = this.layout.graphLabel;
       x = label.x;
+      idx = graph.LabelPosition();
+
       if(!graph.overlay) {
-        y = graph.y+label.y;
-        idx = 0
+        y = graph.y+label.y+((label.h+1)*(idx));
       } else {
-        idx = graph.ParentIndex()+1;
         y = graph.par.y+label.y+((label.h+1)*(idx));
       }
 
