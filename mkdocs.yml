@@ -7,6 +7,7 @@ pages:
   - Home: index.md
   - Getting started: start.md
   - Customization: custom.md
+  - Templates: template.md
   - Graphs: graphs.md
   - Embed: embed.md
 

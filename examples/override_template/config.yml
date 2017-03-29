@@ -1,0 +1,4 @@
+apps:
+  graphsrv:
+    template_locations:
+      - /location/to/your/custom/template/dir
