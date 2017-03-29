@@ -6,10 +6,12 @@
 
 - py3 support
 - visiual indicator when data feed has stopped
+- graphsrv addons may now supply their own media (js / css)
 
 ### Fixed
 
 - NaN format issues on ms formatted labels
+- legend sorting stabilized to alphapetical sort
 
 ### Changed
 ### Deprecated
