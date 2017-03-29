@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>{{ title }}</title>
+  {% for f in graphsrv.instance.includes.js %}
+  <script src="{{ static_url }}/{{ f.path }}" type="text/javascript"></script>
+  {% endfor %}
+  {% for f in graphsrv.instance.includes.css %}
+  <link rel="stylesheet" href="{{ static_url }}/{{ f.path }}" type="text/css" />
+  {% endfor %}
+  {% block head %}
+  {% endblock %}
+</head>
+<body>
+<div id="graphsrv-overview" class="graphsrv overview {{ layout.type }}">
+
+{% block header %}
+{% endblock %}
+
+  <div class="container-fluid">
+    {% for row in layout.layout %}
+      {% include "overview.row.html" %}
+    {% endfor %}
+  </div>
+
+{% block footer %}
+{% endblock %}
+
+</div>
+</body>
+</html>
