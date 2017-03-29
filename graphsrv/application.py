@@ -142,6 +142,8 @@ class GraphServ(vodka.app.WebApplication):
         super(GraphServ, self).setup()
         self.layout_last_sync = 0
         graphsrv.group.add_all(self.get_config("groups"))
+        self.wsgi_plugin.set_route("/view/<layout>/<source>", self.view, methods=["GET","POST"])
+
 
     def data(self, source):
         data, _ = graphsrv.group.get_from_path(source)
@@ -166,8 +168,17 @@ class GraphServ(vodka.app.WebApplication):
 
         return self.layouts
 
+    def view(self, layout, source):
+        return self._overview_view(layout, source)
 
     def overview_view(self):
+        return self._overview_view(
+            request.args.get("layout"),
+            request.args.get("source")
+        )
+
+
+    def _overview_view(self, layout_name, source_name):
         """
         Renders the overview which can hold several graphs
         and is built via config
@@ -177,14 +188,14 @@ class GraphServ(vodka.app.WebApplication):
         layouts = self.layouts.get("layouts")
         graphs = self.config.get("graphs")
 
-        if "layout" in request.args:
-            _layout = layouts.get(request.args["layout"])
+        if layout_name:
+            _layout = layouts.get(layout_name)
         else:
             _layout = list(layouts.values())[0]
 
         layout = copy.deepcopy(_layout)
 
-        source = layout.get("source", request.args.get("source"))
+        source = layout.get("source", source_name)
 
         if source:
             title = layout.get("title", source)
