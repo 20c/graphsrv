@@ -277,7 +277,13 @@ graphsrv.loadGraph = function(id) {
     time_tick_size : this.graphs[id].tickSize,
     grid : { horizontal : 19 },
     colors : {
-      bgc_graph_label : 'rgba(0,0,0,0.5)'
+      textshadow_graph_label : {
+        color : '#000',
+        x : 0,
+        y : 0,
+        blur : 5
+      },
+      bgc_graph_label : 'rgba(0,0,0,0)'
     },
     __colors : { 
       bgc_container : '#fff',
