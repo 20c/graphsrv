@@ -20,7 +20,7 @@ TwentyC.widget.Chart = {
   collisionColor : 10711680,
 
   refCnt : 0,
-  
+
   // utility functions
   util : {},
 
@@ -90,7 +90,7 @@ TwentyC.widget.Chart = {
     "minute" : "%h:%i:%s",
     "second" : "%h:%i:%s"
   }
- 
+
 
 };
 
@@ -129,7 +129,7 @@ TwentyC.widget.Chart.pathImg = "/";
  * @method ExtendMenu
  * @param {String} text item label
  * @param {Function} [onclick] callback for onclick
- * @param {Function} [submenu] function that returns submenu instance (gets passed chart as argument) 
+ * @param {Function} [submenu] function that returns submenu instance (gets passed chart as argument)
  */
 
 TwentyC.widget.Chart.ExtendMenu = function(text, onclick,submenu) {
@@ -142,7 +142,7 @@ TwentyC.widget.Chart.ExtendMenu = function(text, onclick,submenu) {
 
 //#############################################################################
 
-/** 
+/**
  * Drawing tool storage
  * @class drawingTools
  * @static
@@ -185,19 +185,19 @@ TwentyC.widget.Chart.drawingTools.Register =function(tool) {
 
   TwentyC.widget.Chart.hotkeys.Register("draw_"+id, {
     name : "Draw: "+tool.prototype.name,
-    icon : tool.prototype.icon, 
+    icon : tool.prototype.icon,
     state : function(chart) {
       return chart.drawingTool && chart.drawingTool.name == tool.prototype.name;
     },
     fn : function(chart) {
-      
+
       var instance = chart.drawingTool = new tool().Init();
       instance.onDone.subscribe(function() {
         chart.EndDrawing(true);
       });
 
       chart.RenderData();
- 
+
     }
   })
 }
@@ -248,7 +248,7 @@ TwentyC.widget.Chart.hotkeys.Register =function(id, hotkey) {
 //#############################################################################
 // Core hotkeys
 
-// Toggle edit layout 
+// Toggle edit layout
 
 TwentyC.widget.Chart.hotkeys.Register("tgl_edit_layout", {
   name : TwentyC.widget.Chart.locale.edit_layout,
@@ -344,7 +344,7 @@ TwentyC.widget.Chart.indicators.Register = function(id, graph) {
  * Create an image node and set source on it
  * @method Img
  * @param {String} source
- * @param {String} altText 
+ * @param {String} altText
  * @param {Boolean} independentPath if true TwentyC.widget.Chart.pathImg will NOT be prepended to source
  * @returns {HTMLImg Element} the image element that was created
  */
@@ -381,7 +381,7 @@ TwentyC.util.Img = function(source, altText, independentPath) {
 
 var Graph = TwentyC.widget.Chart.widget.Graph = function() {};
 
-/** 
+/**
  * Initialize the graph object, creating properties
  * and event handlers, this function is also mapped to Init(), if you're
  * extending this object, you should override Init and call InitGraph() from
@@ -391,7 +391,7 @@ var Graph = TwentyC.widget.Chart.widget.Graph = function() {};
  * @returns {TwentyC.widget.Chart.widget.Graph} self
  */
 
-Graph.prototype.Init = 
+Graph.prototype.Init =
 Graph.prototype.InitGraph = function(config) {
 
   this.type = "graph";
@@ -417,7 +417,7 @@ Graph.prototype.InitGraph = function(config) {
    * @default undefined
    */
 
-  /** 
+  /**
    * Force top Y axis limit
    * @property forceMaxY
    * @type Number
@@ -449,7 +449,7 @@ Graph.prototype.InitGraph = function(config) {
    */
 
   this.custom_x_axis = false;
- 
+
   /**
    * Stores the plot data inside this graph
    * @property data
@@ -457,9 +457,9 @@ Graph.prototype.InitGraph = function(config) {
    */
 
   this.data = [];
-  
+
   /**
-   * Holds all the graphs that are overlayed onto this graph. 
+   * Holds all the graphs that are overlayed onto this graph.
    *
    * Storage structure is as follows
    *
@@ -471,16 +471,16 @@ Graph.prototype.InitGraph = function(config) {
    * @property overlayed
    * @type Array
    */
-  
+
   this.overlayed = [];
-  
+
   /**
    * Holds all the drawings on this graph
    *
    * @property drawings
    * @type Array
    */
-  
+
   this.drawings = [];
 
   /**
@@ -501,14 +501,14 @@ Graph.prototype.InitGraph = function(config) {
    */
 
   this.price_format = null;
-  
+
   /**
    * Tick size for y axis values
    * @property tick_size
    * @type Number
    * @default 1
    */
-  
+
   this.tick_size = 1;
 
   /**
@@ -530,7 +530,7 @@ Graph.prototype.InitGraph = function(config) {
    */
 
   this.dont_sync_parent_scale = false;
-  
+
   /**
    * Zoom level of the y axis. Means graph view will be zoomed out n ticks
    * on the y axis both above and below the current y axis value.
@@ -538,7 +538,7 @@ Graph.prototype.InitGraph = function(config) {
    * @type Number
    * @default 10
    */
-  
+
   this.y_zoom = 10;
 
   /**
@@ -554,64 +554,64 @@ Graph.prototype.InitGraph = function(config) {
    * @property minY
    * @type Number
    */
-  
+
   this.minY = 99999999999999;
-  
+
   /**
    * Max value for the x axis (x axis right value). Will be automatically calculated
    * @property maxX
    * @type Number
    */
-  
+
   this.maxX = 0;
-  
+
   /**
    * Min value for the x axis (x axis left value). Will be automatically calculated
    * @property minX
    * @type Number
    */
-  
+
   this.minX = null;
 
   /**
    * Amount of plot points accross the x axis
-   * Only set after graph has been added to a chart 
+   * Only set after graph has been added to a chart
    * @property plotPointsX
    * @type Number
    */
 
   this.plotPointsX = 0;
-    
+
    /**
    * Amount of plot points across the y axis
-   * Only set after graph has been added to a chart 
+   * Only set after graph has been added to a chart
    * @property plotPointsY
    * @type Number
    */
-    
+
   this.plotPointsY = 0;
 
   /**
    * plot point width , note that this is not bar width, for bar width check this.barW
-   * Only set after graph has been added to a chart 
+   * Only set after graph has been added to a chart
    * @property plotPointW
    * @type Number
    */
 
   this.plotPointW = 0;
-    
+
   /**
    * plot point height
-   * Only set after graph has been added to a chart 
+   * Only set after graph has been added to a chart
    * @property plotPointH
    * @type Number
    */
-  
+
   this.plotPointH = 0;
-    
+
   /**
    * bar width - 75% of this.plotPointW
-   * Only set after graph has been added to a chart 
+   * Only set after graph has been added to a chart
    * @property barW
    * @type Number
    */
@@ -620,16 +620,16 @@ Graph.prototype.InitGraph = function(config) {
 
   /**
    * graph width in pixels
-   * Only set after graph has been added to a chart 
+   * Only set after graph has been added to a chart
    * @property width
    * @type Number
    */
 
   this.width = 0;
-  
+
   /**
    * graph height in pixels
-   * Only set after graph has been added to a chart 
+   * Only set after graph has been added to a chart
    * @property height
    * @type Number
    */
@@ -638,7 +638,7 @@ Graph.prototype.InitGraph = function(config) {
 
   /**
    * graph x offset in pixels (absolute to chart container)
-   * Only set after graph has been added to a chart 
+   * Only set after graph has been added to a chart
    * @property x
    * @type Number
    */
@@ -647,16 +647,16 @@ Graph.prototype.InitGraph = function(config) {
 
   /**
    * graph y offset in pixels (absolute to chart container)
-   * Only set after graph has been added to a chart 
+   * Only set after graph has been added to a chart
    * @property y
    * @type Number
    */
 
   this.y = 0;
-  
+
   /**
    * graph x offset + width in pixels (absolute to chart container)
-   * Only set after graph has been added to a chart 
+   * Only set after graph has been added to a chart
    * @property r
    * @type Number
    */
@@ -665,7 +665,7 @@ Graph.prototype.InitGraph = function(config) {
 
   /**
    * graph y offset + height in pixels (absolute to chart container)
-   * Only set after graph has been added to a chart 
+   * Only set after graph has been added to a chart
    * @property b
    * @type Number
    */
@@ -723,10 +723,10 @@ Graph.prototype.InitGraph = function(config) {
    * @param {Chart} chart
    * @param {Graph} graph
    */
-  
+
   this.onRemoveFromChart = new Y.util.CustomEvent("onRemoveFromChart");
 
- 
+
   /**
    * Overrideable draw function. Will be called for each plot point to be drawn.
    * You only need to override this if you dont want to make use of the default
@@ -741,13 +741,13 @@ Graph.prototype.InitGraph = function(config) {
    * @param {Number} startIndex index of the first plot point
    * @param {Number} endIndex index of the last plot point
    */
-  
+
   this.draw = function(chart, graph, plot, prev, plotName, plotIndex, start, end) {
     var renderFncName = graph.config.plots[plotName].renderFncName;
     if(chart[renderFncName])
       chart[renderFncName](graph, plot, prev, plotName, plotIndex, start, end);
     else if(graph[renderFncName]) {
-      graph[renderFncName](graph, plot, prev, plotName, plotIndex, start, end); 
+      graph[renderFncName](graph, plot, prev, plotName, plotIndex, start, end);
     } else {
       console.log("Unknown graph render function: ", renderFncName);
     }
@@ -760,7 +760,7 @@ Graph.prototype.InitGraph = function(config) {
    */
 
   this.config = {
-    
+
     /**
      * Defines the opacity value of the graph.
      * @config opacity
@@ -779,23 +779,23 @@ Graph.prototype.InitGraph = function(config) {
      */
 
     show_info_labels : true,
-    
+
     /**
      * Holds the config for each plot, indexed by plot name
      * @config plots
      * @type Object
      */
-    
+
     plots : {
-      
+
       /**
        * Holds the config for the main plot. This is nested in the plots object literal.
        * @config plots.main
        * @type Object
        */
-      
+
       main : {
-        
+
         /**
          * Set to false if you want to show a marker for this plot on the y axis
          * @config plots.main.mark_disabled
@@ -812,7 +812,7 @@ Graph.prototype.InitGraph = function(config) {
          * @type Text
          * @default undefined
          */
-        
+
         /**
          * Color config for the main plot. This is nested in plots.main. Note that these colors are only relevant as long as you
          * do not override the graph's draw() function to substitute it with your own. Of course you can always make your individual draw
@@ -838,44 +838,44 @@ Graph.prototype.InitGraph = function(config) {
          */
 
         fill : true,
- 
-        
+
+
         colors : {
-          
+
           /**
            * Main plot color for negative representation. Can be any valid HTML color string.
            * @config plots.main.colors.negative
            * @type String
            * @default 'red'
            */
-          
+
           negative : "red",
-          
+
           /**
            * Main plot color for positive representation. Can be any valid HTML color string.
            * @config plots.main.colors.positive
            * @type String
            * @default 'lime'
            */
-          
+
           positive : "lime",
-          
+
           /**
            * Main plot color for negative representation of borders. Can be any valid HTML color string.
            * @config plots.main.colors.border_negative
            * @type String
            * @default '#FF8361'
            */
- 
+
           border_negative : "#FF8361",
-          
+
           /**
            * Main plot color for positive representation of borders. Can be any valid HTML color string.
            * @config plots.main.colors.border_positive
            * @type String
            * @default '#E9FF59'
            */
- 
+
           border_positive : "#E9FF59",
 
           /**
@@ -884,38 +884,38 @@ Graph.prototype.InitGraph = function(config) {
            * @type String
            * @default '#FFF'
            */
- 
+
           border_neutral : "#FFF",
 
-         
+
           /**
            * Main plot color for neutral representation. Can be any valid HTML color string
            * @config plots.main.colors.neutral
            * @type String
            * @default 'white'
            */
-          
+
           neutral : "white",
-          
+
           /**
            * Main plot background color for y axis marker. Can be any valid HTML color string
            * @config plots.main.colors.mark_bgc
            * @type String
            * @default '#999999'
            */
-          
+
           mark_bgc : "#999",
-          
+
           /**
            * Main plot font color for the y axis marker. Can be any valid HTML color string
            * @config plots.main.colors.mark_fc
            * @type String
            * @default "#000"
            */
-          
+
           mark_fc : "#000"
         },
-        
+
         /**
          * Specify off of which property to read the value for the main plot's plot points.
          * @config plots.main.plotValue
@@ -924,11 +924,11 @@ Graph.prototype.InitGraph = function(config) {
          */
 
         plotValue : "price",
-        
+
         /**
          * The render function name to use for the main plot. Note that this is only relevant as long as you do not
          * override the graph's draw() functionto substitute with your own.
-         * 
+         *
          * Default valid render functions:
          *
          * 1. RenderLine
@@ -941,9 +941,9 @@ Graph.prototype.InitGraph = function(config) {
          * @type String
          * @default "RenderLine"
          */
-        
+
         renderFncName : "RenderLine",
-          
+
         /**
          * Main plot line thickness (for rendering options where it applies)
          * @config plots.main.line_thickness
@@ -952,9 +952,9 @@ Graph.prototype.InitGraph = function(config) {
          */
 
         line_thickness : 1
- 
+
       }
-    } 
+    }
   };
 
   /**
@@ -993,10 +993,10 @@ Graph.prototype.InitGraph = function(config) {
    * that tracks price, high, low, open and close we could set up something like this.
    *
    *     this.labels = {
-   *       
+   *
    *       // price label
    *       price : {
-   *         // specify how to color the label, use the predefined PosOrNeg function 
+   *         // specify how to color the label, use the predefined PosOrNeg function
    *         // that colors positive or negative numbers accordingly
    *         fnColor : this.PosOrNeg,
    *
@@ -1189,12 +1189,12 @@ Graph.prototype.InitGraph = function(config) {
         return graph.lineThickness
       }
     }
- 
+
     }
     },
     show_info_labels : {
       get : function() { return graph.config.show_info_labels },
-      set : function(ignore,v) { 
+      set : function(ignore,v) {
         graph.config.show_info_labels = v ? true : false;
       },
       label : TwentyC.widget.Chart.locale.show_labels,
@@ -1202,7 +1202,7 @@ Graph.prototype.InitGraph = function(config) {
     },
     opacity : {
       get : function() { return graph.config.opacity },
-      set : function(ignore,v) { 
+      set : function(ignore,v) {
         v = parseFloat(v);
         if(v > 1)
           v = 1;
@@ -1220,22 +1220,22 @@ Graph.prototype.InitGraph = function(config) {
    * @property plotName
    * @type {Object}
    */
-  
+
   this.plotName = {};
 
   /*
    * Handle drawing of the y axis marker of a plot - if its enabled
    */
-  
+
   this.onDrawCurrent.subscribe(function(e,d) {
     var chart = d[0].chart;
     var plot = d[0].plot;
     var graph = d[0].graph;
     var plotName = d[0].plotName;
     var cfg = graph.config.plots[plotName]
-    
+
     /*if y axis marker is disabled via config, bail */
-   
+
     if(cfg.mark_disabled)
       return;
 
@@ -1249,11 +1249,11 @@ Graph.prototype.InitGraph = function(config) {
     // render marker
     chart.RenderPriceMark(
       graph,
-      plot[cfg.plotValue], 
+      plot[cfg.plotValue],
       label,
       cfg.colors.mark_bgc,
       cfg.colors.mark_fc
-    ); 
+    );
   });
 
 
@@ -1273,9 +1273,9 @@ Graph.prototype.ResizePaneTouched = function() {
   var C = this.chart;
   var ins = TwentyC.util.Inside;
 
-  if(this.name == "main") 
+  if(this.name == "main")
     return 0;
-  
+
   if(ins(C.mouseX, C.mouseY, {
     x : this.x,
     y : this.y,
@@ -1295,7 +1295,7 @@ Graph.prototype.ResizePaneTouched = function() {
   }
 
   return 0;
- 
+
 }
 
 /******************************************************************************
@@ -1344,7 +1344,7 @@ Graph.prototype.GetDataForPlotName = function(name) {
 };
 
 /******************************************************************************
- * Set up a new plot. Use this if you want to do a multi plot graph or just 
+ * Set up a new plot. Use this if you want to do a multi plot graph or just
  * dont want to use the default main plot
  * @method NewPlot
  * @param {String} id unique (to this graph) plot id
@@ -1356,7 +1356,7 @@ Graph.prototype.GetDataForPlotName = function(name) {
 Graph.prototype.NewPlot = function(id, name, plotValue, cloneFrom) {
   if(!cloneFrom)
     var cloneFrom = "main";
- 
+
   var plot = {};
   TwentyC.util.UpdateObject(plot, this.config.plots[cloneFrom]);
   plot.plotValue = plotValue;
@@ -1382,7 +1382,7 @@ Graph.prototype.PrefsColorAdd = function(plot, id, label) {
 /******************************************************************************
  * Return an array holding valid Render styles and their respective render
  * functions for the specified plot
- * 
+ *
  *     var styles = graph.RenderStyles("main")
  *
  *     [
@@ -1393,7 +1393,7 @@ Graph.prototype.PrefsColorAdd = function(plot, id, label) {
  *
  * @method RenderStyles
  * @param {String} plot plot id
- * @returns {Array} render styles 
+ * @returns {Array} render styles
  */
 
 Graph.prototype.RenderStyles = function(plot) {
@@ -1473,7 +1473,7 @@ Graph.prototype.ParentIndex = function() {
 /******************************************************************************
  * Return if this graph has other graphs overlayed or not
  * @method HasOverlay
- * @returns Boolean 
+ * @returns Boolean
  */
 
 Graph.prototype.HasOverlay = function(graph) {
@@ -1488,7 +1488,7 @@ Graph.prototype.HasOverlay = function(graph) {
 /******************************************************************************
  * Remove a drawing from the graph.
  * @method RemoveDrawing
- * @param {TwentyC.widget.Chart.widget.DrawingTool} drawing drawing to remove 
+ * @param {TwentyC.widget.Chart.widget.DrawingTool} drawing drawing to remove
  */
 
 Graph.prototype.RemoveDrawing = function(drawing) {
@@ -1508,7 +1508,7 @@ Graph.prototype.RemoveDrawing = function(drawing) {
 Graph.prototype.SetParent = function(par) {
   if(!par)
     return;
-   
+
   // check if graph type already exists as overlay
   // for parent, bail if so
 
@@ -1556,7 +1556,7 @@ Graph.prototype.Id = function() {
 };
 
 /******************************************************************************
- * Re-calculate the graph's plot points. 
+ * Re-calculate the graph's plot points.
  * @method RedoCalc
  */
 
@@ -1585,15 +1585,15 @@ Graph.prototype.Update = function(i, plot, fireEvents) {
   if(!this.custom_x_axis) {
     if(i >= this.data.length) {
       this.data.push(plot);
-    
+
       if(fireEvents) {
-        
+
         this.chart.onBarOpen.fire({
           chart : this.chart,
           graph : this,
           bar : this.data[this.data.length-1]
         });
-        
+
         if(this.data.length > 1) {
           this.chart.onBarClose.fire({
             chart : this.chart,
@@ -1603,7 +1603,7 @@ Graph.prototype.Update = function(i, plot, fireEvents) {
         }
 
       }
-    
+
     } else {
       this.data[i] = plot;
     }
@@ -1656,14 +1656,14 @@ Graph.prototype.NewBar = function(chart, source, i, fireEvents) {
   }
 
   try {
-    
+
     if(this.on_open) {
       this.Update(
         i,
         this.on_open(chart, i, i>0 ? source[i-1] : null, source[i], i>0 ? this.data[i-1] : null),
         fireEvents
       )
-    } 
+    }
     if(this.on_close && i > 0) {
       this.Update(
         i,
@@ -1750,7 +1750,7 @@ Graph.prototype.Calc = function() {};
 
 
 /******************************************************************************
- * Format a value on the x axis. This function is only relevant with 
+ * Format a value on the x axis. This function is only relevant with
  * custom_x_axis enabled and will not be used otherwise. Override this to
  * do your formatting when you enable custom_x_axis
  * enabled
@@ -1821,7 +1821,7 @@ Graph.prototype.PosOrNeg = function(a, b) {
 };
 
 /******************************************************************************
- * Returns the difference between to numbers. With a being treated as the 
+ * Returns the difference between to numbers. With a being treated as the
  * previous number and be being treated as the current number. This can be
  * used when setting up graph labels.
  * @method Diff
@@ -1846,32 +1846,32 @@ Graph.prototype.RenderLabel = function(C, x, y) {
   var i, a, b, lbl;
 
   C.Rect(
-    x, 
-    y, 
-    this.chart.layout.graphLabel.w, 
-    this.chart.layout.graphLabel.h, 
+    x,
+    y,
+    this.chart.layout.graphLabel.w,
+    this.chart.layout.graphLabel.h,
     colors.bgc_graph_label
   );
- 
+
   w = C.Text(
-    this.Title()+" ", 
-    colors.f_graph_label, 
-    x, 
-    y, 
-    "bold 12px arial", 
-    "left", 
-    null, 
+    this.Title()+" ",
+    colors.f_graph_label,
+    x,
+    y,
+    "bold 12px arial",
+    "left",
+    null,
     true
   );
   x+=w.width;
   // render values for each plot
-  
+
   if(this.custom_x_axis) {
     var idx = Math.floor(this.start + (
       (this.chart.mouseX - this.x) /
       this.plotPointW
     ));
-  } else 
+  } else
     var idx = this.chart.SelectedBar();
 
 
@@ -1881,7 +1881,7 @@ Graph.prototype.RenderLabel = function(C, x, y) {
 
   if(!gd || !this.chart.source.length)
     return;
-    
+
   for(r in gd.plots) {
     gdp = gd.plots[r];
     gdx = (prev ? prev.plots[r] : {}) || {};
@@ -1899,7 +1899,7 @@ Graph.prototype.RenderLabel = function(C, x, y) {
     // if high, low, open and close are defined show those
     for(i in this.labels) {
       if(typeof gdp[i] != "undefined" || this.labels[i].fnCreate) {
-        
+
         if(this.labels[i].fnCreate) {
           b = this.labels[i].fnCreate(gdp, gdx, this)
           a = 0;
@@ -1912,14 +1912,14 @@ Graph.prototype.RenderLabel = function(C, x, y) {
             b = gdp[i];
           }
         }
-        
+
         if(this.labels[i].fnColor)
           color = this.labels[i].fnColor(a, b, gdx, gdp, this);
         else
           color = "neutral";
 
         b = this.FormatTickValue(
-          b, 
+          b,
           (this.labels[i].unvalidated || this.config.plots[r].unvalidated),
           true
         );
@@ -1928,12 +1928,12 @@ Graph.prototype.RenderLabel = function(C, x, y) {
         lbl = this.labels[i].fnFormat ? this.labels[i].fnFormat(b) : b;
 
         w = C.Text(
-          this.labels[i].title+lbl, 
-          g_colors[color], 
-          x, 
-          y+2, 
-          "bold 10px arial", 
-          "left", 
+          this.labels[i].title+lbl,
+          g_colors[color],
+          x,
+          y+2,
+          "bold 10px arial",
+          "left",
           null,
           true
         );
@@ -1945,7 +1945,7 @@ Graph.prototype.RenderLabel = function(C, x, y) {
 
   }
 
- 
+
 }
 
 //#############################################################################
@@ -2038,7 +2038,7 @@ Volume.prototype.InitVolume = function(config) {
   this.y_zoom = 0;
   this.title = "Volume";
   this.overlay = "main";
-  
+
   this.config.color_style = "diff";
 
   this.config.opacity = 0.3;
@@ -2069,7 +2069,7 @@ Volume.prototype.InitVolume = function(config) {
       return graph.color_styles
     }
   };
- 
+
 
   this.labels = {
     price : {
@@ -2100,14 +2100,14 @@ Volume.prototype.InitVolume = function(config) {
       } else if(current.open > current.close) {
         colors.primary = cfg.colors.negative;
         colors.secondary = cfg.colors.border_negative;
-      } else { 
+      } else {
         colors.primary = cfg.colors.neutral;
         colors.secondary = cfg.colors.border_neutral;
       }
     }
-    
+
   }, this);
-  
+
   return this;
 };
 
@@ -2117,7 +2117,7 @@ Volume.prototype.calc = function(chart, i, prev, data) {
       main : {
         close : data.close,
         open : data.open,
-        time : data.time, 
+        time : data.time,
         price : data.volume
       }
     }
@@ -2173,7 +2173,7 @@ DTool.prototype.InitDrawingTool = function(config) {
   this.type = "drawing";
 
   this.collisionColor = "#"+(TwentyC.widget.Chart.collisionColor++).toString(16);
-  
+
   /**
    * captured mouse coordinates (eg. user clicks)
    * everytime a user clicks a coordinate is added
@@ -2210,7 +2210,7 @@ DTool.prototype.InitDrawingTool = function(config) {
    */
 
   this.config = {
-    
+
     /**
      * opacity level (float), 0 = none, 1 = full
      * @config opacity
@@ -2226,7 +2226,7 @@ DTool.prototype.InitDrawingTool = function(config) {
      */
 
     colors : {
-      
+
       /**
        * mark font color
        * @config colors.mark_f
@@ -2303,9 +2303,9 @@ DTool.prototype.InitDrawingTool = function(config) {
 
 /**
  * The drawing logic, dummy function, should be overwritten by
- * the object that extends this 
+ * the object that extends this
  * @method Draw
- * @param {TwentyC.widget.Canvas} canvas 
+ * @param {TwentyC.widget.Canvas} canvas
  * @param {Array} coord set of coordinates, eg [[0,1],[1,2],...]
  */
 
@@ -2343,7 +2343,7 @@ DTool.prototype.Capture = function(x, y, update) {
 DTool.prototype.Distance = function(a,b) {
   var graph = this.graph;
   var chart = graph.chart;
- 
+
   var start = this.capture[a];
   var end = this.capture[b];
 
@@ -2365,10 +2365,10 @@ DTool.prototype.Distance = function(a,b) {
 DTool.prototype.LinePoint = function(n, distance) {
   if(!this.graph)
     return { x: 0, y : 0};
-  
+
   var graph = this.graph;
   var chart = graph.chart;
- 
+
   var start = this.capture[n];
   var end = this.capture[n+1];
 
@@ -2423,7 +2423,7 @@ DTool.prototype.Move = function(x,y,mouseX,mouseY) {
   var chart = this.graph.chart,g;
   var graph = this.graph;
   var cx = graph.custom_x_axis;
-  
+
   if(point === null && c.length) {
     var mX, dX = (c[0][0]-x), dY = c[0][1];
 
@@ -2438,22 +2438,22 @@ DTool.prototype.Move = function(x,y,mouseX,mouseY) {
           g = TwentyC.util.Find(chart.source, a[0], true, "time");
         } else {
           g = TwentyC.util.Find(
-            graph.data, a[0], 
-            true, 
-            null, 
-            function(d) { 
+            graph.data, a[0],
+            true,
+            null,
+            function(d) {
               return d.plots[cx.plot][cx.field];
-            } 
+            }
           );
         }
 
         if((g-k) < 0) {
-          a[0] = cx ? 
-                 graph.GetValueForPlotName(0,cx.plot,cx.field) : 
+          a[0] = cx ?
+                 graph.GetValueForPlotName(0,cx.plot,cx.field) :
                  chart.source[0].time;
         } else if((g-k) > chart.source.length-1) {
-          a[0] = cx ? 
-                 graph.GetValueForPlotName(graph.data.length-1, cx.plot, cx.field) : 
+          a[0] = cx ?
+                 graph.GetValueForPlotName(graph.data.length-1, cx.plot, cx.field) :
                  chart.source[chart.source.length-1].time;
         } else {
           a[0] = cx ?
@@ -2533,7 +2533,7 @@ TwentyC.util.Intersect = function(x1,y1,x2,y2,x3,y3,x4,y4) {
         }
 
         return true;
-  
+
 };
 
 
@@ -2541,7 +2541,7 @@ DTool.prototype.InArea = function(x, y, r, b) {
   var i, a, j, c = this.capture, L = this.graph, w = this.graph.chart.layout.chartInner.w;
 
   var chart = L.chart;
-  
+
   // cycle through all coordinates
   for(i in c) {
     a = c[i];
@@ -2649,7 +2649,7 @@ DTool.prototype.EditorCoords = function(w, h) {
 }
 
 /**
- * Return object with changer button coordinates for the drawing made with 
+ * Return object with changer button coordinates for the drawing made with
  * this tool.
  * @method ChangerCoords
  * @param {Number} w button width (px)
@@ -2859,7 +2859,7 @@ VLine.prototype.name = "Vertical Line";
 VLine.prototype.id = "DrawingToolVerticalLine";
 VLine.prototype.icon = function(){return TwentyC.widget.Chart.pathImg+"/ico-vertical-line.png";};
 
-VLine.prototype.Init = 
+VLine.prototype.Init =
 VLine.prototype.InitVLine = function(config) {
   var cnf = {
   }
@@ -2868,7 +2868,7 @@ VLine.prototype.InitVLine = function(config) {
 
   this.yAbsolute = true;
   this.noClip = true;
-  
+
   this.captureLength = 1;
   return this;
 
@@ -2951,7 +2951,7 @@ TLine.prototype.name = "Trend Line";
 TLine.prototype.id = "DrawingToolTrendLine";
 TLine.prototype.icon = function(){return TwentyC.widget.Chart.pathImg+"/ico-trend-line.png";};
 
-TLine.prototype.Init = 
+TLine.prototype.Init =
 TLine.prototype.InitTLine = function(config) {
   var cnf = {
     line_width : 3,
@@ -2998,7 +2998,7 @@ TwentyC.widget.Chart.drawingTools.Register(TLine);
 /**
  * Basic chart class, all charts should extend this class, has all the
  * core funcionality for managing and rendering (plotting) chart data
- * @class Chart 
+ * @class Chart
  * @namespace TwentyC.widget.Chart.widget
  * @constructor
  */
@@ -3012,7 +3012,7 @@ var Chart = TwentyC.widget.Chart.widget.Chart = function() {};
  * @param {Object} config config object holding config key, value pairs
  */
 
-Chart.prototype.Init = 
+Chart.prototype.Init =
 Chart.prototype.InitChart = function(config) {
 
   /**
@@ -3025,7 +3025,7 @@ Chart.prototype.InitChart = function(config) {
    */
 
   this.inactive = false;
-  
+
   /**
    * Holds various click and mouse over zone coordinates
    */
@@ -3051,7 +3051,7 @@ Chart.prototype.InitChart = function(config) {
    */
 
   this.hotkeys = {};
-  
+
   /**
    * html elements created by this.Build() are
    * stored in this object by their name
@@ -3061,15 +3061,15 @@ Chart.prototype.InitChart = function(config) {
   this.elements = {};
 
   /**
-   * graphs created by this.AddGraph() are 
-   * stored in this array in their render order (top down) 
+   * graphs created by this.AddGraph() are
+   * stored in this array in their render order (top down)
    * @property graphsOrder
    * @type {Array}
    */
   this.graphsOrder = [];
 
   /**
-   * graphs created by this.AddGraph() are 
+   * graphs created by this.AddGraph() are
    * stored in this object referenced by their name
    * @property graphs
    * @type {Object}
@@ -3100,14 +3100,14 @@ Chart.prototype.InitChart = function(config) {
      * @type Array
      */
     hotkeys : [
-      "add_indicator", 
-      "tgl_edit_layout", 
+      "add_indicator",
+      "tgl_edit_layout",
       "crosshair",
       "draw_DrawingToolHorizontalLine",
       "draw_DrawingToolVerticalLine",
       "draw_DrawingToolTrendLine"
     ],
-    
+
     /**
      * Time tick size, the length of one tick on the time
      * axis (bar duration) in ms
@@ -3149,7 +3149,7 @@ Chart.prototype.InitChart = function(config) {
      */
 
     chart_region : {
-      
+
       /**
        * left position of the chart in pixels
        * @config chart_region.x
@@ -3166,7 +3166,7 @@ Chart.prototype.InitChart = function(config) {
 
       y : 5,
 
-      /** 
+      /**
        * right position of the chart in pixels
        * @config chart_region.r
        * @type {Number}
@@ -3180,7 +3180,7 @@ Chart.prototype.InitChart = function(config) {
        * @type {Number}
        */
 
-      b : 20 
+      b : 20
     },
 
     /**
@@ -3190,7 +3190,7 @@ Chart.prototype.InitChart = function(config) {
      */
 
     instrument : {
-      
+
       /**
        * Define instrument tick size
        * @config instrument.tick_size
@@ -3226,7 +3226,7 @@ Chart.prototype.InitChart = function(config) {
      */
 
     grid : {
-      
+
       /**
        * Toggle grid visibility over the chart background
        * @config grid.visible
@@ -3372,7 +3372,7 @@ Chart.prototype.InitChart = function(config) {
      */
 
     colors : {
-      
+
       /**
        * Background color of the container holding the chart
        * @config colors.bgc_container
@@ -3386,15 +3386,15 @@ Chart.prototype.InitChart = function(config) {
        * @config colors.bgc_chart
        * @type {String}
        */
-      
+
       bgc_chart : "#333",
 
       /**
-       * Border color of the chart 
+       * Border color of the chart
        * @config colors.bdc_chart
        * @type {String}
        */
-      
+
       bdc_chart : "#999",
 
       /**
@@ -3402,7 +3402,7 @@ Chart.prototype.InitChart = function(config) {
        * @config colors.grid
        * @type {String}
        */
-      
+
       grid : "#555",
 
       /**
@@ -3418,7 +3418,7 @@ Chart.prototype.InitChart = function(config) {
        * @config colors.crosshair_f
        * @type {String}
        */
-      
+
       crosshair_f : "#000",
 
       /**
@@ -3429,7 +3429,7 @@ Chart.prototype.InitChart = function(config) {
 
       bgc_graph_label : "rgba(0,0,0,0.25)",
 
-      /** 
+      /**
        * Font color for graph info box
        * @config colors.f_graph_label
        * @type {String}
@@ -3494,7 +3494,7 @@ Chart.prototype.InitChart = function(config) {
        */
 
       disabled : false,
-      
+
       /**
        * Enable indicator menu
        * @config toolbar.indicators
@@ -3510,7 +3510,7 @@ Chart.prototype.InitChart = function(config) {
        */
 
       edit_mode : true,
- 
+
       /**
        * Enable drawing tools
        * @config toolbar.drawing_tools
@@ -3535,7 +3535,7 @@ Chart.prototype.InitChart = function(config) {
    */
 
   this.onMouseDown = new Y.util.CustomEvent("onMouseDown");
-  
+
   /**
    * Fires when the mouse button is released from the chart
    * @event onMouseUp
@@ -3545,7 +3545,7 @@ Chart.prototype.InitChart = function(config) {
    */
 
   this.onMouseUp = new Y.util.CustomEvent("onMouseUp");
-  
+
   /**
    * Fires when the mouse pointer is moved over the chart
    * @event onMouseMove
@@ -3557,7 +3557,7 @@ Chart.prototype.InitChart = function(config) {
   this.onMouseMove = new Y.util.CustomEvent("onMouseMove");
 
   /**
-   * Fires when a bar opens on any graph 
+   * Fires when a bar opens on any graph
    * @event onBarOpen
    * @param {Chart} chart
    * @param {Graph} graph
@@ -3565,9 +3565,9 @@ Chart.prototype.InitChart = function(config) {
    */
 
   this.onBarOpen = new Y.util.CustomEvent("onBarOpen");
-  
+
   /**
-   * Fires when a bar closes on any graph 
+   * Fires when a bar closes on any graph
    * @event onBarClose
    * @param {Chart} chart
    * @param {Graph} graph
@@ -3602,7 +3602,7 @@ Chart.prototype.InitChart = function(config) {
    */
 
   this.onPrefsSubmit = new Y.util.CustomEvent("onPrefsSubmit");
-  
+
   /**
    * Fires when an imput field is created for preferences
    * @event onPrefsCreateInput
@@ -3610,7 +3610,7 @@ Chart.prototype.InitChart = function(config) {
    * @param {String} type input type
    * @param {Element} input input element
    */
-  
+
   this.onPrefsCreateInput = new Y.util.CustomEvent("onPrefsCreateInput");
 
   /**
@@ -3649,8 +3649,8 @@ Chart.prototype.InitChart = function(config) {
    */
 
   this.onRemoveHotkey = new Y.util.CustomEvent("onRemoveHotkey");
- 
-  
+
+
   this.requireRender = 3;
   this.graphNum = 0;
 
@@ -3661,7 +3661,7 @@ Chart.prototype.InitChart = function(config) {
   /*
    * add main graph
    */
- 
+
   this.AddGraph("main", new TwentyC.widget.Chart.widget.MarketDataGraph().Init(this.config.instrument.symbol));
   this.AddGraph("volume", new TwentyC.widget.Chart.widget.VolumeGraph().Init());
 
@@ -3720,7 +3720,7 @@ Chart.prototype.BuildChart = function() {
     return;
 
   var el = this.elements, c, C;
-  
+
   this.canvasDict = {};
 
   el.container = document.createElement("div");
@@ -3738,7 +3738,7 @@ Chart.prototype.BuildChart = function() {
   el.container.style.position = "relative";
 
   el.container.className = "twentychart";
-  
+
   var n = 0;
   for(c in this.canvasDict) {
     C = this.canvasDict[c];
@@ -3759,7 +3759,7 @@ Chart.prototype.BuildChart = function() {
   var C = this;
 
   // build toolbar
-  
+
   el.toolbar = document.createElement('div');
   el.toolbar.className = "toolbar";
   this.element.appendChild(el.toolbar);
@@ -3786,8 +3786,8 @@ Chart.prototype.BuildChart = function() {
   el.prefs = document.createElement('div');
 
   // make sure mouse events on the prefs pane dont get sent to the chart
- 
-  var cancelEvent = function(e) { 
+
+  var cancelEvent = function(e) {
     Y.util.Event.stopPropagation(e);
   }
 
@@ -3798,7 +3798,7 @@ Chart.prototype.BuildChart = function() {
   this.element.appendChild(el.prefs);
 
   // set up mouse events
-  
+
   var ins = TwentyC.util.Inside;
 
   // various menus
@@ -3807,7 +3807,7 @@ Chart.prototype.BuildChart = function() {
   this.contextMenu = new TwentyC.widget.Chart.widget.ChartContextMenu(this);
   this.hotkeyMenu = new TwentyC.widget.Chart.widget.HotkeyMenu(this, function(e, ev, id){
      C.ToolbarAddHotkey(id);
-   
+
   });
 
   Y.util.Event.addListener(
@@ -3821,7 +3821,7 @@ Chart.prototype.BuildChart = function() {
       var target = C.canvasDict.plot.GetCollisionColor(mouseX, mouseY, 4, C.graphs);
       if(!target)
         var target = C.canvasDict.plot.GetCollisionColor(mouseX, mouseY, 4, graph.drawings);
-      
+
       if(target) {
         if(target.type == "graph") {
           C.PrefsBuild(target, target.prefs, target.Title(), true);
@@ -3843,13 +3843,13 @@ Chart.prototype.BuildChart = function() {
     eventNode,
     "mousewheel",
     function(e) {
-      
+
       if(e.wheelDelta)
         var delta = e.wheelDelta / 120;
       else if(e.detail)
         var delta = -e.detail /3
       else
-        return 
+        return
 
       if(TwentyC.widget.Chart.mousewheel && !TwentyC.widget.Chart.mousewheel.validate(e))
         return;
@@ -3872,7 +3872,7 @@ Chart.prototype.BuildChart = function() {
         break;
         case "resize-y":
           var graph = C.TouchedGraph(C.mouseX, C.mouseY);
-          
+
           if(!graph)
             return;
 
@@ -3899,8 +3899,8 @@ Chart.prototype.BuildChart = function() {
       var R = C.GetRegion();
       var mouseX = Y.util.Event.getPageX(e)-R.x;
       var mouseY = Y.util.Event.getPageY(e)-R.y;
-      var b = C.onMouseDown.fire({ 
-        e : e, 
+      var b = C.onMouseDown.fire({
+        e : e,
         x : mouseX,
         y : mouseY
       });
@@ -3919,7 +3919,7 @@ Chart.prototype.BuildChart = function() {
       /*
        * check event zones
        */
-      
+
       var i,z;
       for(i in C.EventZones.drawings) {
         z = C.EventZones.drawings[i];
@@ -3981,7 +3981,7 @@ Chart.prototype.BuildChart = function() {
           return;
         }
       } else if(C.editMode) {
-        
+
         /*
          * Graph resizing
          */
@@ -4005,19 +4005,19 @@ Chart.prototype.BuildChart = function() {
         C.TglScrollDrag(1,mouseX);
 
       C.RenderMarkers();
-     
+
     }
   );
 
   Y.util.Event.addListener(
-    document.body, 
+    document.body,
     "mouseup",
     function(e) {
       var R = C.GetRegion();
       var mouseX = Y.util.Event.getPageX(e)-R.x;
       var mouseY = Y.util.Event.getPageY(e)-R.y;
-      var b = C.onMouseUp.fire({ 
-        e : e, 
+      var b = C.onMouseUp.fire({
+        e : e,
         x : mouseX,
         y : mouseY
       });
@@ -4059,7 +4059,7 @@ Chart.prototype.BuildChart = function() {
             C.drawingTool.Progress();
             if(C.drawingTool.quick_place)
               C.drawingTool.Progress();
-              
+
           } else {
             C.drawingTool.Drop();
           }
@@ -4069,14 +4069,14 @@ Chart.prototype.BuildChart = function() {
 
           return;
         }
-      } 
+      }
 
 
       C.GraphDnDDrop();
       C.TglScrollDrag(0,0);
       C.TglResizeDrag(e,0);
       C.TglResizeGraphDrag(0,0);
-      
+
       C.RenderMarkers();
       C.ToolbarUpdateHotkeys();
 
@@ -4245,7 +4245,7 @@ Chart.prototype.TglResizeDrag = function(e,b,t) {
     }
   } else if(b == "y") {
 
-   
+
     // figure out which graph is targeted for y zooming
 
     var i, graph;
@@ -4291,7 +4291,7 @@ Chart.prototype.ResizeDrag = function(e) {
       if(Math.abs(diff) > 10) {
         if(diff > 0)
           n -= 1
-        else 
+        else
           n += 1
 
         this.SetConfig({
@@ -4309,7 +4309,7 @@ Chart.prototype.ResizeDrag = function(e) {
       if(Math.abs(diff) > 10) {
         if(diff > 0)
           n -= 5
-        else 
+        else
           n += 5
 
         n = Math.max(2,n);
@@ -4317,7 +4317,7 @@ Chart.prototype.ResizeDrag = function(e) {
         this.RenderData();
         m.y = this.mouseY;
       }
- 
+
 
     }
   };
@@ -4331,7 +4331,7 @@ Chart.prototype.ResizeGraphDrag = function(e) {
     if(Math.abs(diff) > 3) {
       if(diff > 0)
         n -= (m.dir == 1 ? 5 : -5)
-      else 
+      else
         n += (m.dir == 1 ? 5 : -5)
 
       n = Math.max(35,n);
@@ -4420,13 +4420,13 @@ Chart.prototype.SetConfig = function(config) {
      */
 
     this.plotPointsX = G.x_count * G.horizontal;
-    
+
     /**
      * Amount of plot points across the y axis
      * @property plotPointsY
      * @type Number
      */
-    
+
     this.plotPointsY = G.y_count * G.vertical;
 
     /**
@@ -4436,15 +4436,15 @@ Chart.prototype.SetConfig = function(config) {
      */
 
     this.plotPointW = this.chartWidthInner / this.plotPointsX;
-    
+
     /**
      * plot point height
      * @property plotPointH
      * @type Number
      */
-    
+
     this.plotPointH = this.chartHeightInner / this.plotPointsY;
-    
+
     /**
      * bar width - 75% of this.plotPointW
      * @property barW
@@ -4481,7 +4481,7 @@ Chart.prototype.SetConfig = function(config) {
      * @property layout
      * @type Object
      */
-    
+
     this.layout = {
       chart : {
         x : R.x,
@@ -4505,9 +4505,9 @@ Chart.prototype.SetConfig = function(config) {
       x : this.layout.chartInner.x,
       y : 2,
       w : 200,
-      h : 15 
+      h : 15
     };
-    
+
     this.layout.resizeZoneX = {
       x : this.layout.chart.x,
       w : this.layout.chart.w,
@@ -4523,7 +4523,7 @@ Chart.prototype.SetConfig = function(config) {
     };
 
     if(!this.config.toolbar.disabled) {
-      
+
       var offset = TOOLBAR_HEIGHT;
       this.layout.chart.y += offset
       this.layout.chart.h -= offset;
@@ -4531,7 +4531,7 @@ Chart.prototype.SetConfig = function(config) {
       this.layout.chartInner.h -= offset;
       //this.layout.resizeZoneX.y -= offset;
       //this.layout.resizeZoneX.h = 15;
- 
+
     }
 
     if(this.config.scrollbar.enabled) {
@@ -4554,16 +4554,16 @@ Chart.prototype.SetConfig = function(config) {
 
       this.layout.resizeZoneX.y -= offset;
       this.layout.resizeZoneX.h = 15;
-        
+
       this.Scrollbar.SetLayout(
         this.layout.chart.x + sb.x_offset,
         this.config.height - offset,
         this.layout.chart.w,
         sb.height
       );
- 
+
     } else {
-      
+
       var offset = 15;
       //this.layout.chart.h -= offset;
       //this.layout.chart.b -= offset;
@@ -4572,7 +4572,7 @@ Chart.prototype.SetConfig = function(config) {
       //this.layout.resizeZoneX.y -= offset;
       this.layout.resizeZoneX.h = 15;
 
- 
+
     }
 
     for(i in this.canvasDict) {
@@ -4600,7 +4600,7 @@ Chart.prototype.SetConfig = function(config) {
 };
 
 /**
- * Handle config updates, alias: this.onConfigUpdate. 
+ * Handle config updates, alias: this.onConfigUpdate.
  * @method onConfigUpdateChart
  * @param {String} name name of the update config variable
  * @param {Mixed} oldValue old value
@@ -4628,7 +4628,7 @@ Chart.prototype.onConfigUpdateChart = function(name, oldValue, newValue) {
         render = 3;
       }
     break;
-    
+
     case "instrument.precision":
       var i, graph;
       for(i in this.graphs) {
@@ -4640,7 +4640,7 @@ Chart.prototype.onConfigUpdateChart = function(name, oldValue, newValue) {
       }
       render = 1;
     break;
-    
+
     case "instrument.price_format":
       var i, graph;
       for(i in this.graphs) {
@@ -4652,8 +4652,8 @@ Chart.prototype.onConfigUpdateChart = function(name, oldValue, newValue) {
       }
       render = 1;
     break;
- 
- 
+
+
     case "instrument.tick_size":
       var i, graph;
       for(i in this.graphs) {
@@ -4665,7 +4665,7 @@ Chart.prototype.onConfigUpdateChart = function(name, oldValue, newValue) {
       }
       render = 1;
     break;
-    
+
     case "chart_region.x":
     case "chart_region.y":
     case "chart_region.r":
@@ -4738,7 +4738,7 @@ Chart.prototype.Dock = function(element) {
 Chart.prototype.RemoveGraph = function(graph) {
   var idx = TwentyC.util.InArray(graph, this.graphsOrder)
   if(idx > -1) {
-    this.graphsOrder.splice(idx, 1); 
+    this.graphsOrder.splice(idx, 1);
   }
   if(graph.par) {
     graph.par.overlayed.splice(graph.ParentIndex(),1);
@@ -4828,7 +4828,7 @@ Chart.prototype.AddGraph = function(name, graph, position) {
     else
       this.graphsOrder.unshift(graph);
   }
- 
+
   graph.name = name;
 
   if(graph.overlay && typeof position != "number") {
@@ -4837,7 +4837,7 @@ Chart.prototype.AddGraph = function(name, graph, position) {
     // check if targeted parent graph exists
     //
     // if not add graph as normal stacked graph
-    
+
     if(this.graphs[graph.overlay]) {
       var par = this.graphs[graph.overlay];
       graph.SetParent(par);
@@ -4872,8 +4872,8 @@ Chart.prototype.AddGraph = function(name, graph, position) {
 };
 
 /**
- * Move graph to a new location, location can either be object or number. If 
- * it's a number move it to the specified point inthe graph order. If its 
+ * Move graph to a new location, location can either be object or number. If
+ * it's a number move it to the specified point inthe graph order. If its
  * an object, assume its another graph and overlay it
  * @method MoveGraph
  * @param {TwentyC.widget.Chart.widget.graph} graph instance
@@ -4885,7 +4885,7 @@ Chart.prototype.MoveGraph = function(graph, target) {
   var oldIdx = TwentyC.util.InArray(graph, this.graphsOrder);
 
   if(typeof target == "number" || target === null) {
-    
+
     // move graph to new position in order
     this.RemoveGraph(graph);
 
@@ -4899,7 +4899,7 @@ Chart.prototype.MoveGraph = function(graph, target) {
     // assume target is another graph, overlay
     //
     // check that same graph doesnt exist already
-    
+
     if(target.HasOverlay(graph))
       return;
 
@@ -4916,7 +4916,7 @@ Chart.prototype.MoveGraph = function(graph, target) {
  */
 
 Chart.prototype.ResetGraphLayout = function() {
-  
+
   var i, l=0;
 
   // adjust height
@@ -4939,7 +4939,7 @@ Chart.prototype.ResetGraphLayout = function() {
     if(graph.overlay) {
       continue;
     }
-    
+
     graph.renderXAxis = (graph.custom_x_axis || (!i || i>k));
 
     if(graph.custom_x_axis) {
@@ -4959,13 +4959,13 @@ Chart.prototype.ResetGraphLayout = function() {
       graph.renderXAxisToGraph.xAxisBottomFor = graph;
     }
 
-    
+
     if(l && graph.renderXAxis)
       totalHeight -= this.config.grid.x_axis_height
     l+=1;
 
     //console.log(graph.title, graph.renderXAxis, (graph.renderXAxisToGraph||{}).title, i, k);
-      
+
   }
 
   // get height total of graphs with custom adjusted height
@@ -5021,7 +5021,7 @@ Chart.prototype.ResetGraphLayout = function() {
     if(graph.xAxisBottomFor && this.graphsOrder[parseInt(i)+1]) {
       y += this.config.grid.x_axis_height;
     }
-   
+
     if(prev) {
       prev.nextSibling = graph;
     }
@@ -5033,7 +5033,7 @@ Chart.prototype.ResetGraphLayout = function() {
   this.stackedGraphs = l;
 
   // handle graph overlay
-  
+
   for(i in this.graphsOrder) {
     var graph = this.graphsOrder[i];
     if(graph.overlay) {
@@ -5055,7 +5055,7 @@ Chart.prototype.ResetGraphLayout = function() {
 };
 
 /**
- * Set data source, Update() will then read data from the 
+ * Set data source, Update() will then read data from the
  * specified source. Source should be an array holding market
  * data. [{high,low,open,close,time,volume},..]
  * @method SetSource
@@ -5204,7 +5204,7 @@ Chart.prototype.Sync = function(added, removed) {
  * @method TouchedGraph
  * @param {Number} x
  * @param {Number} y
- * @returns {TwentyC.widget.Chart.widget.Graph} 
+ * @returns {TwentyC.widget.Chart.widget.Graph}
  */
 
 Chart.prototype.TouchedGraph = function(x, y) {
@@ -5230,7 +5230,7 @@ Chart.prototype.RenderMarkers = function() {
   // clear
   var C = this.canvasDict.mark;
   C.Rect(0,0,this.config.width,this.config.height);
-  
+
   if(!this.source||!this.source.length)
     return;
 
@@ -5242,7 +5242,7 @@ Chart.prototype.RenderMarkers = function() {
   var x, y, graph, i, idx=0;
   // render graph information
   if(!this.editMode) {
-    for(i in this.graphs) { 
+    for(i in this.graphs) {
       graph = this.graphs[i];
       if(!graph.config.show_info_labels)
         continue;
@@ -5262,8 +5262,8 @@ Chart.prototype.RenderMarkers = function() {
   }
   graph = null;
 
-  // render selected bar 
-  
+  // render selected bar
+
   var bar = this.selectedBar;
   if(bar >= this.start && bar <= this.index && this.source && this.source[bar]) {
     C.Rect(
@@ -5297,9 +5297,9 @@ Chart.prototype.RenderMarkers = function() {
       "left"
     );
   }
- 
- 
- 
+
+
+
   // find out which graph the mouse is hovering over,
   // if any
 
@@ -5344,7 +5344,7 @@ Chart.prototype.RenderMarkers = function() {
 
   // render crosshair
   if(graph && renderCrossHair) {
-     
+
 
     if(this.config.crosshair_lines) {
       C.Line(
@@ -5363,11 +5363,11 @@ Chart.prototype.RenderMarkers = function() {
       (my_x+mt), my_y, mw, mh, colors.crosshair
     );
     C.Text(
-      graph.FormatTickValue(this.YToValue(graph, y-graph.y)), 
-      colors.crosshair_f, 
-      (my_x+mt), 
-      my_y+2, 
-      "10px Arial", 
+      graph.FormatTickValue(this.YToValue(graph, y-graph.y)),
+      colors.crosshair_f,
+      (my_x+mt),
+      my_y+2,
+      "10px Arial",
       "left"
     );
 
@@ -5376,7 +5376,7 @@ Chart.prototype.RenderMarkers = function() {
       vy_x, vy_y, vt, vh, colors.crosshair, "u"
     );
 
-    if(!graph.custom_x_axis) { 
+    if(!graph.custom_x_axis) {
       var x_text = this.FormatTimeTick(
         this.XToValue(graph, x-this.layout.chartInner.x),
         this.XToValue(graph, x-this.layout.chartInner.x, true),
@@ -5398,12 +5398,12 @@ Chart.prototype.RenderMarkers = function() {
       vt,
       colors.crosshair
     );
- 
+
 
     C.Text(
       x_text, colors.crosshair_f, x+2, l.b+5, "10px Arial", "center"
     );
-      
+
 
   }
 
@@ -5419,7 +5419,7 @@ Chart.prototype.RenderMarkers = function() {
  * @param {String} field field to plot - with market data this should be "time", but with graphs that have custom_x_axis setup this would change to whatever is specified in graph.custom_x_axis.plot
  * @param {Number} ts tick size, value of one tick
  * @param {Number} ts_d tick_size normalizer with market data this should be 1000, so ms can be normalized to seconds
- * @param {Number} start_value value of the first plot point in source 
+ * @param {Number} start_value value of the first plot point in source
  * @returns Object object holding location of x axis tick lines and labels
  */
 
@@ -5432,7 +5432,7 @@ Chart.prototype.GridXInfo = function(start, end, source, field, ts, ts_d, start_
       time_gridTicksX = 0,
       time_xc = 0,
       time_nextTickX = null;
-  
+
   var start_value = source[0][field];
   var first_tick_at, next_tick_at;
   // sync first tick to 00:00 of current day (from graph data starting point)
@@ -5456,12 +5456,12 @@ Chart.prototype.GridXInfo = function(start, end, source, field, ts, ts_d, start_
     if(r)
       prev = val;
     val = s[r][field];
-    
+
     if(r == next_tick_at) {
       time_gridX.push(
         [
-        val, 
-        time_gridTicksX, 
+        val,
+        time_gridTicksX,
         r>0 ? prev : val,
         r>0 ? val - prev : 0
         ]
@@ -5491,7 +5491,7 @@ Chart.prototype.RenderData = function() {
 
   if(this.inactive)
     return;
-  
+
   var z,i,f,n,x,y,r,j,diff,s = this.source,n;
   var C = this.canvasDict.plot;
   var colors = this.config.colors;
@@ -5501,7 +5501,7 @@ Chart.prototype.RenderData = function() {
 
   if(!s)
     return;
-   
+
   var graph, h = this.layout.chartInner.y, R = this.config.chart_region;
   var l = s.length, first = true, t = 0;
   var grid = this.config.grid;
@@ -5511,7 +5511,7 @@ Chart.prototype.RenderData = function() {
 
 
   this.EventZones.drawings = [];
-  
+
   if(this.index < this.plotPointsX)
     this.index = this.plotPointsX;
   if(this.index > s.length)
@@ -5522,7 +5522,7 @@ Chart.prototype.RenderData = function() {
     start = 0;
 
   this.start = start;
-  
+
   var time_start = start;
   var time_end = end;
 
@@ -5530,7 +5530,7 @@ Chart.prototype.RenderData = function() {
 
 
   var clearAll = true;
-  
+
   // clear old data
   if(clearAll) {
     C.Rect(
@@ -5562,7 +5562,7 @@ Chart.prototype.RenderData = function() {
   var o, ng;
 
   var nextTickX = null;
-  
+
   var time_gridX = [],
       time_gridTicksX = 0,
       time_xc = 0,
@@ -5571,7 +5571,7 @@ Chart.prototype.RenderData = function() {
   // calculate x axis grid, do this only once since all non-custom
   // x axis graphs will share it
 
-  // keep track of time values along the x axis for 
+  // keep track of time values along the x axis for
   // easy conversion later on
 
   var gridXInfo = this.GridXInfo(
@@ -5579,7 +5579,7 @@ Chart.prototype.RenderData = function() {
     end,
     s,
     "time",
-    ts, 
+    ts,
     1000,
     this.startTime
   );
@@ -5591,7 +5591,7 @@ Chart.prototype.RenderData = function() {
 
   this.time_gridX = time_gridX;
 
-  
+
   // render chart seperators
   n=0;
   for(i in this.graphsOrder) {
@@ -5600,11 +5600,11 @@ Chart.prototype.RenderData = function() {
       y = graph.b;
       n++;
       C.Line(
-        this.layout.chart.x, 
+        this.layout.chart.x,
         y,
         (this.config.width-R.x)-10,
         y,
-        this.config.grid.width, 
+        this.config.grid.width,
         colors.bdc_chart
       );
     }
@@ -5638,9 +5638,9 @@ Chart.prototype.RenderData = function() {
   }
 
 
-  // render plot data 
+  // render plot data
   for(i in this.graphsOrder) {
-    
+
     graph = this.graphsOrder[i];
     var plotData = null;
 
@@ -5654,7 +5654,7 @@ Chart.prototype.RenderData = function() {
 
 
     if(!graph.custom_x_axis) {
-      
+
       // graph will be using the common time grid
 
       var gridX = time_gridX,
@@ -5670,13 +5670,13 @@ Chart.prototype.RenderData = function() {
         else
           graph.custom_x_axis.absolute = true;
       }
-      
+
       // graph will be doing custom x axis calculation / grid setup
       // graph.custom_x_axis.absolute = true;
 
-      var gridX = [], 
-          gridTicksX = 0, 
-          xc = 0, 
+      var gridX = [],
+          gridTicksX = 0,
+          xc = 0,
           nextTickX = null;
 
       plotData = graph.GetDataForPlotName(graph.custom_x_axis.plot);
@@ -5696,7 +5696,7 @@ Chart.prototype.RenderData = function() {
     if(graph.custom_x_axis) {
 
       if(graph.custom_x_axis.absolute) {
-        
+
         // if custom_x_axis.absolute is true it means all the graph data
         // will be displayed absolute to the chart's container proportions
         // there will be no scrolling
@@ -5714,10 +5714,10 @@ Chart.prototype.RenderData = function() {
         );
 
       } else {
-        
+
         // if custom_x_axis.absolute is false it means the graph data
         // can be scrolled.
-       
+
         gridXInfo = this.GridXInfo(
           graph.start,
           graph.end,
@@ -5725,7 +5725,7 @@ Chart.prototype.RenderData = function() {
           graph.custom_x_axis.field,
           graph.custom_x_axis.tick_size,
           graph.custom_x_axis.tick_size_normalizer || 1,
-          null, 
+          null,
           true
         );
 
@@ -5738,13 +5738,13 @@ Chart.prototype.RenderData = function() {
     }
 
     // draw horizontal grid lines and tick labels
-    
+
     var bottom_graph = graph.renderXAxisToGraph;
-    
+
     if(graph.renderXAxis) {
-      
+
       // Render background and borders for graph separator line
-    
+
       C.Rect(
         layout.chart.x,
         bottom_graph.b,
@@ -5777,7 +5777,7 @@ Chart.prototype.RenderData = function() {
 
           j = qr(gridX[x][1]*this.plotPointW);
           j += qr(this.plotPointW / 2)
-      
+
           // grid line
           C.Line(
             layout.chartInner.x + j,
@@ -5813,13 +5813,13 @@ Chart.prototype.RenderData = function() {
             "10px Arial",
             "center"
           );
-        
+
         }
       } else {
-        
+
         // Render x axis ticks and labels for unscrollable absolute
         // graphs
-        
+
         r = qr(graph.ticksPerGridX), o = 0;
 
         for(e = graph.start; e < graph.end; e++) {
@@ -5837,7 +5837,7 @@ Chart.prototype.RenderData = function() {
           var x = graph.x + ((e-graph.start)*graph.plotPointW) + (graph.plotPointW/2);
 
           //console.log(r, x, nextTickX, graph.xCount, graph.width, graph.x);
-     
+
           // grid line
           C.Line(
             x,
@@ -5869,7 +5869,7 @@ Chart.prototype.RenderData = function() {
             "10px Arial",
             "center"
           );
- 
+
         }
       }
     }
@@ -5880,7 +5880,7 @@ Chart.prototype.RenderData = function() {
     var maxY, minY, diffMax, diffMin, center;
 
     var pad = graph.y_zoom;
-   
+
     if(!graph.overlay && pad) {
 
       if(graph.sync_scale) {
@@ -5917,7 +5917,7 @@ Chart.prototype.RenderData = function() {
     if(graph.forceMinY != undefined) {
       graph.minY = graph.forceMinY;
     }
-    
+
     if(graph.overlay) {
       var overlayed_on = this.graphs[graph.overlay];
       if(graph.sync_scale && (overlayed_on.data_type == graph.data_type)) {
@@ -6031,11 +6031,11 @@ Chart.prototype.RenderData = function() {
           "left"
         );
       }
- 
+
     }
 
     first = false;
-    
+
 
     // plot data
     if(graph.config.opacity)
@@ -6056,17 +6056,17 @@ Chart.prototype.RenderData = function() {
       // of the current plot points on the timelime,
       // this can later be used to translate a time to
       // a point on the chart quickly.
-      
+
       gd = graph.data[r];
       gdp = r>0 ? graph.data[r-1] : null;
 
       if(!gd)
         continue;
-        
+
       for(x in gd.plots) {
         if(gd.plots[x][graph.config.plots[x].plotValue] == undefined)
           continue;
-        
+
         try {
           graph.draw(this, graph, gd.plots[x], gdp ? gdp.plots[x] : null, x, r, start, end);
         } catch(err) {
@@ -6110,16 +6110,16 @@ Chart.prototype.RenderData = function() {
       graph.height
     );
 
- 
+
     // render drawings
-    var drawing, j = 0, grapharea = { 
+    var drawing, j = 0, grapharea = {
       x : graph.minX,
       r : graph.maxX,
       y : graph.minY,
-      b : graph.maxY 
+      b : graph.maxY
     };
     for(r in graph.drawings) {
-      drawing = graph.drawings[r]; 
+      drawing = graph.drawings[r];
 
       // make sure drawing falls into drawing region
       if(
@@ -6167,7 +6167,7 @@ Chart.prototype.RenderData = function() {
               { x : changers[ch][0], y : changers[ch][1] },
               function(x, y, data) {
                 data.drawing.PickupPoint(data.changer);
-              }, "btn-blank.png", 10 , 10, { changer : changers[ch][2] } 
+              }, "btn-blank.png", 10 , 10, { changer : changers[ch][2] }
             );
           }
 
@@ -6176,7 +6176,7 @@ Chart.prototype.RenderData = function() {
         if(drawing.noClip) {
           C.clip = clip;
         }
- 
+
       }
       //window.document.title = j + " drawings";
     };
@@ -6231,7 +6231,7 @@ Chart.prototype.SelectedBar = function() {
   };
 
   this.mouseMoved = false;
-  
+
   return (bar);
 };
 
@@ -6249,7 +6249,7 @@ Chart.prototype.FormatTimeTick = function(t, p, dbg) {
   var zp = TwentyC.util.ZeroPad;
 
   var tmpl = TwentyC.widget.Chart.date_tmpl;
-  
+
   // create date objects
   var dT = new Date();
   dT.setTime(t);
@@ -6257,7 +6257,7 @@ Chart.prototype.FormatTimeTick = function(t, p, dbg) {
   var dP = new Date();
   dP.setTime(p);
   var r;
-  
+
   if(!p) {
     r = tmpl.full;
   } else if(dT.getFullYear() != dP.getFullYear()) {
@@ -6314,7 +6314,7 @@ Chart.prototype.RenderColumn = function(graph, plotA, plotB, plotName) {
     borderColor = cfg.colors.border_positive;
   }
 
-  var payload = { 
+  var payload = {
     graph : graph,
     chart : this,
     plot_name : plotName,
@@ -6340,7 +6340,7 @@ Chart.prototype.RenderColumn = function(graph, plotA, plotB, plotName) {
   }
 
   if(cfg.borders) {
- 
+
     C.StrokeRect(
       this.ValueToX(graph, plotA[graph.XAxisField()]) + ((this.plotPointW / 2)-(this.barW / 2)),
       y,
@@ -6375,7 +6375,7 @@ Chart.prototype.RenderLine = function(graph, plotA, plotB, plotName, plotIdx, st
   if(x<=0||r <= 0)
     return;
 
-  var payload = { 
+  var payload = {
     graph : graph,
     chart : this,
     plot_name : plotName,
@@ -6397,7 +6397,7 @@ Chart.prototype.RenderLine = function(graph, plotA, plotB, plotName, plotIdx, st
     var y = this.ValueToY(graph, plotA[cfg.plotValue]);
     var y2 = this.ValueToY(graph, plotB[cfg.plotValue]);
     var z = this.ValueToY(graph, 0);
-   
+
     if(!payload.efficient_fill) {
       // efficient fill is false, so we want to immediatly draw
       // this plot point and fill it
@@ -6467,7 +6467,7 @@ Chart.prototype.RenderLine = function(graph, plotA, plotB, plotName, plotIdx, st
 Chart.prototype.RenderCandlestick = function(graph, plot, plotB, plotName) {
   if(!plot)
     return;
-  var g = this.config.grid; 
+  var g = this.config.grid;
   var C = this.canvasDict.plot;
   var x = this.ValueToX(graph, plot[graph.XAxisField()]);
   var y,b,h,color,cfg = graph.config.plots[plotName];
@@ -6490,7 +6490,7 @@ Chart.prototype.RenderCandlestick = function(graph, plot, plotB, plotName) {
   }
   h = b-y;
 
-  var payload = { 
+  var payload = {
     graph : graph,
     chart : this,
     plot_name : plotName,
@@ -6570,7 +6570,7 @@ Chart.prototype.RenderTimeMark = function(graph, time, label, bgColor, fColor){
   var C = this.canvasDict.plot;
   var clip = C.clip;
   C.clip = null;
- 
+
   if(!graph.custom_x_axis)
     var x =this.ValueToX(graph, time) + (graph.plotPointW / 2);
   else
@@ -6589,13 +6589,13 @@ Chart.prototype.RenderTimeMark = function(graph, time, label, bgColor, fColor){
   C.Triangle(
     vy_x, vy_y, vt, vh, bgColor, "u"
   );
-  
+
   if(!graph.custom_x_axis) {
     var x_text = label || this.FormatTimeTick(time, 0);
   } else {
     var x_text = label || graph.FormatTickValueX(time);
   }
-  
+
   C.SetState("font", "10px Arial");
   vw = C.Ctx().measureText(x_text).width+10;
 
@@ -6606,7 +6606,7 @@ Chart.prototype.RenderTimeMark = function(graph, time, label, bgColor, fColor){
     vt,
     bgColor
   );
- 
+
 
   C.Text(
     x_text, fColor, x+2, graph.b+5, "10px Arial", "center"
@@ -6633,7 +6633,7 @@ Chart.prototype.RenderTimeMark = function(graph, time, label, bgColor, fColor){
  */
 
 Chart.prototype.RenderPriceMark = function(graph, price, label, bgColor, fColor){
-    
+
   if(!bgColor)
     var bgColor = graph.config.colors.mark_bgc;
   if(!fColor)
@@ -6684,7 +6684,7 @@ TwentyC.util.Find = function(arr, n, closest, key, keyFn) {
 
   var end = arr.length-1;
   var start = 0, middle, i;
- 
+
   while(start <= end) {
     middle = Math.floor((start+end)/2);
     if(!keyFn)
@@ -6724,7 +6724,7 @@ Chart.prototype.ValueToX = function(graph, n, right) {
 
     x -= s;
     x += L.x;
- 
+
     if(!right)
       return x;
     else if(right == 1)
@@ -6746,9 +6746,9 @@ Chart.prototype.ValueToX = function(graph, n, right) {
     var f= (graph.plotPointW/1);
     var j,l,m;
     var x = TwentyC.util.Find(
-      graph.data, 
-      n, 
-      true, 
+      graph.data,
+      n,
+      true,
       null,
       function(data) {
         return data.plots[graph.custom_x_axis.plot][graph.custom_x_axis.field];
@@ -6758,7 +6758,7 @@ Chart.prototype.ValueToX = function(graph, n, right) {
 
     x -= s;
     x += graph.x;
- 
+
     if(!right)
       return x;
     else if(right == 1)
@@ -6769,7 +6769,7 @@ Chart.prototype.ValueToX = function(graph, n, right) {
       return x +((graph.plotPointW / 2)-(graph.barW / 2));
 
   }
-  
+
 };
 
 /**
@@ -6777,7 +6777,7 @@ Chart.prototype.ValueToX = function(graph, n, right) {
  * @method XToValue
  * @param {Graph} graph graph object
  * @param {Number} n pixel value on the x axis, relative to chart boundary
- * @param {Number) [b] 
+ * @param {Number) [b]
  * @returns {Number} translated plot value
  */
 
@@ -6795,13 +6795,13 @@ Chart.prototype.XToValue = function(graph, n, b, dbg) {
 
     if(b && x > 0)
       x--;
- 
+
     if(!this.source[x]) {
       return 0;
     }
     return this.source[x].time;
   } else if(graph.custom_x_axis.absolute) {
-    
+
     var k = n / graph.plotPointW;
     var diffX = graph.maxX - graph.minX;
     return Math.round(graph.minX + (k * (diffX / graph.plotPointsX)));
@@ -6819,19 +6819,19 @@ Chart.prototype.XToValue = function(graph, n, b, dbg) {
 
     if(b && x > 0)
       x--;
- 
+
     if(!graph.data[x]) {
       return 0;
     }
     return graph.data[x].plots[graph.custom_x_axis.plot][graph.custom_x_axis.field];
- 
+
   }
 };
 
 /**
  * Translate a plot value on the y axis to a pixel value
  * @method ValueToY
- * @param {TwentyC.widget.Chart.widget.Graph} graph instance 
+ * @param {TwentyC.widget.Chart.widget.Graph} graph instance
  * @param {Number} n plot value to be translated
  * @param {Boolean} bottom if true will return y+plot height (bottom)
  * @returns {Number} translated pixel value
@@ -6845,7 +6845,7 @@ Chart.prototype.ValueToY = function(graph, n, bottom) {
   var k = (p * graph.yCount);
   var d = (graph.height / k);
   return (graph.y + ((((a-n)/graph.tick_size)-0)*d));
- 
+
 };
 
 /**
@@ -6884,8 +6884,8 @@ Chart.prototype.RenderBase = function() {
 
   BG.Rect(L.chart.x, L.chart.y, L.chart.w, L.chart.h, color.bgc_chart);
 
-  // render border 
-  
+  // render border
+
   BG.StrokeRect(L.chart.x, L.chart.y, L.chart.w, L.chart.h, 1, color.bdc_chart);
 
 };
@@ -6893,7 +6893,7 @@ Chart.prototype.RenderBase = function() {
 /**
  * Render drawing control button
  * @method RenderDrawingControl
- * @param {TwentChart.widget.DrawingTool} drawing 
+ * @param {TwentChart.widget.DrawingTool} drawing
  * @param {Object} coords coordinate object holding x and y coordinates (px)
  * @param {Function} onClick function call when button is clicked
  * @param {String} src image source for the button (without TwentyC.widget.Chart.pathImg)
@@ -6911,7 +6911,7 @@ Chart.prototype.RenderDrawingControl = function(drawing, coords, onClick, src, w
     data.drawing = drawing;
   else
     var data = drawing;
-          
+
   this.EventZones.drawings.push({
     x : coords.x,
     y : coords.y,
@@ -6934,7 +6934,7 @@ Chart.prototype.RenderDrawingControl = function(drawing, coords, onClick, src, w
     coords.x,
     coords.y
   );
- 
+
 };
 
 /**
@@ -6944,7 +6944,7 @@ Chart.prototype.RenderDrawingControl = function(drawing, coords, onClick, src, w
  */
 
 Chart.prototype.PickupDrawing = function(drawing) {
-  
+
   // only proceed if there is no drawing in progress
 
   if(this.drawingTool && this.drawingTool.progress) {
@@ -6952,7 +6952,7 @@ Chart.prototype.PickupDrawing = function(drawing) {
   };
 
   this.oldDrawingTool = this.drawingTool;
-  
+
   this.drawingTool = drawing;
   drawing.graph.RemoveDrawing(drawing);
   this.RenderDrawingProgress();
@@ -7038,7 +7038,7 @@ Chart.prototype.SnapToPresent = function() {
  */
 
 Chart.prototype.RenderUI = function() {
-  var chart = this; 
+  var chart = this;
   var C = this.canvasDict.ui;
   var L = this.layout,i,graph,label,x,y;
   var p = TwentyC.widget.Chart.pathImg;
@@ -7067,7 +7067,7 @@ Chart.prototype.RenderUI = function() {
         chart.SnapToPresent();
       },
       graph
-    ); 
+    );
     this.SetUIButton(
       L.chart.r-10,
       L.chart.b-6,
@@ -7078,7 +7078,7 @@ Chart.prototype.RenderUI = function() {
         chart.SnapToPresent();
       },
       graph
-    ); 
+    );
 
   }
 
@@ -7096,7 +7096,7 @@ Chart.prototype.RenderUI = function() {
       chart.TglEditMode(false);
     },
     graph
-  ); 
+  );
 
   C.Text(
     TwentyC.widget.Chart.locale.end_edit_mode,
@@ -7108,7 +7108,7 @@ Chart.prototype.RenderUI = function() {
   );
 
 
- 
+
 
   // render graph buttons
   for(i in this.graphsOrder) {
@@ -7141,7 +7141,7 @@ Chart.prototype.RenderUI = function() {
     );
 
     y+=2
-    
+
     // Close graph
     if(graph.name != "main") {
       this.SetUIButton(
@@ -7184,7 +7184,7 @@ Chart.prototype.RenderUI = function() {
       "move"
     );
 
- 
+
   }
 
   // render drag & drop indicators
@@ -7194,9 +7194,9 @@ Chart.prototype.RenderUI = function() {
   var color;
 
   if(I) {
-    
+
     var x = this.mouseX, y = this.mouseY, target=-1;
-    
+
     // top of chart indicator
 
     if(ins(x,y,{ x : L.x, y : L.y, w : L.w, h : 20}))  {
@@ -7210,7 +7210,7 @@ Chart.prototype.RenderUI = function() {
     C.Triangle(L.r-15, L.y+2, 10, 5, color, "u");
 
     // bottom of chart indicator
-    
+
     if(ins(x,y,{ x : L.x, y : L.b-20, w : L.w, h : 20}))  {
       target = null;
       color = colors.dnd_highlight;
@@ -7222,12 +7222,12 @@ Chart.prototype.RenderUI = function() {
     C.Triangle(L.r-15, L.b-8, 10, 5, color, "d");
 
     // between graphs indicator
-    
+
     var n = 0;
 
     for(i in this.graphsOrder) {
       graph = this.graphsOrder[i];
-      if(graph.overlay) 
+      if(graph.overlay)
         continue;
 
       n++;
@@ -7240,7 +7240,7 @@ Chart.prototype.RenderUI = function() {
       } else {
         color = colors.dnd_normal;
       }
-      
+
       C.Triangle(L.x+5, graph.b+2, 10, 5, color, "u");
       C.Triangle(L.r-15, graph.b+2, 10, 5, color, "u");
       C.Line(L.x+1, graph.b, L.r-1, graph.b, 1,color);
@@ -7253,7 +7253,7 @@ Chart.prototype.RenderUI = function() {
     // target on graph
 
     if(target == -1) {
-      
+
       for(i in this.graphsOrder) {
         graph = this.graphsOrder[i];
         if(ins(x,y,{x:L.x, y:graph.y, h:graph.height, w:L.w})) {
@@ -7319,7 +7319,7 @@ Chart.prototype.RenderUI = function() {
  */
 
 Chart.prototype.SetUIButton = function(x, y, w, h, src, callback, data, cursor) {
-  
+
   this.EventZones.ui.push({
     x : x,
     y : y,
@@ -7338,7 +7338,7 @@ Chart.prototype.SetUIButton = function(x, y, w, h, src, callback, data, cursor) 
   var C = this.canvasDict.ui;
 
   C.Image(
-    src, x, y 
+    src, x, y
   );
 };
 
@@ -7357,7 +7357,7 @@ Chart.prototype.TglEraser = function() {
 };
 
 /**
- * Toggle edit mode on or off. When in edit mode indicators can be 
+ * Toggle edit mode on or off. When in edit mode indicators can be
  * moved and configured.
  * @method TglEditMode
  * @param {Boolean} b on or off
@@ -7378,7 +7378,7 @@ Chart.prototype.TglEditMode = function(b) {
  */
 
 Chart.prototype.ToolbarAddHotkey = function(id) {
-  
+
   if(this.config.toolbar.disabled)
     return;
 
@@ -7434,7 +7434,7 @@ Chart.prototype.ToolbarRemoveHotkey = function(id) {
  * @method ToolbarUpdateHotkeys
  */
 
-Chart.prototype.ToolbarUpdateHotkeys = function() { 
+Chart.prototype.ToolbarUpdateHotkeys = function() {
   var i;
   for(i in this.hotkeys) {
     this.hotkeys[i].UpdateState();
@@ -7458,12 +7458,12 @@ Chart.prototype.PrefsBuild = function(obj, template, title, open) {
 
   this.prefs = [];
   var lst,i,r,v,data,input,label,row;
-  
+
   // clear prefs pane
   e.innerHTML = "<h1>"+title+"</h1>";
 
   this.PrefsBuildElements(obj, e, template);
-  
+
   // create button
   var btn = document.createElement("input");
   btn.setAttribute("type", "button");
@@ -7487,7 +7487,7 @@ Chart.prototype.PrefsBuildElements = function(obj, node, template, title, collap
    var kc = Y.util.Event.getCharCode(e);
    if(kc == 13)
      chart.PrefsSubmit(obj);
-  }; 
+  };
 
   var e = document.createElement('div');
   e.className = "twentychart-prefs-section";
@@ -7495,7 +7495,7 @@ Chart.prototype.PrefsBuildElements = function(obj, node, template, title, collap
   if(title) {
     var titleNode = document.createElement("h2");
     titleNode.innerHTML = title+ " <span>Click to Open</span>";
-   
+
     Y.util.Event.addListener(titleNode, "click", function() {
       if(e.style.height != "auto") {
         e.style.height = "auto";
@@ -7511,9 +7511,9 @@ Chart.prototype.PrefsBuildElements = function(obj, node, template, title, collap
   }
 
   // build form elements and labels
-  
+
   for(i in template) {
-    
+
     v = template[i];
 
     // check if sub section
@@ -7521,7 +7521,7 @@ Chart.prototype.PrefsBuildElements = function(obj, node, template, title, collap
       if(!v._sectionSelect)
         this.PrefsBuildElements(obj, node, v, v.title);
       else {
-        
+
         // build collapsable sections
         for(k in v) {
 
@@ -7582,11 +7582,11 @@ Chart.prototype.PrefsBuildElements = function(obj, node, template, title, collap
 
     input.tcSet = [v.set, obj, v.onSet, v.type];
     this.prefs.push(input);
-    
+
     // create new row
     row = document.createElement("div");
     row.className = "twentychart-prefs-row";
-    
+
 
     row.innerHTML = "<span>"+v.label+"</span>";
 
@@ -7594,12 +7594,12 @@ Chart.prototype.PrefsBuildElements = function(obj, node, template, title, collap
     if(v.type == "checkbox") {
       row.childNodes[0].className = "checkbox-label"
       row.insertBefore(input, row.childNodes[0]);
-    } else 
+    } else
       row.appendChild(input);
 
     // append row to pane
     e.appendChild(row);
-    
+
     this.onPrefsCreateInput.fire({
       name : v.title,
       type : v.type,
@@ -7663,7 +7663,7 @@ Chart.prototype.PrefsClose = function() {
 
   e.style.overflow = "hidden";
   e.style.left = (-(e.offsetWidth+10))+"px";
-}; 
+};
 
 /**
  * Picks up an indicator graph and places it at the mouse pointer for
@@ -7687,8 +7687,8 @@ Chart.prototype.GraphDnDPickup = function(graph) {
   };
 
   // toggle text selection off
-  
-  TwentyC.util.ToggleGlobalSelect(0);  
+
+  TwentyC.util.ToggleGlobalSelect(0);
 
   // create drag and drop element
 
@@ -7704,13 +7704,13 @@ Chart.prototype.GraphDnDPickup = function(graph) {
 };
 
 /**
- * End graph DnD, if a location is set in this.graphDnD, graph will 
+ * End graph DnD, if a location is set in this.graphDnD, graph will
  * be moved to that location
  * @method GraphDnDDrop
  */
 
 Chart.prototype.GraphDnDDrop = function() {
-  
+
   // get drag and drop info
   var I = this.graphDnD;
 
@@ -7719,7 +7719,7 @@ Chart.prototype.GraphDnDDrop = function() {
     this.MoveGraph(I.graph, I.target);
   };
 
-  TwentyC.util.ToggleGlobalSelect(1);  
+  TwentyC.util.ToggleGlobalSelect(1);
   this.graphDnD = null;
   this.RenderUI();
 };
@@ -7730,7 +7730,7 @@ Chart.prototype.GraphDnDDrop = function() {
  */
 
 Chart.prototype.GraphDnDDrag = function() {
-  
+
   // get drag and drop info
   var I = this.graphDnD;
 
@@ -7788,7 +7788,7 @@ Scrollbar.prototype.InitScrollbar = function(config) {
      */
 
     speed : 50,
-    
+
     /**
      * Color config, all color values need to be html valid color strings
      * eg. "red" "#fff" or "rgba(1,2,3,1)"
@@ -7797,7 +7797,7 @@ Scrollbar.prototype.InitScrollbar = function(config) {
      */
 
     colors : {
-      
+
       /**
        * @config colors.button
        */
@@ -7853,10 +7853,10 @@ Scrollbar.prototype.InitScrollbar = function(config) {
     var x = d[0].x;
     var y = d[0].y;
     if(sb.scrollDrag) {
-      
+
       var diff = sb.scrollDrag.x - x;
       var p = diff / sb.pixelsPerTick;
-      
+
       if(Math.abs(p) >= 1) {
         sb.scrollDrag.x = x;
         sb.scrollDrag.y = y;
@@ -7880,7 +7880,7 @@ Scrollbar.prototype.InitScrollbar = function(config) {
  */
 
 Scrollbar.prototype.TglScroll = function(type, x, y) {
-  
+
   var c = this.config;
 
   if(!type) {
@@ -7893,12 +7893,12 @@ Scrollbar.prototype.TglScroll = function(type, x, y) {
   }
   var dir;
   if(type == "l")
-    dir = -c.ticks 
+    dir = -c.ticks
   else if(type == "r")
     dir = c.ticks;
   else if(type == "d") {
     this.scrollDrag = {
-      x : x, 
+      x : x,
       y : y
     }
   }
@@ -7908,7 +7908,7 @@ Scrollbar.prototype.TglScroll = function(type, x, y) {
     // accordingly
     var sb = this;
     this.scrollInterval = setInterval(function() {
-      sb.Scroll(dir);   
+      sb.Scroll(dir);
     }, c.speed);
   }
 };
@@ -7935,7 +7935,7 @@ Scrollbar.prototype.Scroll = function(n) {
  * Calculate proportions and positions and store them in
  * this.layout
  * @method SetLayout
- * @param {Number} x 
+ * @param {Number} x
  * @param {Number} y
  * @param {Number} w width
  * @param {Number} h height
@@ -8005,14 +8005,14 @@ Scrollbar.prototype.Render = function() {
   canvas.Rect(
     l.bar.x, l.bar.y, l.bar.w, l.bar.h, col.bar
   );
-  
+
   // button scroll left
   canvas.Triangle(
-    l.button_dec.x, 
+    l.button_dec.x,
     l.button_dec.y,
-    l.button_dec.w, 
-    l.button_dec.h, 
-    col.button, 
+    l.button_dec.w,
+    l.button_dec.h,
+    col.button,
     "l"
   );
 
@@ -8022,7 +8022,7 @@ Scrollbar.prototype.Render = function() {
     l.button_inc.y,
     l.button_inc.w,
     l.button_inc.h,
-    col.button, 
+    col.button,
     "r"
   );
 
@@ -8089,7 +8089,7 @@ var ChartContextMenu = TwentyC.widget.Chart.widget.ChartContextMenu = function(c
   this.chart = chart;
   this.SetItems();
 
-  
+
   var CM = this;
 
   this.menu.triggerContextMenuEvent.subscribe(function(a,b,c) {
@@ -8121,11 +8121,11 @@ var ChartContextMenu = TwentyC.widget.Chart.widget.ChartContextMenu = function(c
  */
 
 ChartContextMenu.prototype.SetItems = function() {
-  
+
   var chart = this.chart;
 
   this.menu.clearContent();
-  
+
   this.indicatorMenu = new TwentyC.widget.Chart.widget.IndicatorMenu(this.chart)
   this.editIndicatorMenu = new TwentyC.widget.Chart.widget.ActiveGraphsMenu(this.chart);
   this.removeIndicatorMenu = new TwentyC.widget.Chart.widget.ActiveGraphsMenu(this.chart);
@@ -8248,7 +8248,7 @@ IndicatorMenu.prototype.SetItems = function() {
   for(i in I) {
     var graph = new TwentyC.widget.Chart.indicators.dict[I[i]];
     this.menu.addItem({
-      text : graph.Title(), 
+      text : graph.Title(),
       onclick : {
         fn : function(e,ev, id) {
           try {
@@ -8265,7 +8265,7 @@ IndicatorMenu.prototype.SetItems = function() {
             return;
           }
           chart.AddGraph(id+(chart.graphNum++), graph);
-        }, 
+        },
         obj : I[i]
       }
     });
@@ -8291,11 +8291,11 @@ var DToolMenu = TwentyC.widget.Chart.widget.DrawingToolMenu = function(chart){
   this.menu.render(document.body);
 };
 
-DToolMenu.prototype.SetItems = 
+DToolMenu.prototype.SetItems =
 DToolMenu.prototype.SetItemsDToolMenu = function() {
   var i, I = TwentyC.widget.Chart.drawingTools.list;
   var chart = this.chart;
-  
+
   this.menu.clearContent();
 
   this.menu.addItem({
@@ -8309,7 +8309,7 @@ DToolMenu.prototype.SetItemsDToolMenu = function() {
   for(i in I) {
     var tool = TwentyC.widget.Chart.drawingTools.dict[I[i]];
     this.menu.addItem({
-    
+
       text : '<img src="'+tool.prototype.icon()+'" class="twentychart-menu-icon" /> '+tool.prototype.name,
       onclick : {
         fn : function(e, ev, id) {
@@ -8319,15 +8319,15 @@ DToolMenu.prototype.SetItemsDToolMenu = function() {
           });
           chart.drawingTool = tool;
           chart.RenderData();
-        }, 
+        },
         obj : I[i]
       }
     })
   }
 };
- 
+
 /******************************************************************************
- * Hotkey meny 
+ * Hotkey meny
  * @class HotkeyMenu
  * @constructor
  * @namespace TwentyC.widget.Chart.widget
@@ -8343,18 +8343,18 @@ var HotkeyMenu = TwentyC.widget.Chart.widget.HotkeyMenu = function(chart, onclic
   this.menu.render(document.body);
 };
 
-HotkeyMenu.prototype.SetItems = 
+HotkeyMenu.prototype.SetItems =
 HotkeyMenu.prototype.SetItemsHotkeyMenu = function(onclick) {
   var i, I = TwentyC.widget.Chart.hotkeys.list;
   var chart = this.chart;
-  
+
   this.menu.clearContent();
 
   // add tools
   for(i in I) {
     var hotkey = TwentyC.widget.Chart.hotkeys.dict[I[i]];
     this.menu.addItem({
-    
+
       text : '<img src="'+hotkey.icon()+'" class="twentychart-menu-icon" /> '+hotkey.name,
       onclick : {
         fn : onclick,
@@ -8363,7 +8363,7 @@ HotkeyMenu.prototype.SetItemsHotkeyMenu = function(onclick) {
     })
   }
 };
- 
+
 /******************************************************************************
  * Hotkey button widget.
  * @class Hotkey
@@ -8374,10 +8374,10 @@ HotkeyMenu.prototype.SetItemsHotkeyMenu = function(onclick) {
  */
 
 var Hotkey = TwentyC.widget.Chart.widget.Hotkey = function(chart, config) {
-  if(config) 
+  if(config)
     this.Init(chart, config);
 }
-  
+
 /******************************************************************************
  * Initialize the hotkey element - This is done automatically by constructor
  * if constructor is called with config argument.
@@ -8420,7 +8420,7 @@ Hotkey.prototype.InitHotkey = function(chart, config) {
   Y.util.Event.addListener(this.element, "mouseup", function(e, hotkey) {
     if(e.button == 2) {
       chart.ToolbarRemoveHotkey(hotkey.config.id);
-      
+
       setTimeout(function(){chart.contextMenu.menu.hide()},0);
 
       return;
