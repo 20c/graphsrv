@@ -1843,7 +1843,7 @@ Graph.prototype.RenderLabel = function(C, x, y) {
     return;
 
   var w, gd, gdp, prev, gdx, color, g_colors, colors = this.chart.config.colors;
-  var i, a, b, lbl;
+  var i, a, b, lbl, ctx = C.GetContext(), restoreShadow;
 
   C.Rect(
     x,
@@ -1852,6 +1852,15 @@ Graph.prototype.RenderLabel = function(C, x, y) {
     this.chart.layout.graphLabel.h,
     colors.bgc_graph_label
   );
+
+  if(colors.textshadow_graph_label) {
+    var tsc = colors.textshadow_graph_label;
+    restoreShadow = ctx.shadowColor;
+    ctx.shadowColor = tsc.color;
+    ctx.shadowOffsetX = tsc.x || 0;
+    ctx.shadowOffsetY = tsc.y || 0;
+    ctx.shadowBlur = tsc.blur || 5;
+  }
 
   w = C.Text(
     this.Title()+" ",
@@ -1879,8 +1888,12 @@ Graph.prototype.RenderLabel = function(C, x, y) {
   gd = this.data[idx]
   prev = idx > 1 ? this.data[idx-1] : null;
 
-  if(!gd || !this.chart.source.length)
+  if(!gd || !this.chart.source.length) {
+    if(restoreShadow) {
+      ctx.shadowColor = restoreShadow;
+    }
     return;
+  }
 
   for(r in gd.plots) {
     gdp = gd.plots[r];
@@ -1945,6 +1958,9 @@ Graph.prototype.RenderLabel = function(C, x, y) {
 
   }
 
+  if(restoreShadow) {
+    ctx.shadowColor = restoreShadow;
+  }
 
 }
 
