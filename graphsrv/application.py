@@ -12,6 +12,7 @@ import vodka.app
 import vodka.data
 import vodka.data.renderers
 import vodka.config
+import vodka.config.shared
 import vodka.plugins
 import vodka.plugins.zeromq
 
@@ -120,8 +121,10 @@ class GraphServ(vodka.app.WebApplication):
             help_text="data groups"
         )
 
-        includes = vodka.config.Attribute(
+        includes = vodka.config.shared.Container(
             dict,
+            nested=1,
+            share="includes:merge",
             default={
                 "js" : {
                     "jquery" : {"path":"graphsrv/js/jquery.js"},
@@ -132,7 +135,7 @@ class GraphServ(vodka.app.WebApplication):
                     "graphsrv" : {"path":"graphsrv/media/graphsrv.css", "order":1}
                 }
             },
-            handler=lambda x,y: vodka.config.shared.Routers(dict, "includes:merge", handler=SharedIncludesConfigHandler),
+            handler=lambda x,y: vodka.config.shared.Routers(dict, "includes:merge", handler=vodka.app.SharedIncludesConfigHandler),
             help_text="allows you to specify extra media includes for js,css etc."
         )
 
