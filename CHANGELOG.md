@@ -2,6 +2,15 @@
 #graphsrv Change Log
 
 ## [Unreleased]
+
+### Added
+### Fixed
+### Changed
+### Deprecated
+### Removed
+### Security
+
+## 1.1.0
 ### Added
 
 - py3 support
@@ -14,6 +23,9 @@
 - legend sorting stabilized to alphapetical sort
 
 ### Changed
+
+- removed the black underlay from graph labels and substituted a text shadow effect instead
+
 ### Deprecated
 ### Removed
 ### Security
