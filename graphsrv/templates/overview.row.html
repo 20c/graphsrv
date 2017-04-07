@@ -1,6 +1,6 @@
 <div class="row" style="height: {{ row.height }}%">
 {% for col in row.cols %}
-  <div class="col-xs-12 col-md-{{ col.width }}">
+  <div class="col-xs-12 col-md-{{ col.width }} column">
   {% if col.graph and col.graph.source %}
     {% if layout.type == "index" %}
     <div class="graph-label">
@@ -10,7 +10,11 @@
     <script src="/graph?targets={{ col.graph.targets }}&id={{ col.graph.id }}&fit={{ col.graph.fit }}&type={{ col.graph.config_dict.type }}{% if col.graph.config %}&config={{ col.graph.config }}{% endif %}&source={{ col.graph.source }}"></script>
   {% elif col.text %}
     <script type="text/javascript">
-    vapingOverview.initTextMonitor('{{ col.text.name }}')
+    graphsrvOverview.initTextMonitor('{{ col.text.name }}')
+    </script>
+  {% elif col.plugin %}
+    <script type="text/javascript">
+    graphsrvPlugins.init({{ col.plugin }});
     </script>
   {% else %}
     <div class="empty">Empty</div>

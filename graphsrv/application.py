@@ -128,6 +128,7 @@ class GraphServ(vodka.app.WebApplication):
             default={
                 "js" : {
                     "jquery" : {"path":"graphsrv/js/jquery.js"},
+                    "graphsrv" : {"path":"graphsrv/js/graphsrv.plugin.js"},
                     "graphsrv.oview": {"path":"graphsrv/js/graphsrv.oview.js", "order":1}
                 },
                 "css": {
