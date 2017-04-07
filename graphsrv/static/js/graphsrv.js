@@ -46,7 +46,7 @@ graphsrv.globalUpdate = {
   },
   get_data : function(type) {
     if(!this.data[type]) {
-      this.data[type] = [] 
+      this.data[type] = []
     }
     if(!this.ffa[type]) {
       this.ffa[type] = {}
@@ -61,7 +61,7 @@ graphsrv.globalUpdate = {
       this.targets[type][targets[i]] = true;
     }
   },
-  
+
   markTime : function(type) {
     this.times[type] = new Date().getTime();
   },
@@ -101,14 +101,14 @@ graphsrv.globalUpdate = {
     var targets = targets_a.join(",");
     var data_e = this.data[type];
     var ts = (data_e.length ? data_e[data_e.length-1].ts : 0);
-    
+
     this.renderStatus(type);
 
     TwentyC.cla.XHR.send("POST", this.host+"/graph_data/", {
       success : function(o) {
         var data_n = JSON.parse(o.responseText).data;
         var t, k, rm=0, add=0, b=false, j=0, target, target_sane, maintarget;
-        
+
         for(k in data_n) {
           t = data_n[k]
           t.time = parseInt(t.ts * 1000);
@@ -132,13 +132,13 @@ graphsrv.globalUpdate = {
           this.markTime(type)
         }
 
-        if(this.queue.length) 
+        if(this.queue.length)
           this.request();
       }.bind(this),
       failure : function(o) {
         this.busy[type] = false;
         this.queue.shift();
-        if(this.queue.length) 
+        if(this.queue.length)
           this.request();
       }.bind(this)
     }, "targets="+targets+"&ts="+ts+'&source='+type);
@@ -150,7 +150,7 @@ graphsrv.globalUpdate = {
  */
 
 graphsrv.globalUpdate.afterUpdate.subscribe(function(e,d) {
- 
+
   var typ,target,targets,graph,i,idx,pl = d[0];
 
   var graphs = {}, _graphs, prev_targets = {}, curr_targets = {}, new_targets ={}, dropped_targets={};
@@ -178,7 +178,7 @@ graphsrv.globalUpdate.afterUpdate.subscribe(function(e,d) {
     if(!curr_targets[target])
       dropped_targets[target] = true;
   }
-  
+
   // now we assign targets to the various ffa graphs
   //
   // first figure out which graphs are valid targets
@@ -244,7 +244,7 @@ graphsrv.globalUpdate.afterUpdate.subscribe(function(e,d) {
     }
   }
 
-  
+
 }.bind(graphsrv.globalUpdate));
 
 //*****************************************************************************
@@ -269,7 +269,7 @@ graphsrv.graphs_for_type = function(typ) {
 }
 
 graphsrv.loadGraph = function(id) {
-  var chart = this.graphs[id].chart = new TwentyC.widget.Chart.widget.Chart(); 
+  var chart = this.graphs[id].chart = new TwentyC.widget.Chart.widget.Chart();
   chart.Init({
     width : 500,
     height : 200,
@@ -285,7 +285,7 @@ graphsrv.loadGraph = function(id) {
       },
       bgc_graph_label : 'rgba(0,0,0,0)'
     },
-    __colors : { 
+    __colors : {
       bgc_container : '#fff',
       bgc_chart : '#efeede',
       bdc_chart : '#b69d87',
@@ -325,7 +325,7 @@ graphsrv.loadGraph = function(id) {
       return;
     var data = graphsrv.globalUpdate.get_data(this.source);
     if(data.length) {
-      this.update([], data, data.length, 0); 
+      this.update([], data, data.length, 0);
     }
     this.initialUpdateDone = true;
   }
@@ -384,7 +384,7 @@ TwentyC.widget.Chart.widget.Chart.prototype.RenderInOut = function(graph, plotA,
   var y2 = this.ValueToY(graph, plotB.in);
   var b2 = this.ValueToY(graph, plotB.out);
 
-  var payload = { 
+  var payload = {
     graph : graph,
     chart : this,
     plot_name : plotName,
@@ -478,8 +478,8 @@ TwentyC.widget.Chart.widget.Chart.prototype.RenderHeatmap = function(graph, plot
     );
   }
   C.Ctx().globalAlpha = 1
-   
-  
+
+
 };
 
 graphsrv.formatters = {
