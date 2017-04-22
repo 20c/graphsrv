@@ -39,6 +39,7 @@ DG.prototype.InitDGPlot = function(target, isOverlay, config) {
     },
     loss : {
       title : "loss ",
+      unvalidated : true,
       fnColor : function(a,b,prev,cur,graph) {
         return graph.LossColor(cur.loss, cur.cnt);
       },
@@ -46,6 +47,7 @@ DG.prototype.InitDGPlot = function(target, isOverlay, config) {
     },
     cnt : {
       title : "/ ",
+      unvalidated : true,
       fnFormat : function(b) { return parseInt(b); }
     }
   }
@@ -115,9 +117,13 @@ DG.prototype.LossColor = function(loss, cnt) {
   return "loss_level"+lvl;
 }
 
-DG.prototype.FormatTickValue = function(val) {
+
+DG.prototype.FormatTickValue = function(val, unvalidated) {
+  if(unvalidated)
+    return val;
   return this.toFloat(val).toFixed(2)+"ms";
 }
+
 DG.prototype.Id = function() {
   return this.target;
 }
