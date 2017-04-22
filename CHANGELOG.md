@@ -4,6 +4,9 @@
 ## [Unreleased]
 
 ### Added
+
+- plugin API (#12)
+
 ### Fixed
 ### Changed
 ### Deprecated
