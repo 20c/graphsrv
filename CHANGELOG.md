@@ -4,6 +4,15 @@
 ## [Unreleased]
 
 ### Added
+### Fixed
+### Changed
+### Deprecated
+### Removed
+### Security
+
+## 1.1.1
+
+### Added
 
 - plugin API (#12)
 
@@ -11,12 +20,8 @@
 
 - Smokestack graphs always showing 0 / 0 for loss and count (#13)
 
-### Changed
-### Deprecated
-### Removed
-### Security
-
 ## 1.1.0
+
 ### Added
 
 - py3 support
