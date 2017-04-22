@@ -80,7 +80,7 @@ DG.prototype.calc = function(chart, i, prev, data) {
       main : {
         time : data.time,
         data : data.data[this.target].data,
-        loss : parseInt(data.data[this.target].loss),
+        loss : parseFloat(data.data[this.target].loss) * parseInt(data.data[this.target].cnt),
         cnt : parseInt(data.data[this.target].cnt),
         recv : parseInt(data.data[this.target].recv),
         close : this.toInt(parseFloat(data.data[this.target].avg)+0.5),
@@ -121,6 +121,8 @@ DG.prototype.LossColor = function(loss, cnt) {
 DG.prototype.FormatTickValue = function(val, unvalidated) {
   if(unvalidated)
     return val;
+  if(isNaN(val))
+    return "- ms";
   return this.toFloat(val).toFixed(2)+"ms";
 }
 
