@@ -8,6 +8,9 @@
 - plugin API (#12)
 
 ### Fixed
+
+- Smokestack graphs always showing 0 / 0 for loss and count (#13)
+
 ### Changed
 ### Deprecated
 ### Removed
