@@ -5,13 +5,16 @@
 
 ### Added
 ### Fixed
-
-- formatting of graph labels during packet loss in smokestack graph (#14)
-
 ### Changed
 ### Deprecated
 ### Removed
 ### Security
+
+## 1.1.2
+
+### Fixed
+
+- formatting of graph labels during packet loss in smokestack graph (#14)
 
 ## 1.1.1
 
