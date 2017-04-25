@@ -5,6 +5,11 @@
 
 ### Added
 ### Fixed
+
+- Sometimes grid lines are drawn over graph lines (#16)
+- When resizing on the y axis, first plot is unaffected (#17)
+- First plot in multitarget graph does not scale properly (#18)
+
 ### Changed
 ### Deprecated
 ### Removed
