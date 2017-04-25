@@ -59,12 +59,12 @@
 ### Removed
 ### Security
 
-##1.0.6
+## 1.0.6
 ### Fixed
 
 - fix remote graph embedding
 
-##1.0.5
+## 1.0.5
 
 ### Added
 
@@ -79,15 +79,19 @@
 
 - fixed an issue where using an id field other than "avg" would cause the graph not to render
 
-##1.0.4
+## 1.0.4
+
 ### Changed
+
 - vodka minimum requirement changed to 2.0.3
 - updated static urls in templates to work with vodka request env changes
 
-##1.0.3
+## 1.0.3
+
 ### Changed
 - vodka minimum requirement changed to 2.0.2
 
-##1.0.2
+## 1.0.2
+
 ### Fixed
 - fixed issue where graphs would not render on safari
