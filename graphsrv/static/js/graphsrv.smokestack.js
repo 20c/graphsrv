@@ -49,6 +49,15 @@ DG.prototype.InitDGPlot = function(target, isOverlay, config) {
       title : "/ ",
       unvalidated : true,
       fnFormat : function(b) { return parseInt(b); }
+    },
+    loss_p : {
+      title: "",
+      unvalidated : true,
+      fnFormat : function(b) {
+        if(isNaN(b))
+          return "";
+        return "["+parseFloat(b).toFixed(2)+"%]";
+      }
     }
   }
   this.onRenderPlot.subscribe(function(e,d) {
@@ -81,6 +90,7 @@ DG.prototype.calc = function(chart, i, prev, data) {
         time : data.time,
         data : data.data[this.target].data,
         loss : parseFloat(data.data[this.target].loss) * parseInt(data.data[this.target].cnt),
+        loss_p : parseFloat(data.data[this.target].loss) * 100,
         cnt : parseInt(data.data[this.target].cnt),
         recv : parseInt(data.data[this.target].recv),
         close : this.toInt(parseFloat(data.data[this.target].avg)+0.5),
