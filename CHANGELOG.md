@@ -4,6 +4,9 @@
 ## [Unreleased]
 
 ### Added
+
+- Loss percentage for smokestack graphs (#15)
+
 ### Fixed
 
 - Sometimes grid lines are drawn over graph lines (#16)
