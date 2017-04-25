@@ -5655,9 +5655,9 @@ Chart.prototype.RenderData = function() {
 
 
   // render plot data
-  for(i in this.graphsOrder) {
+  for(i in this.graphs) {
 
-    graph = this.graphsOrder[i];
+    graph = this.graphs[i];
     var plotData = null;
 
     if(graph.error)
