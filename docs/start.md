@@ -83,3 +83,24 @@ pip install gevent
 ```sh
 bartender serve --config=.
 ```
+
+## Urls
+
+Once the server is running you should be able to access these paths on your host
+
+### Default index layout
+```sh
+http://localhost/
+```
+
+### Detail view using the 'custom' layout with data for source_a.first
+```sh
+http://localhost/view/custom/source_a.first
+```
+
+### If you have made another index layout 
+```sh
+http://localhost/view/<layout_name>/all
+```
+
+
