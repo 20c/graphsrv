@@ -93,9 +93,9 @@ Once the server is running you should be able to access these paths on your host
 http://localhost/
 ```
 
-### Detail view using the 'custom' layout with data for source_a.first
+### Detail view using the 'detail' layout with data for source_a.first
 ```sh
-http://localhost/view/custom/source_a.first
+http://localhost/view/detail/source_a.first
 ```
 
 ### If you have made another index layout 
