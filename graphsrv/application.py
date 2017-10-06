@@ -3,6 +3,9 @@ from __future__ import division
 from builtins import range
 from past.utils import old_div
 from builtins import object
+
+from pkg_resources import get_distribution
+
 import uuid
 import copy
 import os
@@ -19,7 +22,10 @@ import vodka.plugins.zeromq
 import graphsrv.group
 
 #FIXME: these need to be abstracted in wsgi plugin
+
 from flask import request
+
+__version__ = get_distribution('graphsrv').version
 
 class GraphSourcePlugin(vodka.plugins.TimedPlugin):
     """
@@ -99,6 +105,8 @@ class Graph(object):
 @vodka.app.register('graphsrv')
 class GraphServ(vodka.app.WebApplication):
     # configuration
+
+    version = __version__
 
     class Configuration(vodka.app.WebApplication.Configuration):
 
@@ -196,7 +204,14 @@ class GraphServ(vodka.app.WebApplication):
         if layout_name:
             _layout = layouts.get(layout_name)
         else:
-            _layout = list(layouts.values())[0]
+            if source_name:
+                #if source name is specified but layout name is not
+                #find the first layout that is a custom layout
+                _layout = [l for l in layouts.values() if l["type"] == "custom"][0]
+            else:
+                #if neither source name nor layout name are specified
+                #we want to render the index layout
+                _layout = layouts.get("index")
 
         layout = copy.deepcopy(_layout)
 
