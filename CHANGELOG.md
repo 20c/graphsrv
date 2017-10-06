@@ -10,6 +10,16 @@
 ### Removed
 ### Security
 
+## 1.2.0
+
+### Added
+
+- Index layouts can now have manually built layouts
+
+### Fixed
+
+- Fixed (#22) graphserv does not default to "index" layout if any other layout name is present
+
 ## 1.1.3
 
 ### Added
