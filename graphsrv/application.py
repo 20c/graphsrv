@@ -227,23 +227,25 @@ class GraphServ(vodka.app.WebApplication):
         ids = 1
 
         if layout.get("type") == "index":
-            # index layout, auto generate grid
+            # index layout
 
-            grid = [int(x) for x in layout.get("grid", "3x3").split("x")]
+            if not layout.get("layout"):
+                # auto-generate grid
+                grid = [int(x) for x in layout.get("grid", "3x3").split("x")]
 
-            sources = layout.get("sources", graphsrv.group.get_paths())
+                sources = layout.get("sources", graphsrv.group.get_paths())
 
-            layout["layout"] = [
-                {
-                    "cols" : [
-                        {
-                            "graph" : copy.deepcopy(layout.get("graph")),
-                            "width" : int(old_div(12,grid[0]))
-                        } for _ in range(0, grid[0])
-                    ],
-                    "height" : float(old_div(100.00,float(grid[1])))
-                } for _ in range(0, grid[1])
-            ]
+                layout["layout"] = [
+                    {
+                        "cols" : [
+                            {
+                                "graph" : copy.deepcopy(layout.get("graph")),
+                                "width" : int(old_div(12,grid[0]))
+                            } for _ in range(0, grid[0])
+                        ],
+                        "height" : float(old_div(100.00,float(grid[1])))
+                    } for _ in range(0, grid[1])
+                ]
 
 
         for row in layout.get("layout"):
@@ -255,7 +257,7 @@ class GraphServ(vodka.app.WebApplication):
 
                     col["graph"]["config_dict"] =cfg
                     if layout.get("type") == "index":
-                        if sources:
+                        if not col["graph"].get("source") and sources:
                             col["graph"]["source"] = sources.pop(0)
                         if not col["graph"].get("id"):
                             col["graph"]["id"] = "auto-%s" % ids
