@@ -19,6 +19,7 @@ layouts:
         id: multitarget-source_a.first
         width: 6
       # col 1, graph 2
+      - graph:
         config: multitarget
         fit: 'yes'
         targets: all
@@ -27,5 +28,4 @@ layouts:
         source: source_a.second
         id: multitarget-source_a.second
         width: 6
-      - graph:
     height: 100
