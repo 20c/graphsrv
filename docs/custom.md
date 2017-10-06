@@ -21,6 +21,12 @@ Index layout types allow you to quickly generate a grid to render multiple graph
 {!examples/customize_layout/index.yml!}
 ```
 
+If you wish, however, you may normally define the index layout as well
+
+```yml
+{!examples/customize_layout/index_manual_layout.yml!}
+```
+
 #### custom
 
 Custom layouts are completely customizable using bootstrap to render a responsive grid

@@ -1,0 +1,31 @@
+layouts:
+
+  # this is the layout that will be rendered to /, it is required to be of type 'index'
+
+  index:
+    # layout type: 'index'
+    type: index
+
+    layout:
+    - cols:
+      # col 1, graph 1
+      - graph:
+        config: multitarget
+        fit: 'yes'
+        targets: all
+        # since index layouts are loaded without specified source, we need to 
+        # tell the graph where it is geting it's data from
+        source: source_a.first
+        id: multitarget-source_a.first
+        width: 6
+      # col 1, graph 2
+        config: multitarget
+        fit: 'yes'
+        targets: all
+        # since index layouts are loaded without specified source, we need to 
+        # tell the graph where it is geting it's data from
+        source: source_a.second
+        id: multitarget-source_a.second
+        width: 6
+      - graph:
+    height: 100
