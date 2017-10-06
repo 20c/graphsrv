@@ -90,17 +90,17 @@ Once the server is running you should be able to access these paths on your host
 
 ### Default index layout
 ```sh
-http://localhost/
+http://localhost:7041/
 ```
 
 ### Detail view using the 'detail' layout with data for source_a.first
 ```sh
-http://localhost/view/detail/source_a.first
+http://localhost:7041/view/detail/source_a.first
 ```
 
 ### If you have made another index layout 
 ```sh
-http://localhost/view/<layout_name>/all
+http://localhost:7041/view/<layout_name>/all
 ```
 
 
