@@ -4,7 +4,7 @@ html, body {
 }
 
 div.height1 {
-  height: 10%; 
+  height: 10%;
 }
 div.height2 {
   height: 16.5%;
@@ -88,4 +88,74 @@ div.graphsrv.overview div.status-indicator.visible {
   animation-name: status_indicator_anim;
   animation-duration: 2s;
   animation-iteration-count: infinite;
+}
+
+svg text {
+  fill: white;
+  font: 10px sans-serif;
+  text-anchor: start;
+}
+
+svg text.label {
+  font-size: 12px;
+}
+
+svg .axis line,
+svg .axis path {
+  fill: none;
+  stroke: #aaa;
+  shape-rendering: crispEdges;
+}
+
+svg .x.axis text {
+  text-anchor: middle;
+}
+
+svg .y.axis text {
+  text-anchor: end;
+}
+
+svg .y.axis.right text {
+  text-anchor: start;
+}
+
+svg rect.background {
+  fill: #2b2b2b;
+}
+
+
+svg.mtr rect.avg-line {
+  fill: orange;
+}
+
+svg.mtr rect.loss {
+  fill: red;
+}
+
+svg.mtr text.loss {
+  fill: red;
+}
+
+svg.multitarget g.data path {
+  fill: none;
+  stroke: steelblue;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  stroke-wdith: 3.5;
+}
+
+div.graphsrv-popover {
+  background-color: #000;
+  border: 1px #666 solid;
+  color: #999;
+  padding: 3px;
+}
+
+div.graphsrv-popover p {
+  margin: 0px;
+}
+
+div.graphsrv-popover h1 {
+  font-size: 15px;
+  margin:0px;
 }

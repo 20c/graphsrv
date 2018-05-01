@@ -1,6 +1,6 @@
 <div class="row" style="height: {{ row.height }}%">
 {% for col in row.cols %}
-  <div class="col-xs-12 col-md-{{ col.width }} column">
+  <div class="col-xs-12 col-md-{{ col.width }} column" style="height:100%">
   {% if col.graph and col.graph.source %}
     {% if layout.type == "index" %}
     <div class="graph-label">

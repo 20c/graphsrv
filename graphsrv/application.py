@@ -136,8 +136,7 @@ class GraphServ(vodka.app.WebApplication):
             default={
                 "js" : {
                     "jquery" : {"path":"graphsrv/js/jquery.js"},
-                    "graphsrv" : {"path":"graphsrv/js/graphsrv.plugin.js"},
-                    "graphsrv.oview": {"path":"graphsrv/js/graphsrv.oview.js", "order":1}
+                    "bootstrap" : {"path":"graphsrv/js/bootstrap.min.js"},
                 },
                 "css": {
                     "bootstrap" : {"path":"graphsrv/media/bootstrap.css"},
@@ -361,25 +360,24 @@ class GraphServ(vodka.app.WebApplication):
 
 
         cdata = self.data(source)
+        index = {}
 
         for row in cdata:
             if ts and ts >= row["ts"]:
                 continue
 
             rdata = row["data"]
+            _time = row["ts"] * 1000
 
-            rv_row = {"ts" : row["ts"], "data":{}}
-
-            if "all" in targets:
-                for target,bars in list(rdata.items()):
-                    rv_row["data"][target] = bars
-            else:
-                for target in targets:
-                    if target in rdata:
-                        rv_row["data"][target] = rdata.get(target)
-
-            data.append(rv_row)
-
+            for target,bars in list(rdata.items()):
+                if targets != ["all"] and target not in targets:
+                    continue
+                bars["time"] = _time
+                if target not in index:
+                    index[target] = len(data)
+                    data.append([bars])
+                else:
+                    data[index[target]] += [bars]
 
 
     @vodka.data.renderers.RPC(errors=True)
@@ -398,7 +396,11 @@ class GraphServ(vodka.app.WebApplication):
         if not len(targets):
             raise ValueError("Target targets missing")
 
+
+        t1 = time.time()
         self.collect_graph_data(data, targets, source, ts=ts)
+        t2 = time.time()
+        print("graph_data", (t2-t1), "s")
 
 
 
