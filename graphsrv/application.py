@@ -139,7 +139,7 @@ class GraphServ(vodka.app.WebApplication):
                     "bootstrap" : {"path":"graphsrv/js/bootstrap.min.js"},
                 },
                 "css": {
-                    "bootstrap" : {"path":"graphsrv/media/bootstrap.css"},
+                    "bootstrap" : {"path":"graphsrv/media/bootstrap.min.css"},
                     "graphsrv" : {"path":"graphsrv/media/graphsrv.css", "order":1}
                 }
             },

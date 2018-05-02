@@ -5,8 +5,19 @@ graphsrv = {
   "components" : new $tc.cls.Registry(),
   "formatters" : {},
   "instances" : {},
+  "popovers" : new $tc.cls.Registry(),
   "util" : {}
 }
+
+/**
+ * Describes a data window specified by start
+ * and end points in a dataset
+ *
+ * @class DataViewport
+ * @namespace graphsrv.util
+ * @constructor
+ * @param {Number} length - max length of data
+ */
 
 graphsrv.util.DataViewport = $tc.cls.define(
   "DataViewport",
@@ -14,19 +25,50 @@ graphsrv.util.DataViewport = $tc.cls.define(
     "DataViewport" : function(length) {
       this.set(length)
     },
+
+    /**
+     * Sets the length of the viewport
+     * @method set
+     * @param {Number} length
+     */
     "set" : function(length) {
       this.length = (length == undefined ? -1 : length)
     },
+
+    /**
+     * Returns the start point (index) for the window
+     * when applied to a dataset (first index)
+     * @param {Array} data
+     * @returns {Number} start
+     */
     "get_start" : function(data) {
       if(this.length == -1)
         return 0;
       return Math.max(0, data.length - this.length);
     },
+
+    /**
+     * Returns the end point (index) for the window when
+     * applied to a dataset (last index+1)
+     *
+     * @method get_end
+     * @param {Array} data
+     * @returns {Number} end
+     */
     "get_end" : function(data) {
       if(this.length == -1)
         return data.length;
       return Math.min(data.length, this.get_start(data) + this.length);
     },
+
+    /**
+     * Returns the length of the window (number of items
+     * contained in the window) when applied to a dataset
+     *
+     * @method get_length
+     * @param {Array} data
+     * @returns {Number} length
+     */
     "get_length" : function(data) {
       if(this.length == -1)
         return (data ? data.length : 0)
@@ -34,6 +76,402 @@ graphsrv.util.DataViewport = $tc.cls.define(
     }
   }
 );
+
+/**
+ * Popover base
+ *
+ * Popovers can be used to display data when clicking elements
+ * inside a graph or a plugin
+ *
+ * All popovers should extend this class
+ *
+ * Uses the bootstrap4 popover
+ *
+ * @class Popover
+ * @namespace graphsrv.popovers
+ * @constructor
+ * @param {jQuery} bind - element to bind
+ *     popover to. This will be the element that will dictate the
+ *     position of the popover. It is also the element that will
+ *     trigger the popover when clicked.
+ *
+ *     See `bind_events` and `bind_popover` methods for details.
+ */
+
+graphsrv.popovers.register(
+  "Popover",
+  {
+    "Popover" : function(bind) {
+      if(bind.data("bs.popover"))
+        throw("Can only bind one popover to an element")
+
+      this.bind_events(bind);
+      this.bind_popover(bind);
+    },
+
+    /**
+     * Binds the mouse events required to open a popover
+     * @method bind_events
+     * @param {jQuery} bind - object
+     *    to bind click event to. Clicking this element will
+     *    open the popover
+     */
+
+    "bind_events" : function(bind) {
+      this.trigger = bind;
+      this.trigger.on("click", function(e) {
+        this.show(e);
+      }.bind(this))
+    },
+
+    /**
+     * Binds the popover itself to an element, which will then
+     * be used to position the popover.
+     *
+     * @method bind_popover
+     * @param {jQuery} bind - object to bind popover to
+     */
+
+    "bind_popover" : function(bind) {
+      this.bound_to = bind;
+      this.bound_to.popover(this.options());
+    },
+
+    /**
+     * Update the title of the popup
+     *
+     * @method title
+     * @param {String|jQuery|HTML Element} content
+     */
+
+    "title" : function(content) {
+      if(typeof content == "string")
+        content = $("<span>").text(content);
+      var tip = this.bound_to.data("bs.popover").tip
+      if(tip)
+        $(tip).find(".popover-header").empty().append(content)
+    },
+
+    /**
+     * Update the body of the popover
+     *
+     * @method content
+     * @param {jQuery|HTML Element} content
+     */
+
+    "content" : function(content) {
+      var tip = this.bound_to.data("bs.popover").tip
+      if(tip) {
+        content
+          .click(function() { this.hide(); }.bind(this))
+          .css("cursor", "pointer");
+        $(tip).find(".popover-body").empty().append(content)
+      }
+    },
+
+    /**
+     * Show the popover
+     * @method show
+     * @param {Event} e - mouse event
+     */
+
+    "show" : function(e) {
+      this.bound_to.popover("show")
+      this.update(e);
+    },
+
+    /**
+     * Hide the popover
+     * @method hide
+     * @param {Event} e - jquery event object
+     */
+
+    "hide" : function(e) {
+      this.bound_to.popover("hide")
+    },
+
+    /**
+     * Check if the popover is currently shown
+     * @method shown
+     * @returns {Boolean} shown
+     */
+
+    "shown" : function() {
+      if(!this.bound_to)
+        return false;
+      return $(this.bound_to.data("bs.popover").tip).is(":visible")
+    },
+
+    /**
+     * Return bootstrap popover options to use for
+     * instantiating the popover
+     *
+     * @method options
+     * @returns {Object} options
+     */
+
+    "options" : function() {
+      return {
+        "title" : "Popover",
+        "content" : "Popover Content",
+        "html" : true,
+        "trigger" : "manual",
+        "placement" : "right",
+        "container" : "body"
+      }
+    },
+
+    /**
+     * Update popup, called automatically during show() but
+     * can also be used to update a currently open popover with
+     * new content
+     *
+     * @method update
+     * @param {Event} e - jquery event object
+     */
+
+    "update" : function(e) {
+    }
+  }
+)
+
+/**
+ * Generic graph popover that can be used
+ * with graphsrv.components.Graph
+ *
+ * @class GraphPopover
+ * @namespace graphsrv.popovers
+ * @extends graphsrv.popovers.Popover
+ * @constructor
+ * @param {jQuery} bind - bind the popover to this element
+ * @param {Graph} graph
+ */
+
+graphsrv.popovers.register(
+  "GraphPopover",
+  {
+    "GraphPopover" : function(bind, graph) {
+
+      /**
+       * Holds reference to the graph that this popover
+       * belongs to
+       * @property {Graph} graph
+       */
+
+      this.graph = graph;
+
+      /**
+       * When tried to index a popover to a data point we
+       * will use the field described in this poperty
+       *
+       * It defaults to whatever the graph option for `data_x`
+       * is
+       * @property {String} index_field
+       */
+      this.index_field = graph.options.data_x;
+      this.Popover(bind);
+
+      $(graph).on("update_after_render", function() {
+        if(this.shown() && this.value)
+          this.update(null, this.value);
+      }.bind(this));
+    },
+
+    /**
+     * Return the popover index value from the specified
+     * data object
+     *
+     * @method index
+     * @param {Object} data
+     * @returns {Mixed} popover index value
+     */
+
+    "index" : function(data) {
+      return data[this.index_field];
+    },
+
+    "show" : function(e) {
+      this.bind_popover();
+      this.Popover_show(e);
+    },
+
+    "hide" : function(e) {
+      this.Popover_hide(e);
+      d3.select(this.bound_to.get(0))
+        .remove()
+      this.bound_to.off();
+      this.bound_to = null;
+    },
+
+    /**
+     * Take jQuery event object and calculate the index
+     * in graph data from the mouse coordinates
+     *
+     * Returns an object literal with a `data` and `index`
+     * key.
+     *
+     * `index` - holds the index in the dataset that corresponds to the mouse coordinates
+     * `data` - holds the item in the dataset that corresponds to the mouse coordinates
+     *
+     * Note that if there are multiple datasets, data will always refer to the first
+     * set. Use the value in `index` to obtain the item from the other datasets
+     *
+     * @method data_from_mouse_event
+     * @param {jQuery Event} e
+     * @returns {Object}
+     */
+
+    "data_from_mouse_event" : function(e) {
+      var o = this.graph.options;
+      var x = this.graph.scales.x;
+      var index = d3.bisector(
+        function(d) { return d[o.data_x] }
+      ).left(this.graph.data[0], x.invert(e.offsetX))-1;
+      return {"data":this.graph.data[0][index], "index":index};
+    },
+
+
+    /**
+     * Take a value and find the index in graph data from it
+     *
+     * Returns an object literal with a `data` and `index`
+     * key.
+     *
+     * `index` - holds the index in the dataset that corresponds to the value
+     * `data` - holds the item in the dataset that corresponds to the value
+     *
+     * Note that if there are multiple datasets, data will always refer to the first
+     * set. Use the value in `index` to obtain the item from the other datasets
+     *
+     * @method data_from_mouse_event
+     * @param {Mixed} value
+     * @returns {Object}
+     */
+
+    "data_from_value" : function(value) {
+      var o = this.graph.options;
+      var index = d3.bisector(
+        function(d) { return this.index(d) }.bind(this)
+      ).left(this.graph.data[0], value);
+      if(!index)
+        return null;
+      return {"data":this.graph.data[0][index], "index":index};
+    },
+
+    /**
+     * Update the popover body
+     *
+     * @method content
+     * @param {Object} data - data entry (a single data point in the first dataset)
+     * @param {Number} index - index of data entry in dataset
+     */
+
+    "content" : function(data, index) {
+      var o = this.graph.options,i,target_config,_data;
+      var content = $("<div>");
+      for(i = 0; i < this.graph.data.length; i++) {
+        _data = this.graph.data[i][index];
+        target_config = this.graph.target_config(_data);
+        content.append(
+          $("<div>").text(
+            target_config.name+": "+
+            this.graph.formatter("y")(_data[o.data_y])
+          )
+        );
+      }
+      $(this).trigger("content-prepare", [content, data])
+      this.Popover_content(content)
+    },
+
+    /**
+     * Update the popover title
+     *
+     * @method title
+     * @param {Object} data - data entry (a single data point in the first dataset)
+     * @param {Number} index - index of data entry in dataset
+     */
+
+    "title" : function(data, index) {
+      var o = this.graph.options;
+      var t = new Date();
+      t.setTime(data.time);
+      var content = $("<span>").text(t);
+      $(this).trigger("title-prepare", [content, data])
+      this.Popover_title(content)
+    },
+
+    /**
+     * Update the popover
+     *
+     * This will update title and content as well the popover indicator position
+     *
+     * @method update
+     * @param {jQuery Event} e - if set retrieve popover data from mouse coordinates
+     * @param {Mixed} value - if set (and `e` is not set) retrieve popover data from
+     *    index value
+     */
+
+    "update" : function(e, value) {
+      var data;
+      if(e) {
+        data = this.data_from_mouse_event(e);
+        this.value = this.index(data.data);
+      } else if(value) {
+        data = this.data_from_value(value);
+      } else {
+        return;
+      }
+
+      if(!data)
+        return this.hide();
+
+      this.indicator(data.data, data.index);
+      this.title(data.data, data.index);
+      this.content(data.data, data.index);
+
+    },
+
+    "bind_popover" : function(bind) {
+      if(this.bound_to)
+        return;
+      this.bound_to = $(
+        this.graph.d3.container.append("rect")
+          .attr("class","popover-indicator")
+          .node()
+      )
+      this.bound_to.popover(this.options())
+    },
+
+    /**
+     * Update the popover indicator position according
+     * to the data entry and data index
+     *
+     * @method indicator
+     * @param {Object} data - data entry (a single data point in the first dataset)
+     * @param {Number} index - index of data entry in dataset
+     */
+
+    "indicator" : function(data, index) {
+      var x = this.graph.scales.x,
+          y = this.graph.scales.y,
+          o = this.graph.options;
+
+      var barwidth = this.graph.inner_width() / this.graph.data[0].length
+
+      d3.select(this.bound_to.get(0))
+        .attr("x", x(data[o.data_x]) - (barwidth*0.5))
+        .attr("y", 0)
+        .attr("width", barwidth)
+        .attr("height", this.graph.inner_height())
+        .style("fill", "#fff")
+        .style("opacity", 0.25);
+
+      this.bound_to.popover("update")
+
+    }
+  },
+  "Popover"
+)
 
 graphsrv.util.count_values = function(arr) {
   var r  = [], index = {}, i, value;
@@ -266,7 +704,6 @@ graphsrv.components.register(
       $(window).resize(function() {
         this.render_static();
         this.render_dynamic();
-        this.render_interactive(true);
       }.bind(this));
     },
 
@@ -384,79 +821,6 @@ graphsrv.components.register(
           n--;
         }
       }
-    },
-
-    "popover_bind" : function(node, payload) {
-      node = $(node);
-      if(node.data("popover_bound"))
-        return;
-
-      node.attr("pointer-events", "all")
-
-      var popover_move = function(e) {
-        this.popover_show(e, payload);
-      }.bind(this);
-
-      node.on("mouseover", function() {
-        node.on("mousemove", popover_move)
-      }.bind(this));
-      node.on("mouseout", function(e) {
-        node.off("mousemove", popover_move)
-        this.popover_hide();
-      }.bind(this))
-      node.data("popover_bound", true);
-    },
-
-    "popover" : function() {
-      if(!this.popover_container) {
-        this.popover_container = $("<div>")
-          .attr("class", "graphsrv-popover")
-          .css("position", "absolute")
-          .css("display", "none")
-          .append($("<h1>"))
-          .append($("<div>").attr("class","body"))
-          .appendTo(document.body)
-      }
-      return this.popover_container;
-    },
-
-    "popover_show" : function(e, payload) {
-      this.popover_update(e, payload)
-      this.popover()
-        .css("left", (e.pageX+5)+"px")
-        .css("top", (e.pageY+5)+"px")
-        .css("display", "block")
-    },
-
-    "popover_hide" : function() {
-      this.popover().css("display", "none")
-    },
-
-    "popover_render_line" : function(line, data) {
-      var target_config = this.target_config(data)
-      line.append(
-        $("<strong>").text(target_config.name+":").css("color", target_config.color)
-      ).append(
-        $("<span>").attr("class", this.options.data_y).text(
-          this.formatter("y")(data[this.options.data_y])
-        )
-      )
-      return line;
-    },
-    "popover_update" : function(e, payload) {
-      var content = $("<div>")
-      var j = 0;
-
-      this.d3.data.selectAll("g")
-        .each(function(d) {
-          content.append(this.popover_render_line($("<p>"), d[payload.index]))
-        }.bind(this))
-
-      var t = new Date();
-      t.setTime(this.data[0][payload.index].time)
-
-      this.popover().children("h1").text(t);
-      this.popover().children("div.body").empty().append(content);
     }
 
 
@@ -521,13 +885,9 @@ graphsrv.components.register(
         "axes" : d3.select(this.container.get(0)).
           append("g").attr("class","axes"),
 
-        // holds the elements that the user can interactive (mouseover etc.)
+        // for mouse events
         "interactive" : d3.select(this.container.get(0)).
-          append("g").attr("class","interactive")
-      }
-
-      this.canvas = {
-        "main" : $("<canvas>")
+          append("rect").attr("class","interactive").attr("pointer-events","all")
       }
 
       // default options
@@ -566,6 +926,10 @@ graphsrv.components.register(
           _update();
         }
       }.bind(this))
+
+      var popover_class = graphsrv.popovers.get("GraphPopover")
+      this.popover = new popover_class($(this.d3.interactive.node()), this);
+
     },
 
     /**
@@ -706,6 +1070,11 @@ graphsrv.components.register(
         .attr("height", this.inner_height())
         .attr("transform", "translate("+this.margin.left+", "+this.margin.top+")")
 
+      this.d3.interactive
+        .style("fill", "transparent")
+        .attr("width", this.inner_width())
+        .attr("height", this.inner_height())
+        .attr("transform", "translate("+this.margin.left+", "+this.margin.top+")")
     },
 
     /**
@@ -718,9 +1087,8 @@ graphsrv.components.register(
       this.clear_data();
       this.render_data();
       this.clip_data();
-      this.render_labels()
+      this.render_labels();
       this.render_axes();
-      this.render_interactive();
       $(this).trigger("render_dynamic_after")
     },
 
@@ -846,57 +1214,7 @@ graphsrv.components.register(
           .text(function(d,i) {
             return this.render_label(d[d.length-1])
           }.bind(this))
-    },
-
-    "render_interactive" : function(force) {
-      if(!force) {
-      if(!this.data || !this.data.length || !this.data[0].length)
-        return;
-
-      if($(this.d3.interactive.node()).children().length == this.data[0].length)
-        return;
-      }
-
-      console.log(this.type, this.component_id, "rendering_interactives (2)")
-
-      this.d3.interactive.selectAll("rect")
-        .each(function(d,i,j) {
-          $(j[i]).off()
-        })
-        .remove();
-
-
-      var scales = this.scales, o = this.options;
-      var bar_width = this.inner_width() / this.data[0].length;
-
-      var sections = this.d3.interactive.selectAll("rect")
-        .data(this.data[0])
-        .enter().append("rect")
-          .style("fill", "transparent")
-          .attr("y", 0)
-          .attr("x", function(d,i) { return scales.x(d[o.data_x]) - (bar_width * 0.5) })
-          .attr("width", this.inner_width()/this.data[0].length)
-          .attr("height", this.inner_height())
-          .each(function(d,i,j) {
-            this.popover_bind(j[i], {"index":i})
-          }.bind(this))
-
-/*
-      var sections = this.d3.interactive.selectAll("rect")
-        .data(this.data[0])
-        .enter().append("rect")
-          .style("fill", "transparent")
-          .attr("y", 0)
-          .attr("x", function(d,i) { return scales.x(d[o.data_x]) - (bar_width * 0.5) })
-          .attr("width", this.inner_width()/this.data[0].length)
-          .attr("height", this.inner_height())
-          .each(function(d,i,j) {
-            this.popover_bind(j[i], {"data":d, "index":i})
-          }.bind(this))
-*/
-    },
-
-
+    }
   },
   "Base"
 )

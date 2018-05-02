@@ -672,6 +672,8 @@ twentyc.libraries = {
    */
 
   require : function(test, url) {
+    if(typeof test == "function")
+      test = test();
     if(!test) {
       if(!this.index[url]) {
         var importer = new twentyc.libraries.Importer(url);

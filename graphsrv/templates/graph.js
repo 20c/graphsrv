@@ -20,6 +20,8 @@
   // twentyc is now available
   twentyc.libraries.
     require(window.jQuery, "{{ host }}{{ graphsrv.static_url }}js/jquery.js").
+    require(false, "{{ host }}{{ graphsrv.static_url }}js/popper.min.js").
+    require(false, "{{ host }}{{ graphsrv.static_url }}js/bootstrap.min.js").
     require(window.d3, "{{ host }}{{ graphsrv.static_url }}js/d3.v5.min.js").
     require(window.graphsrv, "{{ host }}{{ graphsrv.static_url }}js/v2/graphsrv.js").
     require(window.graphsrv && window.graphsrv.componentds.has("{{ type }}"),
