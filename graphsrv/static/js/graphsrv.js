@@ -23,6 +23,9 @@ graphsrv.util.DataViewport = $tc.cls.define(
   "DataViewport",
   {
     "DataViewport" : function(length) {
+      this.length = 0;
+      this.offset = 0;
+
       this.set(length)
     },
 
@@ -44,7 +47,8 @@ graphsrv.util.DataViewport = $tc.cls.define(
     "get_start" : function(data) {
       if(this.length == -1)
         return 0;
-      return Math.max(0, data.length - this.length);
+      var s = Math.max(0, Math.max(0, data.length - this.length) + this.offset);
+      return s;
     },
 
     /**
@@ -73,6 +77,51 @@ graphsrv.util.DataViewport = $tc.cls.define(
       if(this.length == -1)
         return (data ? data.length : 0)
       return Math.min(this.length, (data?data.length:0))
+    },
+
+    "bind_scroll" : function(bind_to, extra, property) {
+      if(!property)
+        property = "pageX";
+
+      if(this.length < 0)
+        return;
+
+      var width = bind_to.width()
+
+      var scroll_viewport = function(e) {
+        var _extra = extra();
+        if(this.scrolling.prev) {
+          var diff = e[property] - this.scrolling.prev[property];
+          if(!diff)
+            return;
+          diff = Math.round(diff / _extra.scroll_size);
+          if(!diff)
+            return;
+          this.offset = Math.min(0,this.offset - diff);
+          this.offset = Math.max(-(_extra.max_length - this.get_length(_extra.data)), this.offset);
+          $(this).trigger("scroll");
+        }
+        this.scrolling.prev = e;
+      }.bind(this);
+
+      bind_to.on("mousedown", function(e) {
+        this.scrolling = { "triggered" : new Date() };
+        $(document.body).on("mousemove", scroll_viewport);
+        e.preventDefault();
+      }.bind(this));
+
+      this.stop_scrolling = function() {
+        if(this.scrolling) {
+          this.scrolling = null;
+          $(document.body).off("mousemove", scroll_viewport);
+        }
+      }.bind(this);
+
+      $(document.body).on("mouseup", function(e) {
+        this.stop_scrolling();
+      }.bind(this));
+
+
     }
   }
 );
@@ -588,7 +637,7 @@ graphsrv.update = {
         "refcount" : 1,
         "data" : [],
         // FIXME: should come from some config
-        "max_length" : 250,
+        "max_length" : 500,
         "interval" : interval,
         // FIXME: should come from some config
         "incremental" : function(d) { return d.time/1000 },
@@ -694,7 +743,7 @@ graphsrv.components.register(
        */
       this.options = {};
 
-      this.data_viewport = new graphsrv.util.DataViewport();
+      this.data_viewport = new graphsrv.util.DataViewport(250);
 
       this.type = "component"
 
@@ -743,7 +792,13 @@ graphsrv.components.register(
 
     "get_proportions" : function() {
       this.width = this.container.parent().width()
-      this.height = this.container.parent().height()
+
+      var h=0;
+      this.container.parent().children().not(this.container).each(function() {
+        h+=$(this).height()
+      });
+
+      this.height = this.container.parent().height()-h
     },
 
     /**
@@ -784,10 +839,11 @@ graphsrv.components.register(
      */
 
     "update" : function(data) {
+      if(data == undefined && this.raw_data)
+        data = this.raw_data;
       var _data = [], __data = [], i, k, id, source=this.options.source;
 
       var vp = this.data_viewport, start, end;
-
 
       for(i = 0; i < data.length; i++) {
         id = source + '-' + this.type + "-" + data[i][0][this.options.target_id];
@@ -803,6 +859,7 @@ graphsrv.components.register(
       }
 
       this.data = _data;
+      this.raw_data = data;
 
       $(this).trigger("update_before_render", [this.data])
       this.render_dynamic();
@@ -885,9 +942,13 @@ graphsrv.components.register(
         "axes" : d3.select(this.container.get(0)).
           append("g").attr("class","axes"),
 
-        // for mouse events
+        // for mouse events on the graph area
         "interactive" : d3.select(this.container.get(0)).
-          append("rect").attr("class","interactive").attr("pointer-events","all")
+          append("rect").attr("class","interactive").attr("pointer-events","all"),
+
+        // for mouse event on the history scroll area
+        "history_scroll" : d3.select(this.container.get(0)).
+          append("rect").attr("class","history_scroll").attr("pointer-events","all")
       }
 
       // default options
@@ -929,6 +990,20 @@ graphsrv.components.register(
 
       var popover_class = graphsrv.popovers.get("GraphPopover")
       this.popover = new popover_class($(this.d3.interactive.node()), this);
+
+      this.data_viewport.bind_scroll(
+        $(this.d3.history_scroll.node()),
+        function() {
+          return {
+            "max_length" : this.raw_data[0].length,
+            "data" : this.data[0],
+            "scroll_size" : (this.inner_width()/this.data[0].length)
+          }
+        }.bind(this)
+      )
+      $(this.data_viewport).on("scroll", function() {
+        this.update();
+      }.bind(this));
 
     },
 
@@ -1064,17 +1139,33 @@ graphsrv.components.register(
 
     "render_static" : function() {
       this.Base_render_static();
+      this.render_background();
+      this.render_interactive();
+      this.render_history_scroll();
+    },
 
+    "render_background" : function() {
       this.d3.background
         .attr("width", this.inner_width())
         .attr("height", this.inner_height())
         .attr("transform", "translate("+this.margin.left+", "+this.margin.top+")")
+    },
 
+    "render_interactive" : function() {
       this.d3.interactive
         .style("fill", "transparent")
         .attr("width", this.inner_width())
         .attr("height", this.inner_height())
         .attr("transform", "translate("+this.margin.left+", "+this.margin.top+")")
+    },
+
+    "render_history_scroll" : function() {
+      this.d3.history_scroll
+        .style("fill", "transparent")
+        .style("cursor", "ew-resize")
+        .attr("width", this.inner_width())
+        .attr("height", 25)
+        .attr("transform", "translate("+this.margin.left+", "+(this.margin.top+this.inner_height())+")")
     },
 
     /**
@@ -1099,19 +1190,25 @@ graphsrv.components.register(
 
     "render_axes" : function() {
 
+      $(this).trigger("render_axes_before")
+
       this.d3.axes.selectAll("*").remove()
 
       this.d3.axes.append("g")
         .attr("class", "y axis right")
         .attr("transform", "translate("+(this.inner_width()+this.margin.left)+", 0)")
-        .call(d3.axisRight(this.scales.y).tickFormat(this.formatter("y")))
+        .call(d3.axisRight(this.scales.y).ticks(5).tickFormat(this.formatter("y")))
 
       this.d3.axes.append("g")
-        .attr("class", "x axis bottom")
+        .attr("class", function(d) {
+          return "x axis bottom" + (this.data_viewport.offset<0?" historic":"");
+        }.bind(this))
         .attr("transform", "translate(0, "+(this.inner_height() + this.margin.top)+")")
         .call(d3.axisBottom(this.scales.x).tickFormat(this.formatter("x")))
 
+      $(this).trigger("render_axes_after")
     },
+
 
     "clear_data" : function() {
       // remove all existing data data
@@ -1215,6 +1312,7 @@ graphsrv.components.register(
             return this.render_label(d[d.length-1])
           }.bind(this))
     }
+
   },
   "Base"
 )
@@ -1243,5 +1341,17 @@ graphsrv.components.instantiate = function(name, options) {
   var cls = this.get(name);
   return new cls(options);
 }
+
+$(window).mouseleave(function(e) {
+  if(!e.relatedTarget) {
+    var i;
+    for(i in graphsrv.instances) {
+      var instance = graphsrv.instances[i];
+      if(instance.data_viewport) {
+        instance.data_viewport.stop_scrolling();
+      }
+    }
+  }
+});
 
 })(jQuery, twentyc)

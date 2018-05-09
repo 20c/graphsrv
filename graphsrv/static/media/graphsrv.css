@@ -34,6 +34,7 @@ div.graphsrv.overview div.container-fluid {
 div.graphsrv.overview div.row>div {
   background-color: #000;
   height: 100%;
+  padding: 3px;
 }
 
 div.graphsrv.overview div.overview-file {
@@ -45,10 +46,19 @@ div.graphsrv.overview div.overview-file {
 
 div.graphsrv.overview div.graph-label {
   text-align: center;
+  font-size: 12px;
+  padding: 3px;
 }
 
 div.graphsrv.overview div.graph-label a {
   text-decoration: underline;
+  padding: 2px 5px 2px 5px;
+  display: inline-block;
+  background-color: #818182;
+  border-radius: 5px;
+  color: #fff;
+  text-decoration: none;
+  font-weight: bold;
 }
 
 div.graphsrv.overview div.empty {
@@ -58,7 +68,8 @@ div.graphsrv.overview div.empty {
   text-align: center;
   height: 100%;
   width: 100%;
-  border: 1px #333 dashed;
+  background-color: #151515;
+  border-radius: 5px;
 }
 
 @keyframes status_indicator_anim {
@@ -106,6 +117,16 @@ svg .axis path {
   stroke: #aaa;
   shape-rendering: crispEdges;
 }
+
+svg .axis.historic text {
+  fill: orange;
+}
+
+svg .axis.historic line,
+svg .axis.historic path {
+  stroke: orange;
+}
+
 
 svg .x.axis text {
   text-anchor: middle;
