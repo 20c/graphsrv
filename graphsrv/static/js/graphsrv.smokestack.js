@@ -40,6 +40,7 @@ $gs.components.register(
         }
       }
 
+
       this.d3.data.selectAll("g.data")
         .data(this.data)
         .selectAll("g")
@@ -47,7 +48,7 @@ $gs.components.register(
         .enter().append("g")
           .each(function(d) { backref.set(this, d) })
           .selectAll("rect")
-          .data(function(d) { return d.smokedata })
+          .data(function(d) { return d.smokedata || [] })
           .enter().append("rect")
             .attr("height", function(d,i,j) {
               var br = backref.get(j[i].parentNode)
@@ -119,6 +120,10 @@ $gs.components.register(
       else
         lvl = 6
       return this.options.loss_color[lvl];
+    },
+
+    "render_label" : function(data) {
+      return this.Graph_render_label(data) + " max " + data.max + "ms - " + data.loss + "/" + data.cnt;
     }
 
   },
