@@ -5,18 +5,20 @@
     script.src = url;
     script.callbacks = [{"script":currentScript, "onload":onload}];
     script.onload = function() {
+      script.loaded = true;
       while(this.callbacks.length) {
         var callback = this.callbacks.shift()
         callback.onload(callback.script)
       }
     };
     document.head.appendChild(script);
-  } else if(window.twentyc_loading) {
+  } else if(window.twentyc_loading && !window.twentyc_loading.loaded) {
     window.twentyc_loading.callbacks.push({"script":currentScript, "onload":onload});
   } else {
     onload(currentScript)
   }
 })("{{ host }}{{ graphsrv.static_url }}js/twentyc.core.js", function(currentScript) {
+
   // twentyc is now available
   twentyc.libraries.
     require(window.jQuery, "{{ host }}{{ graphsrv.static_url }}js/jquery.js").
