@@ -793,7 +793,7 @@ graphsrv.components.register(
     "get_proportions" : function() {
       this.width = this.container.parent().width()
 
-      var h=0;
+      var h=5;
       this.container.parent().children().not(this.container).each(function() {
         h+=$(this).height()
       });
