@@ -118,6 +118,16 @@ svg .axis path {
   shape-rendering: crispEdges;
 }
 
+svg .axis.error text {
+  fill: red;
+}
+
+svg .axis.error line,
+svg .axis.error path {
+  stroke: red;
+}
+
+
 svg .axis.historic text {
   fill: orange;
 }
@@ -163,6 +173,12 @@ svg.multitarget g.data path {
   stroke-linejoin: round;
   stroke-linecap: round;
   stroke-wdith: 3.5;
+}
+
+svg g.data-feed-stopped text {
+  fill: red;
+  text-anchor:middle;
+  font: 16px sans-serif;
 }
 
 div.graphsrv-popover {

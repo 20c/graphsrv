@@ -682,7 +682,9 @@ graphsrv.update = {
 
               }.bind(this)
             }
-          )
+          ).fail(function() {
+            $(this).trigger("data_feed_stopped")
+          }.bind(this))
         }
       }
 
@@ -831,7 +833,6 @@ graphsrv.components.register(
     "render_dynamic" : function() {
     },
 
-
     /**
      * Update the component
      * @method update
@@ -971,6 +972,7 @@ graphsrv.components.register(
 
       // everytime the update handler gets data, we update the graph
       $(update).on("update", function(e, data) {
+        this.data_feed_stopped = false;
         var _update = function() {
         var t1 = new Date().getTime();
         this.claim_targets(data);
@@ -986,6 +988,11 @@ graphsrv.components.register(
         }  else {
           _update();
         }
+      }.bind(this))
+
+      $(update).on("data_feed_stopped", function(e) {
+        this.data_feed_stopped = true;
+        this.update();
       }.bind(this))
 
       var popover_class = graphsrv.popovers.get("GraphPopover")
@@ -1055,6 +1062,14 @@ graphsrv.components.register(
 
     "inner_width" : function() {
       return this.width - this.margin.left - this.margin.right;
+    },
+
+    "inner_right" : function() {
+      return this.inner_width() + this.margin.left;
+    },
+
+    "inner_bottom" : function() {
+      return this.inner_height() + this.margin.top;
     },
 
     /**
@@ -1195,7 +1210,9 @@ graphsrv.components.register(
       this.d3.axes.selectAll("*").remove()
 
       this.d3.axes.append("g")
-        .attr("class", "y axis right")
+        .attr("class", function(d)  {
+          return "y axis right" + (this.data_feed_stopped?" error":"")
+        }.bind(this))
         .attr("transform", "translate("+(this.inner_width()+this.margin.left)+", 0)")
         .call(d3.axisRight(this.scales.y).ticks(5).tickFormat(this.formatter("y")))
 
@@ -1205,6 +1222,17 @@ graphsrv.components.register(
         }.bind(this))
         .attr("transform", "translate(0, "+(this.inner_height() + this.margin.top)+")")
         .call(d3.axisBottom(this.scales.x).tickFormat(this.formatter("x")))
+
+      if(this.data_feed_stopped) {
+        this.d3.axes.append("g")
+          .attr("transform", "translate("+this.inner_right()+", "+this.inner_bottom()+")")
+          .attr("class", "data-feed-stopped")
+          .append("text")
+            .attr("x", this.inner_bottom()/2)
+            .attr("y", -5)
+            .text("Data Feed Stopped")
+            .attr("transform", "rotate(-90)")
+      }
 
       $(this).trigger("render_axes_after")
     },
