@@ -1297,9 +1297,16 @@ graphsrv.components.register(
       var text_width = []
       this.d3.labels.selectAll("*").remove()
 
+      var i, _data = [], row;
+      for(i = 0; i < this.data.length; i++) {
+        row = this.data[i][this.data[i].length-1];
+        _data.push({"data": row, "text":this.target_config(row).name})
+      }
+      _data.sort(function(a,b) { return d3.ascending(a.text, b.text) })
+
       // remove existing labels
       this.d3.labels.selectAll("g")
-        .data(this.data)
+        .data(_data)
         .enter().append("g")
 
       // add dummy labels so we can figure out heir width
@@ -1308,7 +1315,7 @@ graphsrv.components.register(
         .append("text")
           .attr("class", "label")
           .text(function(d,i) {
-            return this.render_label(d[d.length-1])
+            return this.render_label(d.data)
           }.bind(this))
           .each(function() {
             text_width.push(this.getComputedTextLength())
@@ -1334,10 +1341,10 @@ graphsrv.components.register(
           .attr("transform", function(d,i) {
             return "translate("+(this.margin.left+5)+", "+((i+1)*20)+")"}.bind(this))
           .style("fill", function(d,i) {
-            return this.target_config(d[d.length-1]).color
+            return this.target_config(d.data).color
           }.bind(this))
           .text(function(d,i) {
-            return this.render_label(d[d.length-1])
+            return this.render_label(d.data)
           }.bind(this))
     }
 
