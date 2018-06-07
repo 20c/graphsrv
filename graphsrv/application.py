@@ -23,7 +23,7 @@ import graphsrv.group
 
 #FIXME: these need to be abstracted in wsgi plugin
 
-from flask import request
+from flask import request, send_file
 
 __version__ = get_distribution('graphsrv').version
 
@@ -85,8 +85,6 @@ class Graph(object):
 
         type = vodka.config.Attribute(
             str,
-            #FIXME: should be dynamic
-            choices=["multitarget", "smokestack"],
             help_text="graph type"
         )
 
@@ -153,6 +151,26 @@ class GraphServ(vodka.app.WebApplication):
         super(GraphServ, self).setup()
         self.layout_last_sync = 0
         graphsrv.group.add_all(self.get_config("groups"))
+
+        # collect graphs that require routes set up for their javascript
+        # and css sources
+
+        graph_config = self.config.get("graphs",{})
+
+
+        for name, graph in graph_config.items():
+            js_src = graph.get("javascript")
+            css_src = graph.get("css")
+            if js_src and hasattr(self, "wsgi_plugin"):
+                def serve_js(src = js_src):
+                    return send_file(src)
+                self.wsgi_plugin.set_route("/static/graphsrv/js/graphsrv.{}.js".format(name), serve_js)
+            if css_src and hasattr(self, "wsgi_plugin"):
+                def serve_css(src = css_src):
+                    return send_file(src)
+                self.wsgi_plugin.set_route("/static/graphsrv/media/graphsrv.{}.css".format(name), serve_css)
+
+
         if hasattr(self, "wsgi_plugin"):
             self.wsgi_plugin.set_route("/view/<layout>/<source>", self.view, methods=["GET","POST"])
 
