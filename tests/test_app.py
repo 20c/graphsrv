@@ -28,7 +28,7 @@ class TestConfig(unittest.TestCase):
         self.app = graphsrv.application.GraphServ(APP_CONFIG)
         self.app.setup();
 
-    
+
     def test_data_type(self):
         self.assertEqual("test", self.app.data_type("test"))
 
@@ -38,37 +38,40 @@ class TestConfig(unittest.TestCase):
 
     def test_collect_graph_data(self):
 
-        points = {"x":{}, "y":{}}
-        
+        def make_points():
+            return {"x":{"bla":1}, "y":{"blu":2}}
+
         vodka.storage.storage["test"] = [
-            {"data":points, "ts": 0},
-            {"data":points, "ts": 2}
+            {"data":make_points(), "ts": 1},
+            {"data":make_points(), "ts": 2}
         ]
 
         r = []
         self.app.collect_graph_data(r, ["x"], "test.a")
         self.assertEqual(
             r,
-            [{"data":{"x":{}},"ts":0},{"data":{"x":{}},"ts":2}]
+            [[{"bla": 1,"time":1000},{"bla":1,"time":2000}]]
         )
-                
+
         r = []
         self.app.collect_graph_data(r, ["all"], "test.a")
+        print(r)
         self.assertEqual(
-            r,
-            [{"data":points,"ts":0},{"data":points,"ts":2}]
+            sorted(r, key=lambda x: "blu" in x[0]),
+            [[{"bla": 1,"time":1000},{"bla":1,"time":2000}],
+             [{"blu": 2,"time":1000},{"blu":2,"time":2000}]]
         )
- 
+
         r = []
         self.app.collect_graph_data(r, ["x"], "test.a", ts=1)
         self.assertEqual(
             r,
-            [{"data":{"x":{}},"ts":2}]
+            [[{"bla":1,"time":2000}]]
         )
- 
+
 
     def test_collect_targets(self):
-        
+
         vodka.storage.storage["test"] = [{"data":{"x":{}, "y":{}}}]
         expected = ["x","y"]
         r = []
