@@ -415,10 +415,4 @@ class GraphServ(vodka.app.WebApplication):
             raise ValueError("Target targets missing")
 
 
-        t1 = time.time()
         self.collect_graph_data(data, targets, source, ts=ts)
-        t2 = time.time()
-        print("graph_data", (t2-t1), "s")
-
-
-
