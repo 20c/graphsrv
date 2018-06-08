@@ -652,6 +652,9 @@ graphsrv.update = {
                 if(!data.data.length)
                   return;
 
+                if(this.sort)
+                  this.sort(data.data);
+
                 // FIXME should come from config
                 this.params.ts = d3.max(data.data, function(d) {
                   return d3.max(d, function(_d) {
@@ -974,6 +977,14 @@ graphsrv.components.register(
           "targets":options.targets.join(",")
         }, options.interval
       )
+      update.sort = function(data) {
+        data.sort(function(a,b) {
+          return d3.ascending(
+            this.target_config(a[0]).name,
+            this.target_config(b[0]).name
+          );
+        }.bind(this));
+      }.bind(this)
 
       // everytime the update handler gets data, we update the graph
       $(update).on("update", function(e, data) {
@@ -1310,7 +1321,6 @@ graphsrv.components.register(
         row = this.data[i][this.data[i].length-1];
         _data.push({"data": row, "text":this.target_config(row).name})
       }
-      _data.sort(function(a,b) { return d3.ascending(a.text, b.text) })
 
       // remove existing labels
       this.d3.labels.selectAll("g")
