@@ -26,7 +26,7 @@
     require(false, "{{ host }}{{ graphsrv.static_url }}js/bootstrap.min.js").
     require(window.d3, "{{ host }}{{ graphsrv.static_url }}js/d3.v5.min.js").
     require(window.graphsrv, "{{ host }}{{ graphsrv.static_url }}js/graphsrv.js").
-    require(window.graphsrv && window.graphsrv.componentds.has("{{ type }}"),
+    require(window.graphsrv && window.graphsrv.components.has("{{ type }}"),
             "{{ host }}{{ graphsrv.static_url}}js/graphsrv.{{ type }}.js").
     ready(function() {
       graphsrv.update.host = "{{ host }}";
