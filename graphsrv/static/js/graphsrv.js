@@ -197,8 +197,12 @@ graphsrv.popovers.register(
       if(typeof content == "string")
         content = $("<span>").text(content);
       var tip = this.bound_to.data("bs.popover").tip
-      if(tip)
+      if(tip) {
+        content
+          .click(function() { this.hide() }.bind(this))
+          .css("cursor", "pointer")
         $(tip).find(".popover-header").empty().append(content)
+      }
     },
 
     /**
