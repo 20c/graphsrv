@@ -1133,14 +1133,17 @@ graphsrv.components.register(
      */
 
     "target_config" : function(data) {
-      var target = data[this.options.target_id]
-
       // Default target config to return if no target
       var config = {
         "color" : "#ccc",
         "stroke_width" : "1.5",
         "name" : target
       };
+
+      if(!data)
+        return config;
+
+      var target = data[this.options.target_id]
 
       if(this.options.config && this.options.config.targets[target])
         $.extend(true, config, this.options.config.targets[target])
