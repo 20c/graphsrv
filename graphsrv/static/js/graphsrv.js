@@ -745,6 +745,8 @@ graphsrv.components.register(
        */
       this.options = {};
 
+      this.claimed_targets = [];
+
       this.data_viewport = new graphsrv.util.DataViewport(250);
 
       this.type = "component"
@@ -870,6 +872,8 @@ graphsrv.components.register(
     "claim_targets" : function(data) {
       var id, i, n = this.options.max_targets;
       var source = this.options.source;
+      if(n <= this.claimed_targets.length)
+        return;
       for(i = 0; i < data.length; i++) {
         if(n == 0)
           break;
@@ -877,6 +881,7 @@ graphsrv.components.register(
         if(!graphsrv.update.claimed_targets[id]) {
           graphsrv.update.claimed_targets[id] = this;
           n--;
+          this.claimed_targets.push(id);
         }
       }
     }
