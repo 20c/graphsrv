@@ -1153,13 +1153,15 @@ graphsrv.components.register(
       var config = {
         "color" : "#ccc",
         "stroke_width" : "1.5",
-        "name" : target
+        "name" : "-"
       };
 
       if(!data)
         return config;
 
       var target = data[this.options.target_id]
+
+      config.name = target;
 
       if(this.options.config && this.options.config.targets[target])
         $.extend(true, config, this.options.config.targets[target])
