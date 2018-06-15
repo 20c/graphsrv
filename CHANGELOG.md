@@ -4,8 +4,15 @@
 ## [Unreleased]
 
 ### Added
+
+- Better support for adding new graph types and supporting third party modules
+
 ### Fixed
+
 ### Changed
+
+- Changed frontend to be d3 based, upgrade should be seamless for users
+
 ### Deprecated
 ### Removed
 ### Security
