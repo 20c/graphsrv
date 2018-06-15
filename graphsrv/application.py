@@ -191,8 +191,19 @@ class GraphServ(vodka.app.WebApplication):
 
         if not self.layout_last_sync or self.layout_last_sync != mtime:
             self.log.debug("%s has changed, reloading layout config..."%path)
-            self.layouts= vodka.config.Config()
-            self.layouts.read(config_file=path)
+
+            # load base layout
+            base_layout = vodka.config.Config()
+            base_layout.read(config_file=self.resource("etc/layouts.yaml"))
+
+            # load extended layout
+            ext_layout = vodka.config.Config()
+            ext_layout.read(config_file=path)
+
+            # merge and set
+            self.layouts = base_layout
+            self.layouts.data["layouts"].update(**ext_layout.data.get("layouts",{}))
+
             self.layout_last_sync = mtime
 
         return self.layouts

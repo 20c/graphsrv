@@ -1,3 +1,4 @@
+import os
 import unittest
 import pytest
 import json
@@ -25,6 +26,7 @@ class TestConfig(unittest.TestCase):
         self.layout_config_file = d
         d.write(json.dumps(self.layout_config))
         APP_CONFIG["layout_config_file"] = str(d)
+        APP_CONFIG["home"] = os.path.dirname(graphsrv.__file__)
         self.app = graphsrv.application.GraphServ(APP_CONFIG)
         self.app.setup();
 
@@ -86,12 +88,17 @@ class TestConfig(unittest.TestCase):
 
         self.app.sync_layout_config();
 
-        self.assertEqual(self.app.layouts, self.layout_config);
+        base_layout = vodka.config.Config()
+        base_layout.read(config_file=self.app.resource("etc/layouts.yaml"))
+
+        self.assertEqual(self.app.layouts.data, base_layout.data)
 
         layout_config = {"layouts":{"test":[]}}
         time.sleep(0.5)
         self.layout_config_file.write(json.dumps(layout_config));
         self.app.sync_layout_config();
-        self.assertEqual(layout_config, self.app.layouts.data);
+        self.assertEqual(layout_config["layouts"]["test"], self.app.layouts.data["layouts"]["test"]);
+        self.assertEqual(base_layout.data["layouts"]["index"], self.app.layouts.data["layouts"]["index"]);
+        self.assertEqual(base_layout.data["layouts"]["detail"], self.app.layouts.data["layouts"]["detail"]);
 
 
