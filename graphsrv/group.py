@@ -5,7 +5,7 @@ groups = {}
 def add(data_id, group_name, targets=None, **kwargs):
     if data_id not in groups:
         groups[data_id] = {}
-    groups[data_id][group_name] = { 
+    groups[data_id][group_name] = {
         "targets" : targets
     }
     groups[data_id][group_name].update(**kwargs)
@@ -13,17 +13,17 @@ def add(data_id, group_name, targets=None, **kwargs):
 def add_all(cfg):
     for data_id, grp in list(cfg.items()):
         for name, targets in list(grp.items()):
-            # config is used for commong config and cant be used as 
+            # config is used for commong config and cant be used as
             # a group name
             if name in ["config"]:
                 continue
             add(data_id, name, targets=targets, **cfg.get("config",{}))
 
 def get_paths():
-    r = []
+    r = {}
     for data_id, s in list(groups.items()):
-        for group in list(s.keys()):
-            r.append("%s.%s" % (data_id, group))
+        for group, data in s.items():
+            r["{}.{}".format(data_id, group)] = data
     return r
 
 def get_from_path(path):

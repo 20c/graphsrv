@@ -60,8 +60,6 @@ class Graph(object):
         format_y = vodka.config.Attribute(
             str,
             default="ms",
-            #FIXME: should be dynamic
-            choices=["ms"],
             help_text="formatter for y axis labels"
         )
 
@@ -90,7 +88,8 @@ class Graph(object):
 
         plot_y = vodka.config.Attribute(
             str,
-            help_text="plot this value on the y axis (data field name)"
+            help_text="plot this value on the y axis (data field name)",
+            default="avg"
         )
 
         id_field = vodka.config.Attribute(
@@ -250,7 +249,13 @@ class GraphServ(vodka.app.WebApplication):
                 # auto-generate grid
                 grid = [int(x) for x in layout.get("grid", "3x3").split("x")]
 
+
+                # get all possible sources
                 sources = layout.get("sources", graphsrv.group.get_paths())
+
+                # filter sources matching the index
+                sources = [s for s,d in sources.items()
+                           if layout.get("graph").get("config") == d.get("default_graph","multitarget")]
 
                 layout["layout"] = [
                     {
@@ -271,14 +276,16 @@ class GraphServ(vodka.app.WebApplication):
                     cfg = graphs.get(col["graph"].get("config"))
                     if "targets" not in cfg:
                         cfg["targets"] = [{"target":"all"}]
-
                     col["graph"]["config_dict"] =cfg
+
+
                     if layout.get("type") == "index":
                         if not col["graph"].get("source") and sources:
                             col["graph"]["source"] = sources.pop(0)
                         if not col["graph"].get("id"):
                             col["graph"]["id"] = "auto-%s" % ids
                             ids +=1
+
                     else:
                         col["graph"]["source"] = sources[0]
 
@@ -379,6 +386,7 @@ class GraphServ(vodka.app.WebApplication):
 
         cdata = self.data(source)
         index = {}
+
 
         for row in cdata:
             if ts and ts >= row["ts"]:
