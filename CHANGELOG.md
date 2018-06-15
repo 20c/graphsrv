@@ -12,6 +12,7 @@
 ### Changed
 
 - Changed frontend to be d3 based, upgrade should be seamless for users
+- Custom layout file will now be loaded on top of the default layout, so you no longer need to provide the two default configurations in your custom layout file if you want to keep them. Redefining them in your custom layout however will still override.
 
 ### Deprecated
 ### Removed
