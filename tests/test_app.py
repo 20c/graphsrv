@@ -52,7 +52,7 @@ class TestConfig(unittest.TestCase):
         self.app.collect_graph_data(r, ["x"], "test.a")
         self.assertEqual(
             r,
-            [[{"bla": 1,"time":1000},{"bla":1,"time":2000}]]
+            [[{"bla": 1,"time":1000,"id":"x"},{"bla":1,"time":2000,"id":"x"}]]
         )
 
         r = []
@@ -60,15 +60,15 @@ class TestConfig(unittest.TestCase):
         print(r)
         self.assertEqual(
             sorted(r, key=lambda x: "blu" in x[0]),
-            [[{"bla": 1,"time":1000},{"bla":1,"time":2000}],
-             [{"blu": 2,"time":1000},{"blu":2,"time":2000}]]
+            [[{"bla": 1,"time":1000, "id":"x"},{"bla":1,"time":2000, "id":"x"}],
+             [{"blu": 2,"time":1000, "id":"y"},{"blu":2,"time":2000, "id":"y"}]]
         )
 
         r = []
-        self.app.collect_graph_data(r, ["x"], "test.a", ts=1)
+        self.app.collect_graph_data(r, ["x"], "test.a", timestamps={"ts_x":1})
         self.assertEqual(
             r,
-            [[{"bla":1,"time":2000}]]
+            [[{"bla":1,"time":2000,"id":"x"}]]
         )
 
 
