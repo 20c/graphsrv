@@ -383,7 +383,7 @@ class GraphServ(vodka.app.WebApplication):
         self.collect_targets(data, source)
 
 
-    def collect_graph_data(self, data, targets, source, ts=0.0):
+    def collect_graph_data(self, data, targets, source, **kwargs):
 
         """
         collect graph data from specified source
@@ -397,19 +397,22 @@ class GraphServ(vodka.app.WebApplication):
 
         cdata = self.data(source)
         index = {}
+        timestamps = kwargs.get("timestamps",{})
 
 
         for row in cdata:
-            if ts and ts >= row["ts"]:
-                continue
 
             rdata = row["data"]
             _time = row["ts"] * 1000
 
             for target,bars in list(rdata.items()):
+                ts = timestamps.get("ts_{}".format(target))
+                if ts and ts >= row["ts"]:
+                    continue
                 if targets != ["all"] and target not in targets:
                     continue
                 bars["time"] = _time
+                bars["id"] = target
                 if target not in index:
                     index[target] = len(data)
                     data.append([bars])
@@ -424,7 +427,8 @@ class GraphServ(vodka.app.WebApplication):
         """
 
         targets = request.values.get("targets","").split(",")
-        ts = float(request.values.get("ts",0))
+        timestamps = dict([(k,float(v)) for k,v in request.values.items()
+                          if k.find("ts_") == 0])
         source = request.values.get("source")
 
         if not source:
@@ -434,4 +438,4 @@ class GraphServ(vodka.app.WebApplication):
             raise ValueError("Target targets missing")
 
 
-        self.collect_graph_data(data, targets, source, ts=ts)
+        self.collect_graph_data(data, targets, source, timestamps=timestamps)

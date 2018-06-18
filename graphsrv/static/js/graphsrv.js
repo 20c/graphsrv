@@ -659,12 +659,14 @@ graphsrv.update = {
                 if(this.sort)
                   this.sort(data.data);
 
-                // FIXME should come from config
-                this.params.ts = d3.max(data.data, function(d) {
-                  return d3.max(d, function(_d) {
-                    return this.incremental(_d)
-                  }.bind(this))
-                }.bind(this))
+                var i, row;
+                for(i = 0; i < data.data.length; i++) {
+                  row = data.data[i][0]
+                  if(!row)
+                    continue
+                  this.params["ts_"+row.id] = d3.max(data.data[i], function(d) { return this.incremental(d) }.bind(this))
+                  //console.log(this.params["ts_"+row.id], row.id)
+                }
 
                 if(this.data && this.data.length) {
                   // there already exists some data, so append the
@@ -862,7 +864,8 @@ graphsrv.components.register(
           start = vp.get_start(data[i])
           end = vp.get_end(data[i])
           for(k = start; k < end; k++) {
-            __data.push(data[i][k])
+            if(data[i][k])
+              __data.push(data[i][k])
           }
           _data.push(__data)
         }
