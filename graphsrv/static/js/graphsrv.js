@@ -556,6 +556,8 @@ graphsrv.util.count_values = function(arr) {
  */
 
 graphsrv.formatters.ms = function(value) {
+  if(isNaN(value))
+    return "-";
   return d3.format(".2f")(value)+"ms";
 }
 
