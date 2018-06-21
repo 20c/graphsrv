@@ -1105,7 +1105,12 @@ graphsrv.components.register(
      */
 
     "formatter" : function(axis) {
-      return graphsrv.formatters[this.options["format_"+axis]];
+      var fn = graphsrv.formatters[this.options["format_"+axis]];
+      if(!fn)
+        return null;
+      return function(a,b,c) {
+        return fn(a,b,c,this);
+      }.bind(this);
     },
 
     /**
@@ -1298,7 +1303,7 @@ graphsrv.components.register(
       var scales = this.scales;
       var options = this.options;
 
-      // line datating function
+      // line plotting function
       var line = d3.line()
         .x(function(d) { return scales.x(d[options.data_x]); })
         .y(function(d) { return scales.y(d[options.data_y] || 0); })
