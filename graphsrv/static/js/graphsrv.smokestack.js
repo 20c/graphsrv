@@ -8,7 +8,7 @@ $gs.components.register(
       this.Graph(options);
       this.type = "smokestack";
       this.container.attr("class", "smokestack");
-      this.data_viewport.set(250);
+      this.data_viewport.set(150);
     },
 
     "render_data" : function() {
