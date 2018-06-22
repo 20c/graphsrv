@@ -17,7 +17,7 @@ def add_all(cfg):
             # a group name
             if name in ["config"]:
                 continue
-            add(data_id, name, targets=targets, **cfg.get("config",{}))
+            add(data_id, name, targets=targets, **grp.get("config",{}))
 
 def get_paths():
     r = {}
