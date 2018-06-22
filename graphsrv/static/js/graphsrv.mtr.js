@@ -34,7 +34,6 @@ $gs.components.register(
       this.type = "mtr";
 
       this.margin.left = 50;
-      this.margin.bottom = 75;
       this.data_viewport.set(50);
 
       $(this).on("render_axes_after", function() {
