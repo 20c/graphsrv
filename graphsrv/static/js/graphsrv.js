@@ -561,6 +561,10 @@ graphsrv.formatters.ms = function(value) {
   return d3.format(".2f")(value)+"ms";
 }
 
+graphsrv.formatters.pcnt = function(value) {
+  return d3.format(",.0%")(value);
+}
+
 /**
  * Data update manager
  * Allows you to request data from the server
@@ -869,6 +873,7 @@ graphsrv.components.register(
             if(data[i][k])
               __data.push(data[i][k])
           }
+          $(this).trigger("update_prepare_data", [__data])
           _data.push(__data)
         }
       }
@@ -1052,18 +1057,27 @@ graphsrv.components.register(
         "config" : {},
         // field to be used to id targets
         "target_id" : "host",
-        // field to be datated on x axis
+        // field to be plotted on x axis
         "data_x" : "time",
         "data_max_x" : "time",
         "data_min_x" : "time",
-        // field to be datated on y axis
+        // field to be plotted on y axis
         "data_y" : "avg",
         "data_max_y" : "avg",
         "data_min_y" : "avg",
-        // y axis formatter to use
+        // field to be plotted on x axis
+        "data_x2" : "time",
+        "data_max_x2" : "time",
+        "data_min_x2" : "time",
+        // field to be plotted on y axis
+        "data_y2" : "avg",
+        "data_max_y2" : "avg",
+        "data_min_y2" : "avg",
+        // formatters
         "format_y" : "ms",
-        // x axis formatter to use
+        "format_y2" : null,
         "format_x" : null,
+        "format_x2" : null,
         "max_targets" : 999
       }
 
@@ -1242,22 +1256,46 @@ graphsrv.components.register(
 
       $(this).trigger("render_axes_before")
 
+
+      // remove all axes so they can be re-drawn
       this.d3.axes.selectAll("*").remove()
 
-      this.d3.axes.append("g")
-        .attr("class", function(d)  {
+      // Right Y Axis
+      if(this.scales.y) {
+        this.d3.axes.append("g")
+          .attr("class", function(d)  {
           return "y axis right" + (this.data_feed_stopped?" error":"")
-        }.bind(this))
-        .attr("transform", "translate("+(this.inner_width()+this.margin.left)+", 0)")
-        .call(d3.axisRight(this.scales.y).ticks(5).tickFormat(this.formatter("y")))
+          }.bind(this))
+          .attr("transform", "translate("+(this.inner_width()+this.margin.left)+", 0)")
+          .call(d3.axisRight(this.scales.y).ticks(5).tickFormat(this.formatter("y")))
+      }
 
-      this.d3.axes.append("g")
-        .attr("class", function(d) {
-          return "x axis bottom" + (this.data_viewport.offset<0?" historic":"");
-        }.bind(this))
-        .attr("transform", "translate(0, "+(this.inner_height() + this.margin.top)+")")
-        .call(d3.axisBottom(this.scales.x).tickFormat(this.formatter("x")))
+      // Left Y Axis
+      if(this.scales.y2) {
+        this.d3.axes.append("g")
+          .attr("class", function(d)  {
+          return "y axis left" + (this.data_feed_stopped?" error":"")
+          }.bind(this))
+          .attr("transform", "translate("+this.margin.left+", 0)")
+          .call(d3.axisLeft(this.scales.y2).ticks(5).tickFormat(this.formatter("y2")))
+      }
 
+      // Bottom X Axis
+      if(this.scales.x) {
+        this.d3.axes.append("g")
+          .attr("class", function(d) {
+            return "x axis bottom" + (this.data_viewport.offset<0?" historic":"");
+          }.bind(this))
+          .attr("transform", "translate(0, "+(this.inner_height() + this.margin.top)+")")
+          .call(d3.axisBottom(this.scales.x).tickFormat(this.formatter("x")))
+      }
+
+      // Top X Axis
+      if(this.scales.x2) {
+
+      }
+
+      // Data Feed Stopped Indicator
       if(this.data_feed_stopped) {
         this.d3.axes.append("g")
           .attr("transform", "translate("+this.inner_right()+", "+this.inner_bottom()+")")
