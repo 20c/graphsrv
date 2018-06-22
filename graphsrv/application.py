@@ -264,9 +264,14 @@ class GraphServ(vodka.app.WebApplication):
                 # get all possible sources
                 sources = layout.get("sources", graphsrv.group.get_paths())
 
+                sources = [{"source":s,
+                            "type":d.get("default_graph","multitarget"),
+                            "config":d.get("default_graph","multitarget")}
+                            for s,d in sources.items()]
+
                 # filter sources matching the index
-                sources = [s for s,d in sources.items()
-                           if layout.get("graph").get("config") == d.get("default_graph","multitarget")]
+                #sources = [s for s,d in sources.items()
+                #           if layout.get("graph").get("config") == d.get("default_graph","multitarget")]
 
                 layout["layout"] = [
                     {
@@ -284,21 +289,22 @@ class GraphServ(vodka.app.WebApplication):
         for row in layout.get("layout"):
             for col in row.get("cols",[]):
                 if "graph" in col:
-                    cfg = graphs.get(col["graph"].get("config"))
-                    if "targets" not in cfg:
-                        cfg["targets"] = [{"target":"all"}]
-                    col["graph"]["config_dict"] =cfg
-
 
                     if layout.get("type") == "index":
                         if not col["graph"].get("source") and sources:
-                            col["graph"]["source"] = sources.pop(0)
+                            col["graph"].update(sources.pop(0))
                         if not col["graph"].get("id"):
                             col["graph"]["id"] = "auto-%s" % ids
                             ids +=1
 
                     else:
                         col["graph"]["source"] = sources[0]
+
+                    cfg = graphs.get(col["graph"].get("config"))
+                    if "targets" not in cfg:
+                        cfg["targets"] = [{"target":"all"}]
+                    col["graph"]["config_dict"] =cfg
+
 
         return self.render(
             "overview.html",
