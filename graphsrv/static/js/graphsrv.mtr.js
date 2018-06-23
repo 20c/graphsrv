@@ -44,6 +44,9 @@ $gs.components.register(
 
     },
 
+    "init_popover": function() {
+    },
+
     "default_options" : function() {
       options = this.Graph_default_options();
       options.max_targets = 1;
@@ -133,7 +136,6 @@ $gs.components.register(
       for(i = 0; i < hops.length; i++) {
         colors[hops[i]] = this.colors[i]
       }
-      console.log(colors, hops)
 
       var bars = this.d3.data.selectAll("g")
         .data(hops)
