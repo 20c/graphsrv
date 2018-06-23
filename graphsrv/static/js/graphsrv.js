@@ -1025,8 +1025,7 @@ graphsrv.components.register(
         this.update();
       }.bind(this))
 
-      var popover_class = graphsrv.popovers.get("GraphPopover")
-      this.popover = new popover_class($(this.d3.interactive.node()), this);
+      this.init_popover();
 
       this.data_viewport.bind_scroll(
         $(this.d3.history_scroll.node()),
@@ -1081,6 +1080,11 @@ graphsrv.components.register(
         "max_targets" : 999
       }
 
+    },
+
+    "init_popover" : function() {
+      var popover_class = graphsrv.popovers.get("GraphPopover")
+      this.popover = new popover_class($(this.d3.interactive.node()), this);
     },
 
     /**
