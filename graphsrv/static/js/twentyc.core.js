@@ -713,7 +713,6 @@ twentyc.libraries = {
     this.loaded = false;
     var importer = this.current = this.queue.shift();
     importer.load(function() {
-      console.log("Loaded",  importer.url)
       if(!this.queue.length)
         this.loaded = true;
       this.current = null;
@@ -766,8 +765,6 @@ twentyc.libraries.Importer = twentyc.cls.define(
         return;
       if(!container)
         container = document.head;
-
-      console.log("Loading", this.url);
 
       var script = document.createElement("script")
       script.onload = function() {
