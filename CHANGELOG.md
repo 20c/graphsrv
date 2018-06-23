@@ -4,19 +4,27 @@
 ## [Unreleased]
 
 ### Added
+### Fixed
+### Changed
+### Deprecated
+### Removed
+### Security
+
+## 1.3.0
+
+### Added
 
 - Better support for adding new graph types and supporting third party modules
 
 ### Fixed
 
+- Show gap after data feed stopped (#20)
+- Parsing errors on layout.yaml should no be shown
+
 ### Changed
 
-- Changed frontend to be d3 based, upgrade should be seamless for users
+- Changed frontend to be d3.js based, upgrade should be seamless for users
 - Custom layout file will now be loaded on top of the default layout, so you no longer need to provide the two default configurations in your custom layout file if you want to keep them. Redefining them in your custom layout however will still override.
-
-### Deprecated
-### Removed
-### Security
 
 ## 1.2.0
 
