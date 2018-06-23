@@ -645,6 +645,7 @@ graphsrv.update = {
         "url" : url,
         "params" : params,
         "refcount" : 1,
+        "last_update_time" : new Date().getTime(),
         "data" : [],
         // FIXME: should come from some config
         "max_length" : 500,
@@ -659,8 +660,13 @@ graphsrv.update = {
               "data": this.params,
               "success" : function(data) {
                 data = JSON.parse(data);
-                if(!data.data.length)
+
+                if(!data.data.length) {
+                  var t = new Date().getTime();
+                  if(t - this.last_update_time > this.interval*3)
+                    $(this).trigger("data_feed_stopped")
                   return;
+                }
 
                 if(this.sort)
                   this.sort(data.data);
@@ -693,6 +699,8 @@ graphsrv.update = {
                 }
 
                 $(this).trigger("update", [this.data]);
+
+                this.last_update_time = new Date().getTime();
 
 
               }.bind(this)
