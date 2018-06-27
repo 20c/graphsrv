@@ -58,6 +58,8 @@ $gs.components.register(
       return options;
     },
 
+    "tick_size_x" : function() { return null },
+
     "render_label" : function(data) {
       return "MTR "+this.target_config(data).name;
     },

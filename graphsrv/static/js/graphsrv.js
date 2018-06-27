@@ -565,6 +565,10 @@ graphsrv.formatters.pcnt = function(value) {
   return d3.format(",.0%")(value);
 }
 
+graphsrv.formatters.time = function(value) {
+  return d3.format("%I:%S")(value);
+}
+
 /**
  * Data update manager
  * Allows you to request data from the server
@@ -661,7 +665,7 @@ graphsrv.update = {
               "success" : function(data) {
                 data = JSON.parse(data);
 
-                if(!data.data.length) {
+                if(!data || !data.data || !data.data.length) {
                   var t = new Date().getTime();
                   if(t - this.last_update_time > this.interval*3)
                     $(this).trigger("data_feed_stopped")
@@ -868,6 +872,9 @@ graphsrv.components.register(
       if(data == undefined && this.raw_data)
         data = this.raw_data;
       var _data = [], __data = [], i, k, id, source=this.options.source;
+
+      if(!data)
+        return;
 
       var vp = this.data_viewport, start, end;
 
@@ -1139,6 +1146,28 @@ graphsrv.components.register(
       }.bind(this);
     },
 
+    "tick_size" : function(axis) {
+      return this["tick_size_"+axis]();
+    },
+
+    "tick_size_x" : function() {
+      var domain = this.scales.x.domain();
+      var diff = (domain[1] - domain[0])/ 1000;
+      if(diff < 60)
+        return d3.timeSecond.every(5);
+      else if(diff < 120)
+        return d3.timeSecond.every(10);
+      else if(diff < 180)
+        return d3.timeSecond.every(30);
+      else if(diff < 300)
+        return d3.timeMinute.every(1);
+      else
+        return d3.timeMinute.every(3);
+    },
+    "tick_size_x2" : function() { return null },
+    "tick_size_y" : function() { return 5 },
+    "tick_size_y2" : function() { return 5 },
+
     /**
      * Calculate the scales for the graph
      *
@@ -1279,7 +1308,7 @@ graphsrv.components.register(
           return "y axis right" + (this.data_feed_stopped?" error":"")
           }.bind(this))
           .attr("transform", "translate("+(this.inner_width()+this.margin.left)+", 0)")
-          .call(d3.axisRight(this.scales.y).ticks(5).tickFormat(this.formatter("y")))
+          .call(d3.axisRight(this.scales.y).ticks(this.tick_size_y()).tickFormat(this.formatter("y")))
       }
 
       // Left Y Axis
@@ -1289,7 +1318,7 @@ graphsrv.components.register(
           return "y axis left" + (this.data_feed_stopped?" error":"")
           }.bind(this))
           .attr("transform", "translate("+this.margin.left+", 0)")
-          .call(d3.axisLeft(this.scales.y2).ticks(5).tickFormat(this.formatter("y2")))
+          .call(d3.axisLeft(this.scales.y2).ticks(this.tick_size_y2()).tickFormat(this.formatter("y2")))
       }
 
       // Bottom X Axis
@@ -1299,7 +1328,7 @@ graphsrv.components.register(
             return "x axis bottom" + (this.data_viewport.offset<0?" historic":"");
           }.bind(this))
           .attr("transform", "translate(0, "+(this.inner_height() + this.margin.top)+")")
-          .call(d3.axisBottom(this.scales.x).tickFormat(this.formatter("x")))
+          .call(d3.axisBottom(this.scales.x).ticks(this.tick_size_x()).tickFormat(this.formatter("x")))
       }
 
       // Top X Axis
