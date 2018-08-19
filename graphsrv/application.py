@@ -264,10 +264,13 @@ class GraphServ(vodka.app.WebApplication):
                 # get all possible sources
                 sources = layout.get("sources", graphsrv.group.get_paths())
 
+
                 sources = [{"source":s,
                             "type":d.get("default_graph","multitarget"),
                             "config":d.get("default_graph","multitarget")}
                             for s,d in sources.items()]
+
+                sources = sorted(sources, key=lambda a: a.get("source"))
 
                 # filter sources matching the index
                 #sources = [s for s,d in sources.items()
