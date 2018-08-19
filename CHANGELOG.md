@@ -5,14 +5,21 @@
 
 ### Added
 ### Fixed
-
-- X axis tick size
-- Bigger window of inactivity before data feed stoppage is reported
-
 ### Changed
 ### Deprecated
 ### Removed
 ### Security
+
+## 1.4.0
+
+### Added
+
+- stabilize graph order on default index layout throughout restarts
+
+### Fixed
+
+- stabilize x axis tick size
+- Bigger window of inactivity before data feed stoppage is reported
 
 ## 1.3.0
 
