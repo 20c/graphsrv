@@ -5,6 +5,10 @@
 
 ### Added
 ### Fixed
+
+- X axis tick size
+- Bigger window of inactivity before data feed stoppage is reported
+
 ### Changed
 ### Deprecated
 ### Removed
