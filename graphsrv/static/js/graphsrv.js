@@ -1150,20 +1150,7 @@ graphsrv.components.register(
       return this["tick_size_"+axis]();
     },
 
-    "tick_size_x" : function() {
-      var domain = this.scales.x.domain();
-      var diff = (domain[1] - domain[0])/ 1000;
-      if(diff < 60)
-        return d3.timeSecond.every(5);
-      else if(diff < 120)
-        return d3.timeSecond.every(10);
-      else if(diff < 180)
-        return d3.timeSecond.every(30);
-      else if(diff < 300)
-        return d3.timeMinute.every(1);
-      else
-        return d3.timeMinute.every(3);
-    },
+    "tick_size_x" : function() { return null },
     "tick_size_x2" : function() { return null },
     "tick_size_y" : function() { return 5 },
     "tick_size_y2" : function() { return 5 },
