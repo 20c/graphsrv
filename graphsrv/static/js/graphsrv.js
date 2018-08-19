@@ -667,7 +667,7 @@ graphsrv.update = {
 
                 if(!data || !data.data || !data.data.length) {
                   var t = new Date().getTime();
-                  if(t - this.last_update_time > this.interval*3)
+                  if(t - this.last_update_time > this.interval*6)
                     $(this).trigger("data_feed_stopped")
                   return;
                 }
