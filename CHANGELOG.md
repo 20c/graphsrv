@@ -4,6 +4,13 @@
 ## [Unreleased]
 
 ### Added
+
+- allow setting up of popover fields through server config
+- pass server plot config through to front end (ugly and hacky for now)
+- support for d3 number formatting from config
+- implement `pass` formatter that just passes the value through,
+- implement `int` formatter that parser the value into an integer
+
 ### Fixed
 ### Changed
 ### Deprecated
