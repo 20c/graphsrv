@@ -41,9 +41,14 @@
             interval : {{ tickSize }},
             source : "{{ source }}",
             data_type : "{{ dataType }}",
+            target_id : "{{ graphConfig.id_field }}",
             data : []
           }
         )
+
+        {% for plot_config_key, plot_config_value in plotConfig.items() %}
+        instance.options["{{ plot_config_key }}"] = "{{ plot_config_value }}";
+        {% endfor %}
       $(currentScript).parent().append(instance.container);
       instance.render_static();
     })

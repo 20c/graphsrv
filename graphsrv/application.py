@@ -6,6 +6,7 @@ from builtins import object
 
 from pkg_resources import get_distribution
 
+import re
 import uuid
 import copy
 import os
@@ -352,6 +353,7 @@ class GraphServ(vodka.app.WebApplication):
             "source" : source,
             "graph_types" : graph_types,
             "graphConfig" : graph_config,
+            "plotConfig" : self.plot_config(graph_config),
             "maxTicks" : int(self.config.get("max_ticks", 500)),
             "dataType" : data_type,
             "tickSize" : tick_size,
@@ -369,6 +371,37 @@ class GraphServ(vodka.app.WebApplication):
         variables["graphConfig"]["targets"] = graphsrv.group.get_config_from_path(source).get("targets")
 
         return self.render("graph.js", self.wsgi_plugin.request_env(**variables))
+
+    def plot_config(self, graph_config):
+        """
+        converts a graphs plot config to data config
+        usable with the new d3 frontend
+
+        FIXME: graph config needs to be refactored
+        to be in line with the frontend
+        """
+
+        plot_config = {}
+
+        for k, v in graph_config.items():
+            m = re.match(r"plot_(.+)", k)
+            if m:
+                name = m.group(1)
+                plot_config.update({
+                    "data_{}".format(name) : v,
+                    "data_max_{}".format(name) : v,
+                    "data_min_{}".format(name) : v,
+                })
+
+            m = re.match(r"(min|max)_(.+)", k)
+            if m:
+                plot_config["data_{}".format(k)] = v
+
+            m = re.match(r"format_(.+)", k)
+            if m:
+                plot_config[k] = v
+
+        return plot_config
 
     def collect_targets(self, data, source):
         for row in self.data(source):
