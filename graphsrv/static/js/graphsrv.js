@@ -555,6 +555,8 @@ graphsrv.util.count_values = function(arr) {
  * @returns {String}
  */
 
+graphsrv.formatters.pass = function(value) { return value; }
+
 graphsrv.formatters.ms = function(value) {
   if(isNaN(value))
     return "-";
@@ -567,6 +569,10 @@ graphsrv.formatters.pcnt = function(value) {
 
 graphsrv.formatters.time = function(value) {
   return d3.format("%I:%S")(value);
+}
+
+graphsrv.formatters.int = function(value) {
+  return parseInt(value)
 }
 
 /**
