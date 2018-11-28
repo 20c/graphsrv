@@ -549,13 +549,65 @@ graphsrv.util.count_values = function(arr) {
  */
 
 /**
+ * Get a formatter by name
+ *
+ * If a formatter with the name does not exist
+ * attempt to return a d3 formatter from it
+ *
+ * You may also specify a suffix
+ * after a space
+ *
+ * Examples:
+ *
+ *    - ".2f"
+ *    - ".2f ms"
+ *    - "pcnt %"
+ *
+ * @method get
+ * @param {String} name
+ * @returns {Function}
+ */
+
+graphsrv.formatters.get = function(name) {
+
+  if(!name)
+    return null;
+
+  var parts = name.split(" ")
+  var name = parts[0]
+  var suffix = parts[1] || "";
+  var formatter
+
+  formatter = this[name]
+  if(!formatter) {
+    try {
+      formatter = d3.format(name)
+    } catch {
+      return null
+    }
+  }
+
+  return function(value) {
+    return formatter(value)+suffix;
+  }
+}
+
+/**
+ * Pass the value through as is
+ * @method pass
+ * @param {mixed} value
+ * @returns {mixed}
+ */
+
+graphsrv.formatters.pass = function(value) { return value; }
+
+/**
  * Latency milliseconds formatter
  * @method ms
  * @param {Float} value
  * @returns {String}
  */
 
-graphsrv.formatters.pass = function(value) { return value; }
 
 graphsrv.formatters.ms = function(value) {
   if(isNaN(value))
@@ -1144,9 +1196,11 @@ graphsrv.components.register(
      */
 
     "formatter" : function(axis) {
-      var fn = graphsrv.formatters[this.options["format_"+axis]];
-      if(!fn)
+      var formatter_name = this.options["format_"+axis];
+      var fn = graphsrv.formatters.get(formatter_name);
+      if(!fn) {
         return null;
+      }
       return function(a,b,c) {
         return fn(a,b,c,this);
       }.bind(this);
