@@ -421,16 +421,33 @@ graphsrv.popovers.register(
 
     "content" : function(data, index) {
       var o = this.graph.options,i,target_config,_data;
-      var content = $("<div>");
+      var content = $("<div>"), graph=this.graph;
+      var popover_fields = o.config.popover;
       for(i = 0; i < this.graph.data.length; i++) {
         _data = this.graph.data[i][index];
         target_config = this.graph.target_config(_data);
-        content.append(
-          $("<div>").text(
-            target_config.name+": "+
-            this.graph.formatter("y")(_data[o.data_y])
-          )
-        );
+
+        if(popover_fields) {
+          $(popover_fields).each(function() {
+            var value = _data[this.field];
+            var formatter = graphsrv.formatters.get(this.formatter);
+            if(formatter)
+              value = formatter(value);
+            content.append(
+              $('<div>').text(
+                (this.label || this.field)+": "+
+                value
+              )
+            );
+          });
+        } else {
+          content.append(
+            $("<div>").text(
+              target_config.name+": "+
+              this.graph.formatter("y")(_data[o.data_y])
+            )
+          );
+        }
       }
       $(this).trigger("content-prepare", [content, data])
       this.Popover_content(content)
@@ -583,7 +600,7 @@ graphsrv.formatters.get = function(name) {
     try {
       formatter = d3.format(name)
     } catch {
-      return null
+      return null;
     }
   }
 
