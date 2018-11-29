@@ -10,6 +10,8 @@
 - support for d3 number formatting from config
 - implement `pass` formatter that just passes the value through,
 - implement `int` formatter that parser the value into an integer
+- allow turning off inspect in graph config
+- allow specifying a different inspect layout in graph config
 
 ### Fixed
 ### Changed
