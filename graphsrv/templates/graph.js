@@ -30,6 +30,9 @@
             "{{ host }}{{ graphsrv.static_url}}js/graphsrv.{{ type }}.js").
     ready(function() {
       graphsrv.update.host = "{{ host }}";
+
+        var False = false, True = true;
+
         var instance = graphsrv.instances["{{ id }}"] = graphsrv.components.instantiate(
           "{{ type }}",
           {
