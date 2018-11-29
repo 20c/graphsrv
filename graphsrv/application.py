@@ -64,18 +64,21 @@ class Graph(object):
             help_text="formatter for y axis labels"
         )
 
+        # deperecated
         precision_y = vodka.config.Attribute(
             int,
             default=2,
             help_text="float precision"
         )
 
+        # deprecated
         size_y = vodka.config.Attribute(
             float,
             default=0.25,
             help_text="tick size on the y axis"
         )
 
+        # deprecated
         sizes_x = vodka.config.Attribute(
             list,
             default=[3000],
@@ -96,6 +99,18 @@ class Graph(object):
         id_field = vodka.config.Attribute(
             str,
             help_text="the field by which a record in the data set is uniquely identified"
+        )
+
+        inspect = vodka.config.Attribute(
+            bool,
+            default=True,
+            help_text="Allow clicking through to a detail view"
+        )
+
+        inspect_layout = vodka.config.Attribute(
+            str,
+            default="detail",
+            help_text="layout to direct to for detail view"
         )
 
 
@@ -305,9 +320,17 @@ class GraphServ(vodka.app.WebApplication):
                         col["graph"]["source"] = sources[0]
 
                     cfg = graphs.get(col["graph"].get("config"))
+
+                    # default configs
                     if "targets" not in cfg:
                         cfg["targets"] = [{"target":"all"}]
-                    col["graph"]["config_dict"] =cfg
+                    if "inspect" not in cfg:
+                        cfg["inspect"] = Graph.Configuration.inspect.default
+                    if "inspect_layout" not in cfg:
+                        cfg["inspect_layout"] = Graph.Configuration.inspect_layout.default
+
+                    col["graph"]["config_dict"] = cfg
+
 
 
         return self.render(

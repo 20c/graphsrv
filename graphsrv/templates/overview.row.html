@@ -4,7 +4,11 @@
   {% if col.graph and col.graph.source %}
     {% if layout.type == "index" %}
     <div class="graph-label">
-      <a href="/view/detail/{{ col.graph.source }}">{{ col.graph.source }}</a>
+      {% if col.graph.config_dict.inspect %}
+      <a href="/view/{{ col.graph.config_dict.inspect_layout }}/{{ col.graph.source }}">{{ col.graph.source }}</a>
+      {% else %}
+      <a>{{ col.graph.source }}</a>
+      {% endif %}
     </div>
     {% endif %}
     <script src="/graph?targets={{ col.graph.targets }}&id={{ col.graph.id }}&fit={{ col.graph.fit }}&type={{ col.graph.config_dict.type }}{% if col.graph.config %}&config={{ col.graph.config }}{% endif %}&source={{ col.graph.source }}"></script>
