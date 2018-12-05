@@ -4,6 +4,15 @@
 ## [Unreleased]
 
 ### Added
+### Fixed
+### Changed
+### Deprecated
+### Removed
+### Security
+
+## 1.5.0
+
+### Added
 
 - allow setting up of popover fields through server config
 - pass server plot config through to front end (ugly and hacky for now)
@@ -12,12 +21,6 @@
 - implement `int` formatter that parser the value into an integer
 - allow turning off inspect in graph config
 - allow specifying a different inspect layout in graph config
-
-### Fixed
-### Changed
-### Deprecated
-### Removed
-### Security
 
 ## 1.4.0
 
