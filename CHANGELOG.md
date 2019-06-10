@@ -10,6 +10,12 @@
 ### Removed
 ### Security
 
+## 1.5.1
+
+### Fixed
+
+- issue with loss bar coloring in smokestack graphs (#32)
+
 ## 1.5.0
 
 ### Added
