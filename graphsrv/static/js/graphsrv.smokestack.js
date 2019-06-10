@@ -104,7 +104,7 @@ $gs.components.register(
     },
 
     "loss_color" : function(data) {
-      var lvl, p = (data.loss / data.cnt);
+      var lvl, p = data.loss;
       if(!p)
         lvl = 0;
       else if(p <= 0.2)
@@ -123,7 +123,8 @@ $gs.components.register(
     },
 
     "render_label" : function(data) {
-      return this.Graph_render_label(data) + " max " + data.max + "ms - " + data.loss + "/" + data.cnt;
+      var lost = parseInt(data.cnt * data.loss);
+      return this.Graph_render_label(data) + " max " + data.max + "ms - " + lost + "/" + data.cnt;
     }
 
   },
