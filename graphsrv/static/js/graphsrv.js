@@ -724,6 +724,7 @@ graphsrv.update = {
         "url" : url,
         "params" : params,
         "refcount" : 1,
+        "requesting" : false,
         "last_update_time" : new Date().getTime(),
         "data" : [],
         // FIXME: should come from some config
@@ -732,59 +733,66 @@ graphsrv.update = {
         // FIXME: should come from some config
         "incremental" : function(d) { return d.time/1000 },
         "request" : function() {
+          if(this.requesting)
+            return;
+
+          this.requesting = true;
           $.ajax(
             {
               "url": host + url,
               "method": "POST",
               "data": this.params,
               "success" : function(data) {
-                data = JSON.parse(data);
+                try {
+                  data = JSON.parse(data);
 
-                if(!data || !data.data || !data.data.length) {
-                  var t = new Date().getTime();
-                  if(t - this.last_update_time > this.interval*6)
-                    $(this).trigger("data_feed_stopped")
-                  return;
-                }
+                  if(!data || !data.data || !data.data.length) {
+                    var t = new Date().getTime();
+                    if(t - this.last_update_time > this.interval*6)
+                      $(this).trigger("data_feed_stopped")
+                    return;
+                  }
 
-                if(this.sort)
-                  this.sort(data.data);
+                  if(this.sort)
+                    this.sort(data.data);
 
-                var i, row;
-                for(i = 0; i < data.data.length; i++) {
-                  row = data.data[i][0]
-                  if(!row)
-                    continue
-                  this.params["ts_"+row.id] = d3.max(data.data[i], function(d) { return this.incremental(d) }.bind(this))
-                  //console.log(this.params["ts_"+row.id], row.id)
-                }
+                  var i, row;
+                  for(i = 0; i < data.data.length; i++) {
+                    row = data.data[i][0]
+                    if(!row)
+                      continue
+                    this.params["ts_"+row.id] = d3.max(data.data[i], function(d) { return this.incremental(d) }.bind(this))
+                    //console.log(this.params["ts_"+row.id], row.id)
+                  }
 
-                if(this.data && this.data.length) {
-                  // there already exists some data, so append the
-                  // new data to the old set
-                  var i;
+                  if(this.data && this.data.length) {
+                    // there already exists some data, so append the
+                    // new data to the old set
+                    var i;
+                    for(i = 0; i < this.data.length; i++) {
+                      this.data[i] = this.data[i].concat(data.data[i])
+                    }
+                  } else {
+                    // first data set, simply reference
+                    this.data = data.data;
+                  }
                   for(i = 0; i < this.data.length; i++) {
-                    this.data[i] = this.data[i].concat(data.data[i])
+                    // maintain data limit
+                    while(this.data[i].length > this.max_length)
+                      this.data[i].shift()
+                  }
 
-                 }
-                } else {
-                  // first data set, simply reference
-                  this.data = data.data;
+                  $(this).trigger("update", [this.data]);
+
+                  this.last_update_time = new Date().getTime();
+                } finally {
+                  this.requesting = false;
                 }
-                for(i = 0; i < this.data.length; i++) {
-                  // maintain data limit
-                  while(this.data[i].length > this.max_length)
-                    this.data[i].shift()
-                }
-
-                $(this).trigger("update", [this.data]);
-
-                this.last_update_time = new Date().getTime();
-
 
               }.bind(this)
             }
           ).fail(function() {
+            this.requesting = false;
             $(this).trigger("data_feed_stopped")
           }.bind(this))
         }
