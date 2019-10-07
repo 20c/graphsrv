@@ -1,6 +1,6 @@
 recursive-include graphsrv/static *
 recursive-include graphsrv/templates *
 recursive-include graphsrv/etc *
-recursive-include facsimile *.txt
+recursive-include Ctl *.txt
 recursive-include graphsrv *.py
-include facsimile/VERSION
+include Ctl/VERSION
