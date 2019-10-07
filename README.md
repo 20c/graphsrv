@@ -1,10 +1,9 @@
 # graphsrv
 
-[![PyPI](https://img.shields.io/pypi/v/graphsrv.svg?maxAge=3600)](https://pypi.python.org/pypi/graphsrv)
-[![Travis CI](https://img.shields.io/travis/20c/graphsrv.svg?maxAge=3600)](https://travis-ci.org/20c/graphsrv)
-[![Code Health](https://landscape.io/github/20c/graphsrv/master/landscape.svg?style=flat)](https://landscape.io/github/20c/graphsrv/master)
-[![Codecov](https://img.shields.io/codecov/c/github/20c/graphsrv/master.svg?maxAge=3600)](https://codecov.io/github/20c/graphsrv)
-[![Requires.io](https://img.shields.io/requires/github/20c/graphsrv.svg?maxAge=3600)](https://requires.io/github/20c/graphsrv/requirements)
+[![PyPI](https://img.shields.io/pypi/v/graphsrv.svg?maxAge=600)](https://pypi.python.org/pypi/graphsrv)
+[![Travis CI](https://img.shields.io/travis/20c/graphsrv.svg?maxAge=600)](https://travis-ci.org/20c/graphsrv)
+[![Codecov](https://img.shields.io/codecov/c/github/20c/graphsrv/master.svg?maxAge=600)](https://codecov.io/github/20c/graphsrv)
+[![Requires.io](https://img.shields.io/requires/github/20c/graphsrv.svg?maxAge=600)](https://requires.io/github/20c/graphsrv/requirements)
 
 serve embeddable graphs
 
