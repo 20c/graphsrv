@@ -5,6 +5,10 @@
 
 ### Added
 ### Fixed
+
+- flask version requirements loosened to allow flask >1.0, <2.0
+- issue with visual glitching and lag under heavy load (#33)
+
 ### Changed
 ### Deprecated
 ### Removed
