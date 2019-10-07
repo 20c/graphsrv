@@ -5,22 +5,26 @@
 
 ### Added
 ### Fixed
-
-- flask version requirements loosened to allow flask >1.0, <2.0
-- issue with visual glitching and lag under heavy load (#33)
-
 ### Changed
 ### Deprecated
 ### Removed
 ### Security
 
-## 1.5.1
+## [1.6.0]
+
+### Fixed
+
+- issue with visual glitching and lag under heavy load (#33)
+- flask version requirements loosened to allow flask >1.0, <2.0
+- move to ctl for package management
+
+## [1.5.1]
 
 ### Fixed
 
 - issue with loss bar coloring in smokestack graphs (#32)
 
-## 1.5.0
+## [1.5.0]
 
 ### Added
 
@@ -32,7 +36,7 @@
 - allow turning off inspect in graph config
 - allow specifying a different inspect layout in graph config
 
-## 1.4.0
+## [1.4.0]
 
 ### Added
 
@@ -43,7 +47,7 @@
 - stabilize x axis tick size
 - Bigger window of inactivity before data feed stoppage is reported
 
-## 1.3.0
+## [1.3.0]
 
 ### Added
 
@@ -59,7 +63,7 @@
 - Changed frontend to be d3.js based, upgrade should be seamless for users
 - Custom layout file will now be loaded on top of the default layout, so you no longer need to provide the two default configurations in your custom layout file if you want to keep them. Redefining them in your custom layout however will still override.
 
-## 1.2.0
+## [1.2.0]
 
 ### Added
 
@@ -69,7 +73,7 @@
 
 - Fixed (#22) graphserv does not default to "index" layout if any other layout name is present
 
-## 1.1.3
+## [1.1.3]
 
 ### Added
 
@@ -81,23 +85,23 @@
 - When resizing on the y axis, first plot is unaffected (#17)
 - First plot in multitarget graph does not scale properly (#18)
 
-## 1.1.2
+## [1.1.2]
 
 ### Fixed
 
 - formatting of graph labels during packet loss in smokestack graph (#14)
 
-## 1.1.1
+## [1.1.1]
 
 ### Added
 
 - plugin API (#12)
 
-### Fixed
+### [Fixed]
 
 - Smokestack graphs always showing 0 / 0 for loss and count (#13)
 
-## 1.1.0
+## [1.1.0]
 
 ### Added
 
@@ -118,12 +122,13 @@
 ### Removed
 ### Security
 
-## 1.0.6
+## [1.0.6]
+
 ### Fixed
 
 - fix remote graph embedding
 
-## 1.0.5
+## [1.0.5]
 
 ### Added
 
@@ -138,19 +143,19 @@
 
 - fixed an issue where using an id field other than "avg" would cause the graph not to render
 
-## 1.0.4
+## [1.0.4]
 
 ### Changed
 
 - vodka minimum requirement changed to 2.0.3
 - updated static urls in templates to work with vodka request env changes
 
-## 1.0.3
+## [1.0.3]
 
 ### Changed
 - vodka minimum requirement changed to 2.0.2
 
-## 1.0.2
+## [1.0.2]
 
 ### Fixed
 - fixed issue where graphs would not render on safari
