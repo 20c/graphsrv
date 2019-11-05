@@ -10,6 +10,12 @@
 ### Removed
 ### Security
 
+## [1.6.1]
+
+### Fixed
+
+- vodka requirements pinned to < 3
+
 ## [1.6.0]
 
 ### Fixed
