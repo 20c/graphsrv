@@ -2,15 +2,20 @@
 # graphsrv Change Log
 
 ## [Unreleased]
-
 ### Added
-- support for python 3.7, 3.8, 3.9
 ### Fixed
 ### Changed
 ### Deprecated
 ### Removed
-- support for python < 3.6
 ### Security
+
+
+## [2.0.0]
+
+### Added
+- support for python 3.7, 3.8, 3.9
+### Removed
+- support for python < 3.6
 
 ## [1.6.1]
 
