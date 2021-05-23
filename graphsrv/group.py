@@ -2,13 +2,14 @@ import vodka.storage
 import vodka.config
 
 groups = {}
+
+
 def add(data_id, group_name, targets=None, **kwargs):
     if data_id not in groups:
         groups[data_id] = {}
-    groups[data_id][group_name] = {
-        "targets" : targets
-    }
+    groups[data_id][group_name] = {"targets": targets}
     groups[data_id][group_name].update(**kwargs)
+
 
 def add_all(cfg):
     for data_id, grp in list(cfg.items()):
@@ -17,7 +18,8 @@ def add_all(cfg):
             # a group name
             if name in ["config"]:
                 continue
-            add(data_id, name, targets=targets, **grp.get("config",{}))
+            add(data_id, name, targets=targets, **grp.get("config", {}))
+
 
 def get_paths():
     r = {}
@@ -26,11 +28,13 @@ def get_paths():
             r[f"{data_id}.{group}"] = data
     return r
 
+
 def get_from_path(path):
     t = path.split(".")
     if len(t) != 2:
         raise ValueError("Path needs to be data_id.group_name")
     return get(t[0], t[1])
+
 
 def get_config_from_path(path):
     t = path.split(".")
@@ -38,9 +42,11 @@ def get_config_from_path(path):
         raise ValueError("Path needs to be data_id.group_name")
     return get_config(t[0], t[1])
 
+
 def get_config(data_id, group_name):
     config = groups.get(data_id).get(group_name)
     return config
+
 
 def get(data_id, group_name):
     config = groups.get(data_id).get(group_name)
@@ -49,9 +55,9 @@ def get(data_id, group_name):
     rv = []
     if data:
         for row in data:
-            _row = {k:v for k,v in list(row.items()) if k != "data"}
+            _row = {k: v for k, v in list(row.items()) if k != "data"}
             _row["data"] = {}
-            for _id,sub in list(row["data"].items()):
+            for _id, sub in list(row["data"].items()):
                 if _id in targets:
                     _row["data"][_id] = sub
             if _row["data"]:
