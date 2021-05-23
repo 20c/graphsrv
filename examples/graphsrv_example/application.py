@@ -5,6 +5,6 @@ import vodka.app
 import graphsrv_example.plugins.test_plot
 
 # we dont do anything with the applet other than to make sure it exists
-@vodka.app.register('graphsrv_example')
+@vodka.app.register("graphsrv_example")
 class MyApplication(vodka.app.Application):
     pass

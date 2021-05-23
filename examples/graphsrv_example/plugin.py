@@ -6,16 +6,17 @@ import graphsrv.application
 
 import random
 
-@vodka.plugin.register('test_plot')
+
+@vodka.plugin.register("test_plot")
 class TestPlotPlugin(graphsrv.application.GraphSourcePlugin):
 
     """
     This is a graphsrv source plugin, it allows for quickly pushing
     plots for a graph
     """
-    
+
     def work(self):
-        
+
         """
         The work function is called on an interval specified in the
         plugin config
@@ -31,15 +32,8 @@ class TestPlotPlugin(graphsrv.application.GraphSourcePlugin):
         self.push(
             [
                 # plot a
-                {
-                    "id" : "a",
-                    "value" : float(random.randint(1, 100))
-                },
-
+                {"id": "a", "value": float(random.randint(1, 100))},
                 # plot b
-                {
-                    "id": "b",
-                    "value" : float(random.randint(100,200))
-                }
+                {"id": "b", "value": float(random.randint(100, 200))},
             ]
         )
