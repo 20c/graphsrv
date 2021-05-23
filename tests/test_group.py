@@ -33,7 +33,7 @@ class TestGroup(unittest.TestCase):
 
         vodka.storage.storage[data_id] = TEST_DATA["plot"]
         graphsrv.group.add(data_id, "first", {"1":{}, "2":{}})
-        data, config = graphsrv.group.get_from_path("%s.%s" % (data_id, "first"))
+        data, config = graphsrv.group.get_from_path("{}.{}".format(data_id, "first"))
         self.assertEqual(data, TEST_DATA["plot"])
         self.assertEqual(config, {"1":{}, "2":{}})
 
@@ -43,7 +43,7 @@ class TestGroup(unittest.TestCase):
 
         vodka.storage.storage[data_id] = TEST_DATA["plot"]
         graphsrv.group.add(data_id, "first", {"1":{}, "2":{}})
-        config = graphsrv.group.get_config_from_path("%s.%s" % (data_id, "first"))
+        config = graphsrv.group.get_config_from_path("{}.{}".format(data_id, "first"))
         self.assertEqual(config, {"targets":{"1":{}, "2":{}}})
 
 

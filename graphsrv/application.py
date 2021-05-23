@@ -1,8 +1,5 @@
-
 #from builtins import str
-from builtins import range
 from past.utils import old_div
-from builtins import object
 
 from pkg_resources import get_distribution
 
@@ -54,7 +51,7 @@ class GraphSourcePlugin(vodka.plugins.TimedPlugin):
 
 
 
-class Graph(object):
+class Graph:
 
     class Configuration(vodka.config.Handler):
 
@@ -163,7 +160,7 @@ class GraphServ(vodka.app.WebApplication):
     # application methods
 
     def setup(self):
-        super(GraphServ, self).setup()
+        super().setup()
         self.layout_last_sync = 0
         graphsrv.group.add_all(self.get_config("groups"))
 
@@ -179,11 +176,11 @@ class GraphServ(vodka.app.WebApplication):
             if js_src and hasattr(self, "wsgi_plugin"):
                 def serve_js(src = js_src):
                     return send_file(src)
-                self.wsgi_plugin.set_route("/static/graphsrv/js/graphsrv.{}.js".format(name), serve_js)
+                self.wsgi_plugin.set_route(f"/static/graphsrv/js/graphsrv.{name}.js", serve_js)
             if css_src and hasattr(self, "wsgi_plugin"):
                 def serve_css(src = css_src):
                     return send_file(src)
-                self.wsgi_plugin.set_route("/static/graphsrv/media/graphsrv.{}.css".format(name), serve_css)
+                self.wsgi_plugin.set_route(f"/static/graphsrv/media/graphsrv.{name}.css", serve_css)
 
 
         if hasattr(self, "wsgi_plugin"):
@@ -411,14 +408,14 @@ class GraphServ(vodka.app.WebApplication):
             if m:
                 name = m.group(1)
                 plot_config.update({
-                    "data_{}".format(name) : v,
-                    "data_max_{}".format(name) : v,
-                    "data_min_{}".format(name) : v,
+                    f"data_{name}" : v,
+                    f"data_max_{name}" : v,
+                    f"data_min_{name}" : v,
                 })
 
             m = re.match(r"(min|max)_(.+)", k)
             if m:
-                plot_config["data_{}".format(k)] = v
+                plot_config[f"data_{k}"] = v
 
             m = re.match(r"format_(.+)", k)
             if m:
@@ -471,7 +468,7 @@ class GraphServ(vodka.app.WebApplication):
             _time = row["ts"] * 1000
 
             for target,bars in list(rdata.items()):
-                ts = timestamps.get("ts_{}".format(target))
+                ts = timestamps.get(f"ts_{target}")
                 if ts and ts >= row["ts"]:
                     continue
                 if targets != ["all"] and target not in targets:
@@ -492,8 +489,8 @@ class GraphServ(vodka.app.WebApplication):
         """
 
         targets = request.values.get("targets","").split(",")
-        timestamps = dict([(k,float(v)) for k,v in list(request.values.items())
-                          if k.find("ts_") == 0])
+        timestamps = {k:float(v) for k,v in list(request.values.items())
+                          if k.find("ts_") == 0}
         source = request.values.get("source")
 
         if not source:

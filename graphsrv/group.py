@@ -23,7 +23,7 @@ def get_paths():
     r = {}
     for data_id, s in list(groups.items()):
         for group, data in list(s.items()):
-            r["{}.{}".format(data_id, group)] = data
+            r[f"{data_id}.{group}"] = data
     return r
 
 def get_from_path(path):
@@ -49,7 +49,7 @@ def get(data_id, group_name):
     rv = []
     if data:
         for row in data:
-            _row = dict([(k,v) for k,v in list(row.items()) if k != "data"])
+            _row = {k:v for k,v in list(row.items()) if k != "data"}
             _row["data"] = {}
             for _id,sub in list(row["data"].items()):
                 if _id in targets:
