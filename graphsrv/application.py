@@ -1,4 +1,4 @@
-from __future__ import division
+
 #from builtins import str
 from builtins import range
 from past.utils import old_div
@@ -173,7 +173,7 @@ class GraphServ(vodka.app.WebApplication):
         graph_config = self.config.get("graphs",{})
 
 
-        for name, graph in graph_config.items():
+        for name, graph in list(graph_config.items()):
             js_src = graph.get("javascript")
             css_src = graph.get("css")
             if js_src and hasattr(self, "wsgi_plugin"):
@@ -250,7 +250,7 @@ class GraphServ(vodka.app.WebApplication):
             if source_name:
                 #if source name is specified but layout name is not
                 #find the first layout that is a custom layout
-                _layout = [l for l in layouts.values() if l["type"] == "custom"][0]
+                _layout = [l for l in list(layouts.values()) if l["type"] == "custom"][0]
             else:
                 #if neither source name nor layout name are specified
                 #we want to render the index layout
@@ -284,7 +284,7 @@ class GraphServ(vodka.app.WebApplication):
                 sources = [{"source":s,
                             "type":d.get("default_graph","multitarget"),
                             "config":d.get("default_graph","multitarget")}
-                            for s,d in sources.items()]
+                            for s,d in list(sources.items())]
 
                 sources = sorted(sources, key=lambda a: a.get("source"))
 
@@ -406,7 +406,7 @@ class GraphServ(vodka.app.WebApplication):
 
         plot_config = {}
 
-        for k, v in graph_config.items():
+        for k, v in list(graph_config.items()):
             m = re.match(r"plot_(.+)", k)
             if m:
                 name = m.group(1)
@@ -492,7 +492,7 @@ class GraphServ(vodka.app.WebApplication):
         """
 
         targets = request.values.get("targets","").split(",")
-        timestamps = dict([(k,float(v)) for k,v in request.values.items()
+        timestamps = dict([(k,float(v)) for k,v in list(request.values.items())
                           if k.find("ts_") == 0])
         source = request.values.get("source")
 

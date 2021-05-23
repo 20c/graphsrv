@@ -22,7 +22,7 @@ def add_all(cfg):
 def get_paths():
     r = {}
     for data_id, s in list(groups.items()):
-        for group, data in s.items():
+        for group, data in list(s.items()):
             r["{}.{}".format(data_id, group)] = data
     return r
 
