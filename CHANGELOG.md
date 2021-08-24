@@ -4,6 +4,7 @@
 ## [Unreleased]
 ### Added
 ### Fixed
+- fix #36: munge compatibility issue during install
 ### Changed
 ### Deprecated
 ### Removed
