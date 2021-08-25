@@ -4,8 +4,9 @@
 ## [Unreleased]
 ### Added
 ### Fixed
-- fix #36: munge compatibility issue during install
+- fix #36: munge 1.2.0 compatibility issue during install
 ### Changed
+- fix #37: upgrade dependencies
 ### Deprecated
 ### Removed
 ### Security
