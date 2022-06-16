@@ -3,12 +3,15 @@
 
 ## [Unreleased]
 ### Added
-### Fixed
-- smokestack length undefined console error when no data exists
 ### Changed
 ### Deprecated
 ### Removed
 ### Security
+
+## [2.1.1]
+
+### Fixed
+- smokestack length undefined console error when no data exists
 
 ## [2.1.0]
 
