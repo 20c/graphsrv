@@ -13,6 +13,9 @@ $gs.components.register(
 
     "render_data" : function() {
 
+      if(!this.data || !this.data.length)
+        return;
+
       var i,j,k,
           x = this.scales.x,
           y = this.scales.y,

@@ -4,6 +4,7 @@
 ## [Unreleased]
 ### Added
 ### Fixed
+- smokestack length undefined console error when no data exists
 ### Changed
 ### Deprecated
 ### Removed
